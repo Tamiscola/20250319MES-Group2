@@ -18,8 +18,8 @@ body {
 #sidebar-wrapper {
     min-height: 100vh;
     width: 250px;
-    background-color: #333;
-    color: #fff;
+    /* background-color: #333; */ /* 기존의 어두운 배경색 제거 */
+    color: #000; /* 글자색을 검정색으로 변경 */
 }
 
 #page-content-wrapper {
@@ -38,29 +38,16 @@ body {
     font-size: 24px;
 }
 
-/* Tab-like appearance for sidebar links */
 .list-group-item {
-    background-color: transparent;
-    color: #fff;
+    /* background-color: transparent; */ /* 기존 배경색 제거 */
+    color: #000; /* 글자색을 검정색으로 유지 */
     border: none;
     padding: 10px 20px;
-    border-radius: 5px 5px 0 0; /* Rounded top corners for the tab look */
-    margin-bottom: 2px; /* Add some space between tabs */
 }
 
 .list-group-item:hover {
-    background-color: #555;
-}
-
-/* Style for the active tab */
-.list-group-item.active {
-    background-color: #4682b4; /* Highlight the active tab */
-    color: white;
-}
-
-
-.custom-sidebar-heading {
-    background-color: #ADD8E6; /* Thick skyblue */
+    background-color: #ADD8E6; /* 연한 파란색 */
+    color: #000;
 }
 
 .company-information {
