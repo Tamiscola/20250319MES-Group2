@@ -1,0 +1,232 @@
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    font-family: 'Malgun Gothic', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* Layout Styles */
+#wrapper {
+    display: flex;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+}
+
+#page-content-wrapper {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar-heading {
+    padding: 20px;
+    text-align: center;
+}
+
+.sidebar-heading h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Tab-like appearance for sidebar links */
+.list-group-item {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px 5px 0 0; /* Rounded top corners for the tab look */
+    margin-bottom: 2px; /* Add some space between tabs */
+}
+
+.list-group-item:hover {
+    background-color: #555;
+}
+
+/* Style for the active tab */
+.list-group-item.active {
+    background-color: #4682b4; /* Highlight the active tab */
+    color: white;
+}
+
+
+.custom-sidebar-heading {
+    background-color: #ADD8E6; /* Thick skyblue */
+}
+
+.company-information {
+    padding: 20px;
+    font-size: 12px;
+}
+
+/* Top Navigation Styles */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.loginInfo {
+    display: flex;
+    align-items: center;
+}
+
+.loginInfo button {
+    margin-left: 10px;
+}
+
+/* Content Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.section-title {
+    background-color: #f0f8ff;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-left: 5px solid #4682b4;
+    font-weight: bold;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.button {
+    background-color: #4682b4;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button:hover {
+    background-color: #396a93;
+}
+
+.dropdown {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.pagination button.active {
+    background-color: #4682b4;
+    color: white;
+    border-color: #4682b4;
+}
+
+/* Form Styles */
+.form-container {
+    margin-top: 30px;
+}
+
+.form-row {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.form-row label {
+    width: 150px;
+    font-weight: bold;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="date"],
+.form-row select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    display: flex;
+    gap: 5px;
+}

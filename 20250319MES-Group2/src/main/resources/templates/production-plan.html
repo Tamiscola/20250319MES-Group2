@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반도체 생산계획 관리</title>
+
+    <!-- Favicon and Styles from Original Layout -->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar-->
+    <div class="border-end" id="sidebar-wrapper">
+        <div class="sidebar-heading border-bottom custom-sidebar-heading" style="text-align: center; height: 10vh;">
+            <a class="a-tag" th:href="@{/bio/dashboard}"><h1>SemiCon</h1></a>
+        </div>
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item"
+               th:href="@{/bio/Employeeslist}">사원관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:href="@{/bio/bioProductList}">제품관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Events</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:href="@{/bio/BioInvShippinglist}">출고관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Profile</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Status</a>
+            <div th:if="${isAdmin}">
+                <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:onclick="location.href='/bio/admin'">관리자 페이지</a>
+            </div>
+
+            <div class="company-information">
+                <p><b>Bio One</b></p>
+                <p><b>경기도 성남시 분당구 190번길 45</b></p>
+                <p><b>Tel : 031-250-8900</b></p>
+                <p><b>Fax : 031-250-8901</b></p>
+                <p><b>사업자등록번호 : 111-23-45678</b></p>
+            </div>
+        </div>
+    </div>
+    <!-- Page content wrapper-->
+    <div id="page-content-wrapper">
+        <!-- Top navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom">
+            <div class="container-fluid">
+                <!--<button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>-->
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                    </ul>
+                </div>
+                <!-- login 관련 추가 -->
+                <div class="loginInfo">
+                    <div class="login" th:if="${user == null}">
+                        <button th:onclick="location.href='/bio/login'">로그인</button>
+                    </div>
+                    <div class="logout" th:unless="${user == null}">
+                        <h6>[[${employeeName}]]님 환영합니다.</h6>
+                        <button th:onclick="location.href='/bio/logout'">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Page content-->
+        <!-- Integrated Production Plan Content -->
+        <div class="container-fluid" layout:fragment="content">
+            <div class="container">
+                <!-- 생산계획 목록 섹션 -->
+                <div class="section-title">생산계획 목록</div>
+
+                <!-- 검색 및 필터 영역 -->
+                <div class="search-bar">
+                    <label for="search">검색:</label>
+                    <input type="text" id="search" placeholder="검색어 입력">
+                    <button class="button">검색</button>
+
+                    <select class="dropdown">
+                        <option value="">우선순위 ▼</option>
+                        <option value="high">높음</option>
+                        <option value="medium">보통</option>
+                        <option value="low">낮음</option>
+                    </select>
+
+                    <select class="dropdown">
+                        <option value="">상태 ▼</option>
+                        <option value="waiting">대기</option>
+                        <option value="inProgress">진행 중</option>
+                        <option value="completed">완료</option>
+                    </select>
+                </div>
+
+                <!-- 생산계획 테이블 -->
+                <table>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제품명</th>
+                        <th>생산기간</th>
+                        <th>목표수량</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>반도체 A</td>
+                        <td>2025-03-20 ~ 03-25</td>
+                        <td>1000</td>
+                        <td>대기</td>
+                        <td class="action-btn">
+                            <button class="button">수정</button>
+                            <button class="button">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>반도체 B</td>
+                        <td>2025-03-22 ~ 03-28</td>
+                        <td>500</td>
+                        <td>진행 중</td>
+                        <td class="action-btn">
+                            <button class="button">수정</button>
+                            <button class="button">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>반도체 C</td>
+                        <td>2025-03-25 ~ 04-01</td>
+                        <td>2000</td>
+                        <td>대기</td>
+                        <td class="action-btn">
+                            <button class="button">수정</button>
+                            <button class="button">삭제</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button>이전</button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>다음</button>
+                </div>
+
+                <!-- 생산계획 입력/수정 폼 -->
+                <div class="form-container">
+                    <div class="section-title">생산계획 입력/수정</div>
+
+                    <form>
+                        <div class="form-row">
+                            <label for="product">제품 선택:</label>
+                            <select id="product" class="dropdown">
+                                <option value="">제품을 선택하세요</option>
+                                <option value="semiconductorA">반도체 A</option>
+                                <option value="semiconductorB">반도체 B</option>
+                                <option value="semiconductorC">반도체 C</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="startDate">생산 시작일:</label>
+                            <input type="date" id="startDate">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="endDate">생산 종료일:</label>
+                            <input type="date" id="endDate">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="targetQuantity">목표 수량:</label>
+                            <input type="number" id="targetQuantity" value="1000">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="manager">생산 책임 담당자:</label>
+                            <input type="text" id="manager" value="홍길동">
+                        </div>
+
+                        <div class="form-row">
+                            <label>우선순위:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="priorityLow" name="priority" value="low">
+                                    <label for="priorityLow">낮음</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="priorityMedium" name="priority" value="medium">
+                                    <label for="priorityMedium">보통</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="priorityHigh" name="priority" value="high" checked>
+                                    <label for="priorityHigh">높음</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="productionLine">생산 라인:</label>
+                            <select id="productionLine" class="dropdown">
+                                <option value="">생산 라인을 선택하세요</option>
+                                <option value="line1">생산 라인 1</option>
+                                <option value="line2">생산 라인 2</option>
+                                <option value="line3">생산 라인 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label>상태:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="statusWaiting" name="status" value="waiting" checked>
+                                    <label for="statusWaiting">대기</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="statusInProgress" name="status" value="inProgress">
+                                    <label for="statusInProgress">진행 중</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="statusCompleted" name="status" value="completed">
+                                    <label for="statusCompleted">완료</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="file">파일 업로드:</label>
+                            <input type="file" id="file">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="button">저장</button>
+                            <button type="button" class="button">취소</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script th:src="@{/js/scripts.js}"></script>
+<th:block layout:fragment="script"></th:block>
+<script>
+    // Toggle Menu버튼 클릭 처리
+    document.querySelector("#sidebarToggle").addEventListener("click", function (e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (document.body.classList.contains('sb-sidenav-toggled')) {
+            document.body.classList.remove('sb-sidenav-toggled');
+        } else {
+            document.body.classList.add('sb-sidenav-toggled');
+        }
+    },false);
+</script>
+</body>
+</html>
