@@ -7,6 +7,7 @@ import org.example.projects.domain.Product;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.Priority;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,9 @@ import java.util.stream.Collectors;
 public class ProductionPlanDTO {
     private Long planId;
     private String productName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private Integer targetQty;
     private String manager;
@@ -38,11 +41,11 @@ public class ProductionPlanDTO {
                 .priority(productionPlan.getPriority())
                 .planStatus(productionPlan.getPlanStatus())
                 .fileUrl(productionPlan.getFileUrl())
-                .productionLineNames(productionPlan.getProductionLines().stream()
-                        .map(ProductionLine::getProductionLineName)
-                        .collect(Collectors.toList()))
                 .productNames(productionPlan.getProducts().stream()
                         .map(Product::getProductName)
+                        .collect(Collectors.toList()))
+                .productionLineNames(productionPlan.getProductionLines().stream()
+                        .map(ProductionLine::getProductionLineName)
                         .collect(Collectors.toList()))
                 .build();
     }

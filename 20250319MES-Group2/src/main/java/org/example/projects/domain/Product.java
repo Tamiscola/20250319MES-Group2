@@ -3,7 +3,6 @@ package org.example.projects.domain;
 import lombok.*;
 import org.example.projects.domain.enums.Status;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,11 +26,11 @@ public class Product {
     private String productName;
 
     @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
-    @JoinColumn(name = "production_line_code", nullable = false)
+    @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;
 
     @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
-    @JoinColumn(name = "production_plan_id", nullable = false)
+    @JoinColumn(name = "production_plan_id")
     private ProductionPlan productionPlan;
 
     @Enumerated(EnumType.STRING)

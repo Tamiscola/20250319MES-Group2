@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.projects.domain.ProductionLine;
+import org.example.projects.domain.ProductionPlan;
 import org.example.projects.domain.enums.Status;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class ProductionLineDTO {
     private Integer targetQty;
     private List<ProcessDTO> productionProcesses;
     private List<ProductDTO> products;
-    private Long productionPlanId;
+    private List<Long> productionPlanIds;
 
     public static ProductionLineDTO fromEntity(ProductionLine productionLine) {
         return ProductionLineDTO.builder()
@@ -47,8 +48,11 @@ public class ProductionLineDTO {
                 .products(productionLine.getProducts().stream()
                         .map(ProductDTO::fromEntity)
                         .collect(Collectors.toList()))
-                .productionPlanId(productionLine.getProductionPlan().getPlanId())
+                .productionPlanIds(productionLine.getProductionPlans().stream()
+                        .map(ProductionPlan::getPlanId)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
+
 

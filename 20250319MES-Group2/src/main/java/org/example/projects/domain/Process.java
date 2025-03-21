@@ -28,7 +28,7 @@ public class Process {
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_line_code", nullable = false)
+    @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;
 
     private boolean completed;

@@ -6,6 +6,7 @@ import org.example.projects.domain.enums.Priority;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,13 +20,20 @@ public class ProductionPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "production_plan_id")
-    private Long planId;
+    private Long planId;    // 생산계획 ID
 
-    @OneToMany(mappedBy = "productionPlan", cascade = CascadeType.ALL)
-    private List<ProductionLine> productionLines;
+    @ManyToMany
+    @JoinTable(
+            name = "production_plan_line",
+            joinColumns = @JoinColumn(name = "production_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "production_line_code")
+    )
+    @Builder.Default
+    private List<ProductionLine> productionLines = new ArrayList<>();   // 생산라인
 
-    @OneToMany(mappedBy = "productionPlan", cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToMany(mappedBy = "productionPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();     // 생산품목
 
     private String productName;  // 제품명
     private LocalDate startDate; // 생산 시작일
@@ -44,5 +52,3 @@ public class ProductionPlan {
     @Column(name = "file_url")
     private String fileUrl;      // 파일 경로 (파일 업로드 후 경로 저장)
 }
-
-

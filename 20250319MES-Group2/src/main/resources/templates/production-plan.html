@@ -99,6 +99,7 @@
                     <tr>
                         <th>번호</th>
                         <th>제품명</th>
+                        <th>생산라인</th>
                         <th>생산기간</th>
                         <th>목표수량</th>
                         <th>담당자</th>
@@ -110,8 +111,9 @@
                     <tbody>
                     <tr th:each="plan, iterStat : ${plans.content}">
                         <td th:text="${iterStat.count + (plans.number * plans.size)}"></td>
-                        <td th:text="${plan.productName}"></td>
-                        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${plan.productNames != null && !plan.productNames.empty ? plan.productNames[0] : plan.productName}"></td>
+                        <td th:text="${#strings.listJoin(plan.productionLineNames, ', ')}"></td>
+                        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' - ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
                         <td th:text="${plan.targetQty}"></td>
                         <td th:text="${plan.manager}"></td>
                         <td th:text="${plan.priority}"></td>
@@ -123,6 +125,7 @@
                     </tr>
                     </tbody>
                 </table>
+
 
                 <!-- 페이지네이션 -->
                 <div class="pagination">
@@ -142,66 +145,67 @@
                             th:onclick="'location.href=\'' + @{/plan/productionplan(page=${plans.number + 1})} + '\''">다음</button>
                 </div>
 
-                <!-- 생산계획 입력/수정 폼 -->
+                <!-- 생산계획 입력 폼 -->
                 <div class="form-container">
-                    <div class="section-title">생산계획 입력/수정</div>
-
-                    <form>
+                    <div class="section-title">생산계획 입력</div>
+                    <form th:action="@{/plan/create}" method="post" enctype="multipart/form-data">
                         <div class="form-row">
-                            <label for="product">제품 선택:</label>
-                            <select id="product" class="dropdown">
+                            <label for="productName">제품 선택:</label>
+                            <select id="productName" name="productName" class="dropdown" required>
                                 <option value="">제품을 선택하세요</option>
-                                <option value="semiconductorA">반도체 A</option>
-                                <option value="semiconductorB">반도체 B</option>
-                                <option value="semiconductorC">반도체 C</option>
+                                <option value="14nm FinFET Chip">14nm FinFET Chip</option>
+                                <option value="5nm AI Processor">5nm AI Processor</option>
+                                <option value="7nm Automotive SoC">7nm Automotive SoC</option>
+                                <option value="3nm High-Performance Computing Chip">3nm High-Performance Computing Chip</option>
+                                <option value="10nm IoT Sensor Chip">10nm IoT Sensor Chip</option>
                             </select>
                         </div>
 
                         <div class="form-row">
                             <label for="startDate">생산 시작일:</label>
-                            <input type="date" id="startDate">
+                            <input type="date" id="startDate" name="startDate" pattern="yyyy-MM-dd" required>
                         </div>
 
                         <div class="form-row">
                             <label for="endDate">생산 종료일:</label>
-                            <input type="date" id="endDate">
+                            <input type="date" id="endDate" name="endDate" pattern="yyyy-MM-dd" required>
                         </div>
 
                         <div class="form-row">
-                            <label for="targetQuantity">목표 수량:</label>
-                            <input type="number" id="targetQuantity" value="1000">
+                            <label for="targetQty">목표 수량:</label>
+                            <input type="number" id="targetQty" name="targetQty" value="1000" required>
                         </div>
 
                         <div class="form-row">
                             <label for="manager">생산 책임 담당자:</label>
-                            <input type="text" id="manager" value="홍길동">
+                            <input type="text" id="manager" name="manager" value="홍길동" required>
                         </div>
 
                         <div class="form-row">
                             <label>우선순위:</label>
                             <div class="radio-group">
                                 <div class="radio-item">
-                                    <input type="radio" id="priorityLow" name="priority" value="low">
+                                    <input type="radio" id="priorityLow" name="priority" value="LOW">
                                     <label for="priorityLow">낮음</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="priorityMedium" name="priority" value="medium">
+                                    <input type="radio" id="priorityMedium" name="priority" value="NORMAL">
                                     <label for="priorityMedium">보통</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="priorityHigh" name="priority" value="high" checked>
+                                    <input type="radio" id="priorityHigh" name="priority" value="HIGH" checked>
                                     <label for="priorityHigh">높음</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-row">
-                            <label for="productionLine">생산 라인:</label>
-                            <select id="productionLine" class="dropdown">
+                            <label for="productionLineName">생산 라인:</label>
+                            <select id="productionLineName" name="productionLineName" class="dropdown" required>
                                 <option value="">생산 라인을 선택하세요</option>
-                                <option value="line1">생산 라인 1</option>
-                                <option value="line2">생산 라인 2</option>
-                                <option value="line3">생산 라인 3</option>
+                                <option value="생산 라인 1">생산 라인 1</option>
+                                <option value="생산 라인 2">생산 라인 2</option>
+                                <option value="생산 라인 3">생산 라인 3</option>
                             </select>
                         </div>
 
@@ -209,15 +213,15 @@
                             <label>상태:</label>
                             <div class="radio-group">
                                 <div class="radio-item">
-                                    <input type="radio" id="statusWaiting" name="status" value="waiting" checked>
+                                    <input type="radio" id="statusWaiting" name="planStatus" value="STANDBY" checked>
                                     <label for="statusWaiting">대기</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="statusInProgress" name="status" value="inProgress">
+                                    <input type="radio" id="statusInProgress" name="planStatus" value="IN_PROGRESS">
                                     <label for="statusInProgress">진행 중</label>
                                 </div>
                                 <div class="radio-item">
-                                    <input type="radio" id="statusCompleted" name="status" value="completed">
+                                    <input type="radio" id="statusCompleted" name="planStatus" value="COMPLETED">
                                     <label for="statusCompleted">완료</label>
                                 </div>
                             </div>
@@ -225,7 +229,7 @@
 
                         <div class="form-row">
                             <label for="file">파일 업로드:</label>
-                            <input type="file" id="file">
+                            <input type="file" id="file" name="file">
                         </div>
 
                         <div class="form-actions">

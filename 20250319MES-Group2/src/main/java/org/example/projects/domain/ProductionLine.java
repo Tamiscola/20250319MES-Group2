@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "productionPlan")
 public class ProductionLine {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -36,7 +36,9 @@ public class ProductionLine {
 
     @Transient  // Marks this as non-persistent
     public Integer getTargetQty() {
-        return productionPlan != null ? productionPlan.getTargetQty() : null;   // 생산계획의 목표수량
+        return productionPlans.stream()
+                .map(ProductionPlan::getTargetQty)
+                .reduce(0, Integer::sum);  // Sum up all target quantities from associated plans
     }
 
     private Integer achievedQty;   // 달성 수량
@@ -48,9 +50,9 @@ public class ProductionLine {
     @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL)
     private List<Product> products;       // 생산품목
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_plan_id", nullable = false)
-    private ProductionPlan productionPlan;        // 생산계획 (ex: 월 목표수량)
+    @ManyToMany(mappedBy = "productionLines")
+    @Builder.Default
+    private List<ProductionPlan> productionPlans = new ArrayList<>();  // 생산계획 (ex: 월 목표수량)
 
     @Builder.Default
     private LocalDate regDate = LocalDate.now();    // 등록 일자

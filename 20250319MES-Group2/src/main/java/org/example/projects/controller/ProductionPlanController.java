@@ -9,10 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +28,19 @@ public class ProductionPlanController {
         Page<ProductionPlanDTO> planDTOPage = planPage.map(ProductionPlanDTO::fromEntity);
         model.addAttribute("plans", planDTOPage);
         return "production-plan";
+    }
+
+    @PostMapping("/create")
+    public String createPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
+                             @RequestParam("productionLineName") String productionLineName,
+                             @RequestParam(value = "file", required = false) MultipartFile file) {
+        try {
+            productionPlanService.createProductionPlan(productionPlanDTO, productionLineName, file);
+            return "redirect:/plan/productionplan";
+        } catch (Exception e) {
+            log.error("Error creating production plan", e);
+            return "error";
+        }
     }
 }
 
