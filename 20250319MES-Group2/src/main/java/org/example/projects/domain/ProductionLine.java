@@ -7,7 +7,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "production_lines")
@@ -52,7 +54,7 @@ public class ProductionLine {
 
     @ManyToMany(mappedBy = "productionLines")
     @Builder.Default
-    private List<ProductionPlan> productionPlans = new ArrayList<>();  // 생산계획 (ex: 월 목표수량)
+    private Set<ProductionPlan> productionPlans = new HashSet<>();  // 생산계획 (ex: 월 목표수량)
 
     @Builder.Default
     private LocalDate regDate = LocalDate.now();    // 등록 일자

@@ -1,5 +1,6 @@
 package org.example.projects.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.projects.domain.Product;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.ProductionPlan;
@@ -19,11 +20,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductionPlanService {
     @Autowired
     private ProductionPlanRepository productionPlanRepository;
@@ -38,8 +39,29 @@ public class ProductionPlanService {
     private ModelMapper modelMapper;
 
     //모든 생산계획 불러오기(페이지)
-    public Page<ProductionPlan> getAllPlans(Pageable pageable) {
-        return productionPlanRepository.findAll(pageable);
+    public Page<ProductionPlanDTO> getAllPlans(Pageable pageable) {
+        Page<ProductionPlan> planPage = productionPlanRepository.findAll(pageable);
+        Set<ProductionPlan> plansWithProductionLines = new HashSet<>(productionPlanRepository.findAllWithProductionLines());
+        Set<ProductionPlan> plansWithProducts = new HashSet<>(productionPlanRepository.findAllWithProducts());
+
+        Map<Long, Set<String>> productionLineMap = plansWithProductionLines.stream()
+                .collect(Collectors.toMap(
+                        ProductionPlan::getPlanId,
+                        p -> p.getProductionLines().stream().map(ProductionLine::getProductionLineName).collect(Collectors.toSet())
+                ));
+
+        Map<Long, Set<String>> productMap = plansWithProducts.stream()
+                .collect(Collectors.toMap(
+                        ProductionPlan::getPlanId,
+                        p -> p.getProducts().stream().map(Product::getProductName).collect(Collectors.toSet())
+                ));
+
+        return planPage.map(plan -> {
+            ProductionPlanDTO dto = ProductionPlanDTO.fromEntity(plan);
+            dto.setProductionLineNames(new HashSet<>(productionLineMap.getOrDefault(plan.getPlanId(), new HashSet<>())));
+            dto.setProductNames(new HashSet<>(productMap.getOrDefault(plan.getPlanId(), new HashSet<>())));
+            return dto;
+        });
     }
 
     // 모든 생산계획 Entity로서 불러오기
@@ -47,6 +69,12 @@ public class ProductionPlanService {
         return productionPlanRepository.findAll();
     }
 
+    // 생산계획 ID로 불러오기
+    public ProductionPlan getProductionPlanById(Long id) {
+        return productionPlanRepository.findById(id).orElse(null);
+    }
+
+    // 생산계획 추가 기능
     @Transactional
     public void createProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {
         // Find or create ProductionLine
@@ -93,5 +121,43 @@ public class ProductionPlanService {
         productionLineRepository.save(productionLine);
     }
 
+    @Transactional
+    public void modifyProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {
+        ProductionPlan plan = productionPlanRepository.findById(dto.getPlanId())
+                .orElseThrow(() -> new RuntimeException("Production plan not found"));
+
+        // Update basic fields
+        plan.setProductName(dto.getProductName());
+        plan.setStartDate(dto.getStartDate());
+        plan.setEndDate(dto.getEndDate());
+        plan.setTargetQty(dto.getTargetQty());
+        plan.setManager(dto.getManager());
+        plan.setPriority(dto.getPriority());
+        plan.setPlanStatus(dto.getPlanStatus());
+
+        // Handle file upload if a new file is provided
+        if (file != null && !file.isEmpty()) {
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String uploadDir = "uploads/";
+            FileUploadUtil.saveFile(uploadDir, fileName, file);
+            plan.setFileUrl(uploadDir + fileName);
+        }
+
+        // Handle production line change if necessary
+        ProductionLine newProductionLine = productionLineRepository.findByProductionLineName(productionLineName)
+                .orElseGet(() -> {
+                    ProductionLine line = new ProductionLine();
+                    line.setProductionLineName(productionLineName);
+                    line.setProductionLineStatus(Status.NORMAL);
+                    return productionLineRepository.save(line);
+                });
+
+        // Correctly manage the production lines
+        // Clear existing production lines before adding the new one
+        plan.getProductionLines().clear();  //  Remove all existing lines
+        plan.getProductionLines().add(newProductionLine);
+
+        productionPlanRepository.save(plan);
+    }
 }
 

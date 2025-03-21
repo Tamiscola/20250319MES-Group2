@@ -111,21 +111,20 @@
                     <tbody>
                     <tr th:each="plan, iterStat : ${plans.content}">
                         <td th:text="${iterStat.count + (plans.number * plans.size)}"></td>
-                        <td th:text="${plan.productNames != null && !plan.productNames.empty ? plan.productNames[0] : plan.productName}"></td>
-                        <td th:text="${#strings.listJoin(plan.productionLineNames, ', ')}"></td>
+                        <td><span th:text="${plan.productName}"></span></td>
+                        <td th:text="${plan.productionLineNames != null ? #strings.setJoin(plan.productionLineNames, ', ') : ''}"></td>
                         <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' - ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
                         <td th:text="${plan.targetQty}"></td>
                         <td th:text="${plan.manager}"></td>
                         <td th:text="${plan.priority}"></td>
                         <td th:text="${plan.planStatus}"></td>
                         <td class="action-btn">
-                            <button class="button">수정</button>
+                            <button class="button" th:onclick="'openModifyModal(\'' + ${plan.planId} + '\')'">수정</button>
                             <button class="button">삭제</button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
 
                 <!-- 페이지네이션 -->
                 <div class="pagination">
@@ -242,6 +241,105 @@
         </div>
     </div>
 </div>
+<!-- 생산계획 수정 창 -->
+<div id="modifyPlanModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>생산계획 수정</h2>
+        <form id="modifyPlanForm" th:action="@{/plan/modify}" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="modifyPlanId" name="planId">
+            <!-- Copy the form fields from the create form, but use different IDs -->
+            <div class="form-row">
+                <label for="modifyProductName">제품 선택:</label>
+                <select id="modifyProductName" name="productName" class="dropdown" required>
+                    <option value="">제품을 선택하세요</option>
+                    <option value="14nm FinFET Chip">14nm FinFET Chip</option>
+                    <option value="5nm AI Processor">5nm AI Processor</option>
+                    <option value="7nm Automotive SoC">7nm Automotive SoC</option>
+                    <option value="3nm High-Performance Computing Chip">3nm High-Performance Computing Chip</option>
+                    <option value="10nm IoT Sensor Chip">10nm IoT Sensor Chip</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyStartDate">생산 시작일:</label>
+                <input type="date" id="modifyStartDate" name="startDate" pattern="yyyy-MM-dd" required>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyEndDate">생산 종료일:</label>
+                <input type="date" id="modifyEndDate" name="endDate" pattern="yyyy-MM-dd" required>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyTargetQty">목표 수량:</label>
+                <input type="number" id="modifyTargetQty" name="targetQty" required>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyManager">생산 책임 담당자:</label>
+                <input type="text" id="modifyManager" name="manager" required>
+            </div>
+
+            <div class="form-row">
+                <label>우선순위:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="modifyPriorityLow" name="priority" value="LOW">
+                        <label for="modifyPriorityLow">낮음</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="modifyPriorityMedium" name="priority" value="NORMAL">
+                        <label for="modifyPriorityMedium">보통</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="modifyPriorityHigh" name="priority" value="HIGH">
+                        <label for="modifyPriorityHigh">높음</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyProductionLineName">생산 라인:</label>
+                <select id="modifyProductionLineName" name="productionLineName" class="dropdown" required>
+                    <option value="">생산 라인을 선택하세요</option>
+                    <option value="생산 라인 1">생산 라인 1</option>
+                    <option value="생산 라인 2">생산 라인 2</option>
+                    <option value="생산 라인 3">생산 라인 3</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label>상태:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="modifyStatusWaiting" name="planStatus" value="STANDBY">
+                        <label for="modifyStatusWaiting">대기</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="modifyStatusInProgress" name="planStatus" value="IN_PROGRESS">
+                        <label for="modifyStatusInProgress">진행 중</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="modifyStatusCompleted" name="planStatus" value="COMPLETED">
+                        <label for="modifyStatusCompleted">완료</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="modifyFile">파일 업로드:</label>
+                <input type="file" id="modifyFile" name="file">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button">수정</button>
+                <button type="button" class="button" onclick="closeModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
@@ -259,6 +357,38 @@
             document.body.classList.add('sb-sidenav-toggled');
         }
     },false);
+
+    // 생산계획 수정 창 열기 & 닫기 함수
+    function openModifyModal(planId) {
+        document.getElementById('modifyPlanModal').style.display = 'block';
+        document.getElementById('modifyPlanId').value = planId;
+
+        // Fetch plan details
+        fetch('/plan/getplan/' + planId)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('modifyProductName').value = data.productName;
+                document.getElementById('modifyStartDate').value = data.startDate;
+                document.getElementById('modifyEndDate').value = data.endDate;
+                document.getElementById('modifyTargetQty').value = data.targetQty;
+                document.getElementById('modifyManager').value = data.manager;
+                document.querySelector('input[name="priority"][value="' + data.priority + '"]').checked = true;
+                document.getElementById('modifyProductionLineName').value = data.productionLineNames[0];
+                document.querySelector('input[name="planStatus"][value="' + data.planStatus + '"]').checked = true;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function closeModal() {
+        document.getElementById('modifyPlanModal').style.display = 'none';
+    }
+
+    // 바깥 창 누를 때 창 닫기
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modifyPlanModal')) {
+            closeModal();
+        }
+    }
 </script>
 </body>
 </html>

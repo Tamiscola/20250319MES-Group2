@@ -7,7 +7,9 @@ import org.example.projects.domain.enums.Priority;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "production_plans")
@@ -29,11 +31,11 @@ public class ProductionPlan {
             inverseJoinColumns = @JoinColumn(name = "production_line_code")
     )
     @Builder.Default
-    private List<ProductionLine> productionLines = new ArrayList<>();   // 생산라인
+    private Set<ProductionLine> productionLines = new HashSet<>();   // 생산라인
 
     @OneToMany(mappedBy = "productionPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<Product> products = new ArrayList<>();     // 생산품목
+    private Set<Product> products = new HashSet<>();     // 생산품목
 
     private String productName;  // 제품명
     private LocalDate startDate; // 생산 시작일
