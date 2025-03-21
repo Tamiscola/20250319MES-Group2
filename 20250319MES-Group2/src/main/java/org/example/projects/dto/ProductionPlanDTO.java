@@ -8,24 +8,31 @@ import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.Priority;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class ProductionPlanDTO {
-    private Long productionId;       // 생산계획 ID
-    private Integer targetQty;       // 목표 생산 수량
-    private String manager;          // 생산 담당자
-    private Priority priority;       // 생산 우선순위
-    private PlanStatus planStatus;   // 생산계획 현황
-    private String fileUrl;          // 파일 경로 (if relevant to the use case)
-    private List<String> productionLineNames; // List of production line names
-    private List<String> productNames; // List of product names
+    private Long planId;
+    private String productName;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Integer targetQty;
+    private String manager;
+    private Priority priority;
+    private PlanStatus planStatus;
+    private String fileUrl;
+    private List<String> productionLineNames;
+    private List<String> productNames;
 
-    public static ProductionPlanDTO toDTO(ProductionPlan productionPlan) {
+    public static ProductionPlanDTO fromEntity(ProductionPlan productionPlan) {
         return ProductionPlanDTO.builder()
-                .productionId(productionPlan.getProductionId())
+                .planId(productionPlan.getPlanId())
+                .productName(productionPlan.getProductName())
+                .startDate(productionPlan.getStartDate())
+                .endDate(productionPlan.getEndDate())
                 .targetQty(productionPlan.getTargetQty())
                 .manager(productionPlan.getManager())
                 .priority(productionPlan.getPriority())
@@ -35,8 +42,10 @@ public class ProductionPlanDTO {
                         .map(ProductionLine::getProductionLineName)
                         .collect(Collectors.toList()))
                 .productNames(productionPlan.getProducts().stream()
-                        .map(Product::getProductName) // Assuming Product has a getName() method
+                        .map(Product::getProductName)
                         .collect(Collectors.toList()))
                 .build();
     }
 }
+
+

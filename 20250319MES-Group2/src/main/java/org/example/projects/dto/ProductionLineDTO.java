@@ -47,7 +47,7 @@ public class ProductionLineDTO {
                 .products(productionLine.getProducts().stream()
                         .map(ProductDTO::fromEntity)
                         .collect(Collectors.toList()))
-                .productionPlanId(productionLine.getProductionPlan().getProductionId())
+                .productionPlanId(productionLine.getProductionPlan().getPlanId())
                 .build();
     }
 }

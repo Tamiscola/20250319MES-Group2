@@ -101,39 +101,21 @@
                         <th>제품명</th>
                         <th>생산기간</th>
                         <th>목표수량</th>
+                        <th>담당자</th>
+                        <th>우선순위</th>
                         <th>상태</th>
                         <th>관리</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>반도체 A</td>
-                        <td>2025-03-20 ~ 03-25</td>
-                        <td>1000</td>
-                        <td>대기</td>
-                        <td class="action-btn">
-                            <button class="button">수정</button>
-                            <button class="button">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>반도체 B</td>
-                        <td>2025-03-22 ~ 03-28</td>
-                        <td>500</td>
-                        <td>진행 중</td>
-                        <td class="action-btn">
-                            <button class="button">수정</button>
-                            <button class="button">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>반도체 C</td>
-                        <td>2025-03-25 ~ 04-01</td>
-                        <td>2000</td>
-                        <td>대기</td>
+                    <tr th:each="plan, iterStat : ${plans.content}">
+                        <td th:text="${iterStat.count + (plans.number * plans.size)}"></td>
+                        <td th:text="${plan.productName}"></td>
+                        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' ~ ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${plan.targetQty}"></td>
+                        <td th:text="${plan.manager}"></td>
+                        <td th:text="${plan.priority}"></td>
+                        <td th:text="${plan.planStatus}"></td>
                         <td class="action-btn">
                             <button class="button">수정</button>
                             <button class="button">삭제</button>
@@ -144,10 +126,20 @@
 
                 <!-- 페이지네이션 -->
                 <div class="pagination">
-                    <button>이전</button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button>다음</button>
+                    <!-- Previous button -->
+                    <button th:if="${plans.hasPrevious()}"
+                            th:onclick="'location.href=\'' + @{/plan/productionplan(page=${plans.number - 1})} + '\''">이전</button>
+
+                    <!-- Page numbers -->
+                    <th:block th:each="pageNumber : ${#numbers.sequence(0, plans.totalPages - 1)}">
+                        <button th:text="${pageNumber + 1}"
+                                th:class="${pageNumber == plans.number} ? 'active'"
+                                th:onclick="'location.href=\'' + @{/plan/productionplan(page=${pageNumber})} + '\''"></button>
+                    </th:block>
+
+                    <!-- Next button -->
+                    <button th:if="${plans.hasNext()}"
+                            th:onclick="'location.href=\'' + @{/plan/productionplan(page=${plans.number + 1})} + '\''">다음</button>
                 </div>
 
                 <!-- 생산계획 입력/수정 폼 -->

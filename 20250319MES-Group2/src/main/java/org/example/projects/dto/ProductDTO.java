@@ -21,7 +21,7 @@ public class ProductDTO {
     private String regBy;
     private LocalDate regDate;
     private String productionLineCode;
-    private String productionPlanId;
+    private Long productionPlanId;
 
     public static ProductDTO fromEntity(Product product) {
         return ProductDTO.builder()
