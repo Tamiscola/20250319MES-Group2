@@ -1,6 +1,6 @@
-//package org.example.projects.domain.enums;
-//
-//public enum Status {
-//    NORMAL,
-//    DEFECTED
-//}
+package org.example.projects.domain.enums;
+
+public enum Status {
+    NORMAL,
+    DEFECTED
+}
