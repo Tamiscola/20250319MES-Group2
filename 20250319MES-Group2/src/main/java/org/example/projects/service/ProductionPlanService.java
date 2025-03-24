@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.Product;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.ProductionPlan;
+import org.example.projects.domain.enums.PlanStatus;
+import org.example.projects.domain.enums.Priority;
 import org.example.projects.domain.enums.Status;
 import org.example.projects.dto.ProductionPlanDTO;
 import org.example.projects.repository.ProductRepository;
@@ -190,6 +192,26 @@ public class ProductionPlanService {
             }
         }
         productionPlanRepository.delete(plan);
+    }
+
+    // 생산계획 검색 기능 (검색어, 우선순위, 상태)
+    public Page<ProductionPlanDTO> searchPlans(String keyword, String priority, String status, Pageable pageable) {
+        Priority priorityEnum = priority.isEmpty() ? null : Priority.valueOf(priority);
+        PlanStatus statusEnum = status.isEmpty() ? null : PlanStatus.valueOf(status);
+
+        Page<ProductionPlan> result;
+
+        if (priorityEnum != null && statusEnum != null) {
+            result = productionPlanRepository.findByProductNameContainingAndPriorityAndPlanStatus(keyword, priorityEnum, statusEnum, pageable);
+        } else if (priorityEnum != null) {
+            result = productionPlanRepository.findByProductNameContainingAndPriority(keyword, priorityEnum, pageable);
+        } else if (statusEnum != null) {
+            result = productionPlanRepository.findByProductNameContainingAndPlanStatus(keyword, statusEnum, pageable);
+        } else {
+            result = productionPlanRepository.findByProductNameContaining(keyword, pageable);
+        }
+
+        return result.map(ProductionPlanDTO::fromEntity);
     }
 }
 

@@ -78,5 +78,18 @@ public class ProductionPlanController {
         }
     }
 
+    @GetMapping("/search")
+    public String searchPlans(@RequestParam(required = false, defaultValue = "") String keyword,
+                              @RequestParam(required = false, defaultValue = "") String priority,
+                              @RequestParam(required = false, defaultValue = "") String status,
+                              @PageableDefault(size = 10, sort = "planId", direction = Sort.Direction.DESC) Pageable pageable,
+                              Model model) {
+        Page<ProductionPlanDTO> searchResult = productionPlanService.searchPlans(keyword, priority, status, pageable);
+        model.addAttribute("plans", searchResult);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedPriority", priority);
+        model.addAttribute("selectedStatus", status);
+        return "production-plan";
+    }
 }
 

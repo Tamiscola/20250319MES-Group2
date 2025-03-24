@@ -73,25 +73,26 @@
                 <div class="section-title">생산계획 목록</div>
 
                 <!-- 검색 및 필터 영역 -->
-                <div class="search-bar">
+                <form th:action="@{/plan/search}" method="get" class="search-bar">
                     <label for="search">검색:</label>
-                    <input type="text" id="search" placeholder="검색어 입력">
-                    <button class="button">검색</button>
+                    <input type="text" id="search" name="keyword" placeholder="검색어 입력">
 
-                    <select class="dropdown">
+                    <select name="priority" class="dropdown">
                         <option value="">우선순위 ▼</option>
-                        <option value="high">높음</option>
-                        <option value="medium">보통</option>
-                        <option value="low">낮음</option>
+                        <option value="HIGH">높음</option>
+                        <option value="NORMAL">보통</option>
+                        <option value="LOW">낮음</option>
                     </select>
 
-                    <select class="dropdown">
+                    <select name="status" class="dropdown">
                         <option value="">상태 ▼</option>
-                        <option value="waiting">대기</option>
-                        <option value="inProgress">진행 중</option>
-                        <option value="completed">완료</option>
+                        <option value="STANDBY">대기</option>
+                        <option value="IN_PROGRESS">진행 중</option>
+                        <option value="COMPLETED">완료</option>
                     </select>
-                </div>
+
+                    <button type="submit" class="button">검색</button>
+                </form>
 
                 <!-- 생산계획 테이블 -->
                 <table>
@@ -131,20 +132,17 @@
 
                 <!-- 페이지네이션 -->
                 <div class="pagination">
-                    <!-- Previous button -->
                     <button th:if="${plans.hasPrevious()}"
-                            th:onclick="'location.href=\'' + @{/plan/productionplan(page=${plans.number - 1})} + '\''">이전</button>
+                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number - 1})} + '\''">이전</button>
 
-                    <!-- Page numbers -->
                     <th:block th:each="pageNumber : ${#numbers.sequence(0, plans.totalPages - 1)}">
                         <button th:text="${pageNumber + 1}"
                                 th:class="${pageNumber == plans.number} ? 'active'"
-                                th:onclick="'location.href=\'' + @{/plan/productionplan(page=${pageNumber})} + '\''"></button>
+                                th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${pageNumber})} + '\''"></button>
                     </th:block>
 
-                    <!-- Next button -->
                     <button th:if="${plans.hasNext()}"
-                            th:onclick="'location.href=\'' + @{/plan/productionplan(page=${plans.number + 1})} + '\''">다음</button>
+                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number + 1})} + '\''">다음</button>
                 </div>
 
                 <!-- 생산계획 입력 폼 -->
