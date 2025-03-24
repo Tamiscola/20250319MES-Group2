@@ -23,12 +23,11 @@
         </div>
         <div class="list-group list-group-flush">
             <a class="list-group-item list-group-item-action list-group-item-light p-3"
-               th:href="@{/bio/Employeeslist}">사원관리</a>
+               th:href="@{/bio/Employeeslist}">생산관리 모니터링</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/bio/bioProductList}">제품관리</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/bio/BioInvShippinglist}">출고관리</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">생산계획관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/bio/BioInvShippinglist}">생산라인관리</a>
+
             <div th:if="${isAdmin}">
                 <a class="list-group-item list-group-item-action list-group-item-light p-3" th:onclick="location.href='/bio/admin'">관리자 페이지</a>
             </div>
