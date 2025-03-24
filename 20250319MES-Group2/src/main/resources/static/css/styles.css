@@ -324,6 +324,21 @@ tr:hover {
     background-color: #bb2d3b;
 }
 
+.no-results {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.no-results p {
+    font-size: 18px;
+    color: #666;
+}
+
+
 
 
 

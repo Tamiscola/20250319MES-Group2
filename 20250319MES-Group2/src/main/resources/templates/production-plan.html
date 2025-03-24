@@ -75,27 +75,27 @@
                 <!-- 검색 및 필터 영역 -->
                 <form th:action="@{/plan/search}" method="get" class="search-bar">
                     <label for="search">검색:</label>
-                    <input type="text" id="search" name="keyword" placeholder="검색어 입력">
+                    <input type="text" id="search" name="keyword" placeholder="검색어 입력" th:value="${keyword}">
 
                     <select name="priority" class="dropdown">
                         <option value="">우선순위 ▼</option>
-                        <option value="HIGH">높음</option>
-                        <option value="NORMAL">보통</option>
-                        <option value="LOW">낮음</option>
+                        <option value="HIGH" th:selected="${selectedPriority == 'HIGH'}">높음</option>
+                        <option value="NORMAL" th:selected="${selectedPriority == 'NORMAL'}">보통</option>
+                        <option value="LOW" th:selected="${selectedPriority == 'LOW'}">낮음</option>
                     </select>
 
                     <select name="status" class="dropdown">
                         <option value="">상태 ▼</option>
-                        <option value="STANDBY">대기</option>
-                        <option value="IN_PROGRESS">진행 중</option>
-                        <option value="COMPLETED">완료</option>
+                        <option value="STANDBY" th:selected="${selectedStatus == 'STANDBY'}">대기</option>
+                        <option value="IN_PROGRESS" th:selected="${selectedStatus == 'IN_PROGRESS'}">진행 중</option>
+                        <option value="COMPLETED" th:selected="${selectedStatus == 'COMPLETED'}">완료</option>
                     </select>
 
                     <button type="submit" class="button">검색</button>
                 </form>
 
                 <!-- 생산계획 테이블 -->
-                <table>
+                <table th:if="${!plans.empty}">
                     <thead>
                     <tr>
                         <th>번호</th>
@@ -130,8 +130,13 @@
                     </tbody>
                 </table>
 
+                <!-- No results message -->
+                <div th:if="${plans.empty}" class="no-results">
+                    <p>검색 결과가 없습니다.</p>
+                </div>
+
                 <!-- 페이지네이션 -->
-                <div class="pagination">
+                <div class="pagination" th:if="${!plans.empty}">
                     <button th:if="${plans.hasPrevious()}"
                             th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number - 1})} + '\''">이전</button>
 
