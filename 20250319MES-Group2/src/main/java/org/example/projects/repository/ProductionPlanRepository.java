@@ -18,11 +18,11 @@ public interface ProductionPlanRepository extends JpaRepository<ProductionPlan, 
     @EntityGraph(attributePaths = {"products", "productionLines"})
     Page<ProductionPlan> findAll(Pageable pageable);
 
-    @Query("SELECT DISTINCT p FROM ProductionPlan p LEFT JOIN FETCH p.productionLines")
-    List<ProductionPlan> findAllWithProductionLines();
-
-    @Query("SELECT DISTINCT p FROM ProductionPlan p LEFT JOIN FETCH p.products")
-    List<ProductionPlan> findAllWithProducts();
+//    @Query("SELECT DISTINCT p FROM ProductionPlan p LEFT JOIN FETCH p.productionLines")
+//    List<ProductionPlan> findAllWithProductionLines();
+//
+//    @Query("SELECT DISTINCT p FROM ProductionPlan p LEFT JOIN FETCH p.products")
+//    List<ProductionPlan> findAllWithProducts();
 
     Page<ProductionPlan> findByProductNameContainingAndPriorityAndPlanStatus(
             String keyword, Priority priority, PlanStatus status, Pageable pageable);

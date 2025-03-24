@@ -8,6 +8,7 @@ import org.example.projects.service.ProductionPlanService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -27,11 +28,20 @@ public class ProductionPlanController {
     private ModelMapper modelMapper;
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 10, sort = "planId", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ProductionPlanDTO> planDTOPage = productionPlanService.getAllPlans(pageable);
+    public String list(Model model,
+                       @RequestParam(defaultValue = "planId") String sort,
+                       @RequestParam(defaultValue = "DESC") String direction,
+                       @PageableDefault(size = 10) Pageable pageable) {
+
+        Sort.Direction sortDirection = Sort.Direction.fromString(direction);
+        Sort sortObj = Sort.by(sortDirection, sort);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
+
+        Page<ProductionPlanDTO> planDTOPage = productionPlanService.getAllPlans(sortedPageable);
         model.addAttribute("plans", planDTOPage);
         return "production-plan";
     }
+
 
     @PostMapping("/create")
     public String createPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,

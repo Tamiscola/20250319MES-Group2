@@ -48,25 +48,22 @@ public class ProductionPlanService {
     //모든 생산계획 불러오기(페이지)
     public Page<ProductionPlanDTO> getAllPlans(Pageable pageable) {
         Page<ProductionPlan> planPage = productionPlanRepository.findAll(pageable);
-        Set<ProductionPlan> plansWithProductionLines = new HashSet<>(productionPlanRepository.findAllWithProductionLines());
-        Set<ProductionPlan> plansWithProducts = new HashSet<>(productionPlanRepository.findAllWithProducts());
-
-        Map<Long, Set<String>> productionLineMap = plansWithProductionLines.stream()
-                .collect(Collectors.toMap(
-                        ProductionPlan::getPlanId,
-                        p -> p.getProductionLines().stream().map(ProductionLine::getProductionLineName).collect(Collectors.toSet())
-                ));
-
-        Map<Long, Set<String>> productMap = plansWithProducts.stream()
-                .collect(Collectors.toMap(
-                        ProductionPlan::getPlanId,
-                        p -> p.getProducts().stream().map(Product::getProductName).collect(Collectors.toSet())
-                ));
-
         return planPage.map(plan -> {
             ProductionPlanDTO dto = ProductionPlanDTO.fromEntity(plan);
-            dto.setProductionLineNames(new HashSet<>(productionLineMap.getOrDefault(plan.getPlanId(), new HashSet<>())));
-            dto.setProductNames(new HashSet<>(productMap.getOrDefault(plan.getPlanId(), new HashSet<>())));
+            if (plan.getProductionLines() != null) {
+                dto.setProductionLineNames(plan.getProductionLines().stream()
+                        .map(ProductionLine::getProductionLineName)
+                        .collect(Collectors.toSet()));
+            } else {
+                dto.setProductionLineNames(null); // Or an empty set, depending on your needs
+            }
+            if (plan.getProducts() != null) {
+                dto.setProductNames(plan.getProducts().stream()
+                        .map(Product::getProductName)
+                        .collect(Collectors.toSet()));
+            } else {
+                dto.setProductNames(null);  // Or an empty set
+            }
             return dto;
         });
     }

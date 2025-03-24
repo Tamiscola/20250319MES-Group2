@@ -338,6 +338,23 @@ tr:hover {
     color: #666;
 }
 
+.sortable::after {
+    content: '\25B2'; /* Up arrow */
+    margin-left: 5px;
+    visibility: hidden;
+}
+
+.sortable.asc::after {
+    visibility: visible;
+}
+
+.sortable.desc::after {
+    content: '\25BC'; /* Down arrow */
+    visibility: visible;
+}
+
+
+
 
 
 
