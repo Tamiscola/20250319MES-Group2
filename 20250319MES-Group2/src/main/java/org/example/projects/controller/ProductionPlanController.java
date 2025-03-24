@@ -66,5 +66,17 @@ public class ProductionPlanController {
             return "error";
         }
     }
+
+    @PostMapping("/delete/{id}")
+    public String deletePlan(@PathVariable Long id) {
+        try {
+            productionPlanService.deleteProductionPlan(id);
+            return "redirect:/plan/list";
+        } catch (Exception e) {
+            log.error("Error deleting production plan", e);
+            return "error";
+        }
+    }
+
 }
 

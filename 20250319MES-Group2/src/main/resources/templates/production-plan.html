@@ -120,7 +120,10 @@
                         <td th:text="${plan.planStatus}"></td>
                         <td class="action-btn">
                             <button class="button" th:onclick="'openModifyModal(\'' + ${plan.planId} + '\')'">수정</button>
-                            <button class="button">삭제</button>
+                            <form th:action="@{/plan/delete/{id}(id=${plan.planId})}" method="post" style="display: inline;">
+                                <button type="submit" class="button delete"
+                                        onclick="return confirm('정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')">삭제</button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>

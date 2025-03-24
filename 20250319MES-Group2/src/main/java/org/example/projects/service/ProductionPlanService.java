@@ -1,6 +1,7 @@
 package org.example.projects.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.Product;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.ProductionPlan;
@@ -20,10 +21,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class ProductionPlanService {
     @Autowired
@@ -121,6 +126,7 @@ public class ProductionPlanService {
         productionLineRepository.save(productionLine);
     }
 
+    // 생산계획 수정 기능
     @Transactional
     public void modifyProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {
         ProductionPlan plan = productionPlanRepository.findById(dto.getPlanId())
@@ -158,6 +164,32 @@ public class ProductionPlanService {
         plan.getProductionLines().add(newProductionLine);
 
         productionPlanRepository.save(plan);
+    }
+
+    // 생산계획 삭제 기능
+    @Transactional
+    public void deleteProductionPlan(Long id) {
+        ProductionPlan plan = productionPlanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Production plan not found with id: " + id));
+
+        // Detach from production lines
+        Set<ProductionLine> lines = new HashSet<>(plan.getProductionLines());
+        for (ProductionLine line : lines) {
+            line.getProductionPlans().remove(plan);
+            productionLineRepository.save(line);
+        }
+        plan.getProductionLines().clear();
+
+        // Delete file if exists
+        if (plan.getFileUrl() != null && !plan.getFileUrl().isEmpty()) {
+            try {
+                Path filePath = Paths.get(plan.getFileUrl());
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                log.warn("Failed to delete file: " + plan.getFileUrl(), e);
+            }
+        }
+        productionPlanRepository.delete(plan);
     }
 }
 

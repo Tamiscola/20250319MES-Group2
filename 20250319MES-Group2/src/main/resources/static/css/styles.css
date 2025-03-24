@@ -316,5 +316,14 @@ tr:hover {
     background-color: #396a93;
 }
 
+.button.delete {
+    background-color: #dc3545;
+}
+
+.button.delete:hover {
+    background-color: #bb2d3b;
+}
+
+
 
 
