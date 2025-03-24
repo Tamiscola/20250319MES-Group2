@@ -211,4 +211,3 @@ public class ProductionPlanService {
         return result.map(ProductionPlanDTO::fromEntity);
     }
 }
-

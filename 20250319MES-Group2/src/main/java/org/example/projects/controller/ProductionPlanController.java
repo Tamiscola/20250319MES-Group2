@@ -92,9 +92,17 @@ public class ProductionPlanController {
     public String searchPlans(@RequestParam(required = false, defaultValue = "") String keyword,
                               @RequestParam(required = false, defaultValue = "") String priority,
                               @RequestParam(required = false, defaultValue = "") String status,
-                              @PageableDefault(size = 10, sort = "planId", direction = Sort.Direction.DESC) Pageable pageable,
+                              @RequestParam(defaultValue = "planId") String sort,
+                              @RequestParam(defaultValue = "DESC") String direction,
+                              @PageableDefault(size = 10) Pageable pageable,
                               Model model) {
-        Page<ProductionPlanDTO> searchResult = productionPlanService.searchPlans(keyword, priority, status, pageable);
+
+        // Create a properly sorted pageable
+        Sort.Direction sortDirection = Sort.Direction.fromString(direction);
+        Sort sortObj = Sort.by(sortDirection, sort);
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
+
+        Page<ProductionPlanDTO> searchResult = productionPlanService.searchPlans(keyword, priority, status, sortedPageable);
         model.addAttribute("plans", searchResult);
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedPriority", priority);
@@ -102,4 +110,3 @@ public class ProductionPlanController {
         return "production-plan";
     }
 }
-
