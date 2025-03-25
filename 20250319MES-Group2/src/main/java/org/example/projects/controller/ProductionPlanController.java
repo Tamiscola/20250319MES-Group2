@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/plan")
 public class ProductionPlanController {
     private final ProductionPlanService productionPlanService;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -42,6 +44,7 @@ public class ProductionPlanController {
         return "production-plan";
     }
 
+    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/create")
     public String createPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
                              @RequestParam("productionLineName") String productionLineName,
@@ -63,6 +66,7 @@ public class ProductionPlanController {
         return ResponseEntity.ok(planDTO);
     }
 
+    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/modify")
     public String modifyPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
                              @RequestParam("productionLineName") String productionLineName,
@@ -76,6 +80,7 @@ public class ProductionPlanController {
         }
     }
 
+    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/delete/{id}")
     public String deletePlan(@PathVariable Long id) {
         try {
