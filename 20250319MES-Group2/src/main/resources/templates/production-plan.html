@@ -58,7 +58,7 @@
                         <button th:onclick="location.href='/login'">로그인</button>
                     </div>
                     <div class="logout" sec:authorize="isAuthenticated()">
-                        <h6>[[${#authentication?.name ?: '게스트'}]]님 환영합니다.</h6>
+                        <h6><span sec:authentication="name"></span>님 환영합니다.</h6>
                         <form th:action="@{/logout}" method="post">
                             <button type="submit">로그아웃</button>
                         </form>

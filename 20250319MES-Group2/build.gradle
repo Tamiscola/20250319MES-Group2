@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     // mybatis 사용
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
