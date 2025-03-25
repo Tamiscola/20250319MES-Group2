@@ -3,6 +3,7 @@ package org.example.projects.service.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    public CustomUserDetailsService() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     /**
      * 로그인 시에 무조건 실행되는 메소드
@@ -26,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         log.info("loadUserByUsername: " + username);
 
         String pw = passwordEncoder.encode("123");     // 1111 평문을 암호화함
