@@ -95,6 +95,10 @@
 <body>
 <div class="login-container">
     <h1>SemiCon Login</h1>
+    <!-- Logout 텍스트 출력 -->
+    <th:block th:if="${param.logout != null}">
+        <h1>Logout...</h1>
+    </th:block>
     <form th:action="@{/login}" method="post">
 <!--        <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
         <div class="input-group">
