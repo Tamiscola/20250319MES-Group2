@@ -82,7 +82,7 @@ public class ProductionPlanService {
     @Transactional
     public void createProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {
         // Find or create ProductionLine
-        ProductionLine productionLine = productionLineRepository.findByProductionLineName(productionLineName)
+        ProductionLine productionLine = productionLineRepository.findFirstByProductionLineName(productionLineName)
                 .orElseGet(() -> {
                     ProductionLine newProductionLine = new ProductionLine();
                     newProductionLine.setProductionLineName(productionLineName);

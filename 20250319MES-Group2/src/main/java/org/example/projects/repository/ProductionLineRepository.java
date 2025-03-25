@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ProductionLineRepository extends JpaRepository<ProductionLine, String> {
     Optional<ProductionLine> findByProductionLineName(String productionLineName);
+    Optional<ProductionLine> findFirstByProductionLineName(String productionLineName);
 }

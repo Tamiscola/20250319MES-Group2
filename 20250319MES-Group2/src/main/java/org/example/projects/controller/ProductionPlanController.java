@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,6 @@ public class ProductionPlanController {
         return "production-plan";
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public String createPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
                              @RequestParam("productionLineName") String productionLineName,
@@ -65,7 +63,6 @@ public class ProductionPlanController {
         return ResponseEntity.ok(planDTO);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/modify")
     public String modifyPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
                              @RequestParam("productionLineName") String productionLineName,
@@ -79,7 +76,6 @@ public class ProductionPlanController {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/delete/{id}")
     public String deletePlan(@PathVariable Long id) {
         try {
