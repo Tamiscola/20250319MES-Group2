@@ -74,20 +74,17 @@
 
                 <!-- 검색 및 필터 영역 -->
                 <form th:action="@{/line/search}" method="get" class="search-bar">
-                    <label for="search">검색:</label>
-                    <input type="text" id="search" name="keyword" placeholder="검색어 입력" th:value="${keyword}">
-
-                    <select name="status" class="dropdown">
+                    <select name="productionLineName" class="dropdown">
                         <option value="">LINE</option>
                         <option value="생산 라인 1" th:selected="${selectedProductionLineName == '생산 라인 1'}">생산 라인 1</option>
                         <option value="생산 라인 2" th:selected="${selectedProductionLineName == '생산 라인 2'}">생산 라인 2</option>
                         <option value="생산 라인 3" th:selected="${selectedProductionLineName == '생산 라인 3'}">생산 라인 3</option>
                     </select>
 
-                    <select name="status" class="dropdown">
+                    <select name="productionLineStatus" class="dropdown">
                         <option value="">STATUS</option>
-                        <option value="NORMAL" th:selected="${selectedStatus == 'NORMAL'}">NORMAL</option>
-                        <option value="DEFECTED" th:selected="${selectedStatus == 'DEFECTED'}">DEFECTED</option>
+                        <option value="NORMAL" th:selected="${selectedProductionLineStatus == 'NORMAL'}">NORMAL</option>
+                        <option value="DEFECTED" th:selected="${selectedProductionLineStatus == 'DEFECTED'}">DEFECTED</option>
                     </select>
 
                     <button type="submit" class="button">검색</button>
@@ -105,8 +102,8 @@
                         <th data-column="capacity" class="sortable">용량</th>
                         <th data-column="equipment" class="sortable">설비정보</th>
                         <th data-column="todayQty" class="sortable">금일목표수량</th>
-                        <th data-column="achievedQty" class="sortable">달성수량</th>
                         <th data-column="productLineStatus" class="sortable">상태</th>
+                        <th data-column="achievedQty" class="sortable">달성수량</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -119,14 +116,10 @@
                         <td th:text="${line.capacity}"></td>
                         <th th:text="${line.equipment}"></th>
                         <td th:text="${line.todayQty}"></td>
-                        <td th:text="${line.achievedQty}"></td>
                         <td th:text="${line.productionLineStatus}"></td>
+                        <td th:text="${line.achievedQty}"></td>
                         <td class="action-btn">
                             <button class="button" th:data-production-line-code="${line.productionLineCode}" onclick="openModifyModal(this.getAttribute('data-production-line-code'))">수정</button>
-                            <!--                            <form th:action="@{/plan/delete/{id}(id=${plan.planId})}" method="post" style="display: inline;">-->
-                            <!--                                <button type="submit" class="button delete"-->
-                            <!--                                        onclick="return confirm('정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')">삭제</button>-->
-                            <!--                            </form>-->
                         </td>
                     </tr>
                     </tbody>
@@ -144,18 +137,27 @@
 
                 <!-- 페이지네이션 -->
                 <div class="pagination" th:if="${!lines.empty}">
+                    <!-- 이전 페이지 버튼 -->
                     <button th:if="${lines.hasPrevious()}"
-                            th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number - 1})} + '\''">이전</button>
+                            th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${lines.number - 1})} + '\''">
+                        이전
+                    </button>
 
+                    <!-- 페이지 번호 버튼들 -->
                     <th:block th:each="pageNumber : ${#numbers.sequence(0, lines.totalPages - 1)}">
                         <button th:text="${pageNumber + 1}"
-                                th:class="${pageNumber == lines.number} ? 'active'"
-                                th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${pageNumber})} + '\''"></button>
+                                th:classappend="${pageNumber == lines.number} ? 'active' : ''"
+                                th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${pageNumber})} + '\''">
+                        </button>
                     </th:block>
 
+                    <!-- 다음 페이지 버튼 -->
                     <button th:if="${lines.hasNext()}"
-                            th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${lines.number + 1})} + '\''">다음</button>
+                            th:onclick="'location.href=\'' + @{/line/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${lines.number + 1})} + '\''">
+                        다음
+                    </button>
                 </div>
+
 
                 <!-- 생산라인 입력 폼 -->
                 <div class="form-container">
