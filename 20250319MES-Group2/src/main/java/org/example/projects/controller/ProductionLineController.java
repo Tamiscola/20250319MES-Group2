@@ -65,9 +65,9 @@ public class ProductionLineController {
         return ResponseEntity.ok(lineDTO);
     }
 
-    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
+//    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/modify")
-    public String modifyLine(@RequestBody ProductionLineDTO productionLineDTO) {
+    public String modifyLine(@ModelAttribute ProductionLineDTO productionLineDTO) {
         try {
             productionLineService.modifyProductionLine(productionLineDTO);
             return "redirect:/line/list";
@@ -76,5 +76,6 @@ public class ProductionLineController {
             return "error";
         }
     }
+
 
 }

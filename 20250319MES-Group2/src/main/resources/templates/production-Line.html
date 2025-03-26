@@ -122,7 +122,7 @@
                         <td th:text="${line.achievedQty}"></td>
                         <td th:text="${line.productionLineStatus}"></td>
                         <td class="action-btn">
-                            <button class="button" th:onclick="'openModifyModal(\'' + ${line.productionLineCode} + '\')'">수정</button>
+                            <button class="button" th:data-production-line-code="${line.productionLineCode}" onclick="openModifyModal(this.getAttribute('data-production-line-code'))">수정</button>
                             <!--                            <form th:action="@{/plan/delete/{id}(id=${plan.planId})}" method="post" style="display: inline;">-->
                             <!--                                <button type="submit" class="button delete"-->
                             <!--                                        onclick="return confirm('정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')">삭제</button>-->
@@ -234,7 +234,7 @@
             <input type="hidden" id="modifyProductionLineCode" name="productionLineCode">
             <div class="form-row">
                 <label for="modifyProductionLineName">라인명 선택:</label>
-                <select id="modifyProductionLineName" name="modifyProductionLineName" class="dropdown" required>
+                <select id="modifyProductionLineName" name="productionLineName" class="dropdown" required>
                     <option value="">라인명</option>
                     <option value="생산 라인 1">생산 라인 1</option>
                     <option value="생산 라인 2">생산 라인 2</option>
@@ -275,11 +275,11 @@
                 <label>상태:</label>
                 <div class="radio-group">
                     <div class="radio-item">
-                        <input type="radio" id="modifyStatusNormal" name="lineStatus" value="NORMAL">
+                        <input type="radio" id="modifyStatusNormal" name="productionLineStatus" value="NORMAL">
                         <label for="modifyStatusNormal">NORMAL</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="modifyStatusDefected" name="lineStatus" value="DEFECTED">
+                        <input type="radio" id="modifyStatusDefected" name="productionLineStatus" value="DEFECTED">
                         <label for="modifyStatusDefected">DEFECTED</label>
                     </div>
                 </div>
@@ -391,14 +391,14 @@
            type: 'GET',
            success: function(data) {
                // Populate the modal form fields with the retrieved data
-               $('#modifyproductionLineCode').val(data.productionLineCode);
-               $('#modifyproductionLineName').val(data.productionLineName);
+               $('#modifyProductionLineCode').val(data.productionLineCode);
+               $('#modifyProductionLineName option[value="' + data.productionLineName + '"]').prop('selected', true);
                $('#modifyLocation').val(data.modifyLocation);
                $('#modifyManager').val(data.manager);
                $('#modifyCapacity').val(data.capacity);
                $('#modifyEquipment').val(data.equipment);
                $('#modifyTodayQty').val(data.todayQty);
-               $('#modifyproductionLineStatus').val(data.productionLineStatus);
+               $('#modifyProductionLineStatus').val(data.productionLineStatus);
                // ... populate other fields as necessary
 
                // Show the modal
