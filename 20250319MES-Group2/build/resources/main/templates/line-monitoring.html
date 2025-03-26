@@ -10,33 +10,36 @@
     <h1>Production Line Monitoring</h1>
 
     <div class="production-lines-grid">
-        <!-- Semiconductor Line -->
-        <div class="production-line-card semiconductor">
+        <!-- Dynamically generate production line cards -->
+        <div th:each="line : ${productionLines}" th:class="'production-line-card ' + ${line.productionLineName.toLowerCase().replace(' ', '-')}">
             <div class="line-header">
-                <h2>Semiconductor Line</h2>
-                <span class="status normal">Normal</span>
+                <h2 th:text="${line.productionLineName}">Production Line</h2>
+                <span th:class="'status ' + ${line.productionLineStatus.name().toLowerCase()}" th:text="${line.productionLineStatus}">Status</span>
+
             </div>
 
             <div class="progress-container">
-                <div class="circular-progress" data-progress="75">
-                    <span class="progress-value">75%</span>
+                <div class="circular-progress" th:data-progress="${line.progress}">
+                    <span class="progress-value" th:text="${line.progress + '%'}">0%</span>
                 </div>
             </div>
 
             <div class="line-summary">
                 <div class="summary-item">
                     <span>Capacity</span>
-                    <strong>100/hr</strong>
+                    <strong th:text="${line.capacity + '/hr'}">0/hr</strong>
                 </div>
                 <div class="summary-item">
                     <span>Today's Production</span>
-                    <strong>750 units</strong>
+                    <strong th:text="${line.todayQty + ' units'}">0 units</strong>
                 </div>
             </div>
 
             <button class="details-toggle">View Details</button>
+            <button class="simulate-button" th:data-line-code="${line.productionLineCode}">Simulate</button>
 
             <div class="line-details">
+                <!-- Add more dynamic details here -->
                 <div class="detail-section">
                     <h3>Line Details</h3>
                     <table>
@@ -54,82 +57,12 @@
                         </tr>
                     </table>
                 </div>
-
-                <div class="detail-section">
-                    <h3>Current Production Plans</h3>
-                    <ul>
-                        <li>Monthly Target: 22,500 units</li>
-                        <li>Weekly Goal: 5,625 units</li>
-                        <li>Daily Target: 1,125 units</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Memory Chip Line -->
-        <div class="production-line-card memory-chip">
-            <div class="line-header">
-                <h2>Memory Chip Line</h2>
-                <span class="status normal">Normal</span>
-            </div>
-
-            <div class="progress-container">
-                <div class="circular-progress" data-progress="62">
-                    <span class="progress-value">62%</span>
-                </div>
-            </div>
-
-            <div class="line-summary">
-                <div class="summary-item">
-                    <span>Capacity</span>
-                    <strong>80/hr</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Today's Production</span>
-                    <strong>496 units</strong>
-                </div>
-            </div>
-
-            <button class="details-toggle">View Details</button>
-
-            <div class="line-details">
-                <!-- Similar structure to Semiconductor Line -->
-            </div>
-        </div>
-
-        <!-- Processor Line -->
-        <div class="production-line-card processor">
-            <div class="line-header">
-                <h2>Processor Line</h2>
-                <span class="status defected">Defected</span>
-            </div>
-
-            <div class="progress-container">
-                <div class="circular-progress" data-progress="45">
-                    <span class="progress-value">45%</span>
-                </div>
-            </div>
-
-            <div class="line-summary">
-                <div class="summary-item">
-                    <span>Capacity</span>
-                    <strong>60/hr</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Today's Production</span>
-                    <strong>270 units</strong>
-                </div>
-            </div>
-
-            <button class="details-toggle">View Details</button>
-
-            <div class="line-details">
-                <!-- Similar structure to other lines -->
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:src="@{/js/production-line-monitor.js}"></script>
 </body>
 </html>

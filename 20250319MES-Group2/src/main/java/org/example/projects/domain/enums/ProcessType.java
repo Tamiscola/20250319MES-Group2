@@ -6,5 +6,6 @@ public enum ProcessType {
     PHOTOLITHOGRAPHY,
     ETCHING,
     DOPING,
-    ANNEALING
+    ANNEALING,
+    COMPLETED;
 }

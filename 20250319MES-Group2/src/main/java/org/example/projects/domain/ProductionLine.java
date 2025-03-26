@@ -58,4 +58,6 @@ public class ProductionLine {
 
     @Builder.Default
     private LocalDate regDate = LocalDate.now();    // 등록 일자
+
+    private double progress;  // 진행률
 }

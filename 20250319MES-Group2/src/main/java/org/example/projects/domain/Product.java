@@ -25,11 +25,11 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
-    @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;
 
-    @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_plan_id")
     private ProductionPlan productionPlan;
 
@@ -43,4 +43,8 @@ public class Product {
 
     @Builder.Default
     private LocalDate regDate = LocalDate.now();
+
+    @Column(nullable = false)
+    private Integer quantity;
 }
+
