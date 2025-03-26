@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Factory Production Line Monitoring</title>
+    <link rel="stylesheet" th:href="@{/css/production-line-monitor.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Production Line Monitoring Dashboard</h1>
+
+    <div class="production-lines-grid">
+        <!-- Production Line Card Template -->
+        <div th:each="line : ${productionLines}" class="production-line-card">
+            <div class="card-header">
+                <h2 th:text="${line.productionLineName}">Line Name</h2>
+                <span th:text="${line.location}" class="location">Location</span>
+            </div>
+
+            <div class="card-body">
+                <div class="gauge-container">
+                    <svg class="gauge" viewBox="0 0 100 50">
+                        <path class="gauge-background" d="M10 50 Q50 0, 90 50" />
+                        <path class="gauge-progress" th:attr="data-progress=${line.achievedQty != null && line.targetQty > 0 ? (line.achievedQty * 100 / line.targetQty) : 0}"
+                              d="M10 50 Q50 0, 90 50" />
+                    </svg>
+                    <div class="gauge-value">
+                        <span th:text="${line.achievedQty != null ? line.achievedQty : 0}">0</span>
+                        <span class="total">/ [[${line.targetQty}]]</span>
+                    </div>
+                </div>
+
+                <div class="line-details">
+                    <div class="detail-item">
+                        <span class="label">Status:</span>
+                        <span th:text="${line.productionLineStatus}"
+                              th:class="${line.productionLineStatus == 'NORMAL' ? 'status-normal' : 'status-defected'}">
+                                Status
+                            </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Manager:</span>
+                        <span th:text="${line.manager}">Manager Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Capacity:</span>
+                        <span th:text="${line.capacity + ' units/hour'}">Capacity</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="details-btn">View Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const gaugeProgressElements = document.querySelectorAll('.gauge-progress');
+
+    gaugeProgressElements.forEach(element => {
+        const progress = parseInt(element.getAttribute('data-progress'));
+        const maxDashOffset = 160;
+
+        // Calculate the stroke-dashoffset based on progress percentage
+        const dashOffset = maxDashOffset - (maxDashOffset * (progress / 100));
+
+        // Animate the gauge
+        element.style.strokeDashoffset = dashOffset;
+    });
+});
+</script>
+</body>
+</html>
