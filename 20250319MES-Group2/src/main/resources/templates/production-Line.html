@@ -122,7 +122,7 @@
                         <td th:text="${line.achievedQty}"></td>
                         <td th:text="${line.productionLineStatus}"></td>
                         <td class="action-btn">
-                            <button class="button" th:onclick="'openModifyModal(\'' + ${line.productionLineCode} + '\')'">수정</button>
+                            <button class="button" th:data-production-line-code="${line.productionLineCode}" onclick="openModifyModal(this.getAttribute('data-production-line-code'))">수정</button>
                             <!--                            <form th:action="@{/plan/delete/{id}(id=${plan.planId})}" method="post" style="display: inline;">-->
                             <!--                                <button type="submit" class="button delete"-->
                             <!--                                        onclick="return confirm('정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')">삭제</button>-->
@@ -391,14 +391,15 @@
            type: 'GET',
            success: function(data) {
                // Populate the modal form fields with the retrieved data
-               $('#modifyproductionLineCode').val(data.productionLineCode);
-               $('#modifyproductionLineName').val(data.productionLineName);
+               $('#modifyProductionLineCode').val(data.productionLineCode);
+               // Find the option with the matching value and set it as selected
+               $('#modifyProductionLineName option[value="' + data.productionLineName + '"]').prop('selected', true);
                $('#modifyLocation').val(data.modifyLocation);
                $('#modifyManager').val(data.manager);
                $('#modifyCapacity').val(data.capacity);
                $('#modifyEquipment').val(data.equipment);
                $('#modifyTodayQty').val(data.todayQty);
-               $('#modifyproductionLineStatus').val(data.productionLineStatus);
+               $('#modifyProductionLineStatus').val(data.productionLineStatus);
                // ... populate other fields as necessary
 
                // Show the modal
