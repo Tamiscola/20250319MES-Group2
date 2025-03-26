@@ -67,7 +67,7 @@ public class ProductionLineController {
 
     @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/modify")
-    public String modifyLine(@RequestBody ProductionLineDTO productionLineDTO) {
+    public String modifyLine(@ModelAttribute ProductionLineDTO productionLineDTO) {
         try {
             productionLineService.modifyProductionLine(productionLineDTO);
             return "redirect:/line/list";
