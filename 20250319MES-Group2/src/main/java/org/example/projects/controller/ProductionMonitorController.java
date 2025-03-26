@@ -35,6 +35,9 @@ public class ProductionMonitorController {
     @Autowired
     private ManufacturingSimulator simulator;
 
+    @Autowired
+    private ProductionPlanRepository productionPlanRepository;
+
     @GetMapping("/list")
     public String list(Model model) {
         List<ProductionLine> lines = productionLineRepository.findAll();
@@ -51,16 +54,11 @@ public class ProductionMonitorController {
                 .orElseThrow(() -> new RuntimeException("Production line not found"));
         log.info("Production line found: {} : {}", productionLineCode, line);
 
-        // If processType is null, set a default value
-        if (line.getProductionProcesses() == null || line.getProductionProcesses().isEmpty()) {
-            throw new RuntimeException("No processes assigned to the production line. Please configure processes first.");
-        }
-
         // Simulate production for the given line
-        simulator.simulateProductionPlan(line.getProductionPlans().iterator().next()); // Assuming one plan per line for simplicity
+        simulator.simulateProductionPlan(line.getProductionPlans().iterator().next());
         log.info("Simulation completed");
 
-        return "redirect:/monitor/list"; // Redirect to a page showing all production lines or progress
+        return "redirect:/monitor/list";
     }
 
     // API to get progress of all production lines

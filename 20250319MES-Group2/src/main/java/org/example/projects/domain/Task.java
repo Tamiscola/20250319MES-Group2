@@ -25,7 +25,8 @@ public class Task {
     @Column(nullable = false)
     private TaskType taskType;
 
-    private boolean completed;
+    @Builder.Default
+    private boolean completed = false;
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private int progress;

@@ -58,32 +58,31 @@ document.addEventListener('DOMContentLoaded', () => {
         element.style.background = `conic-gradient(#3498db ${progress * 3.6}deg, #ededed 0deg)`;
     }
 
-    // Periodic progress update
-    function updateProgress() {
-        $.get('/monitor/api/lines/progress', (data) => {
-            data.forEach(line => {
-                const lineCard = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"]`);
-                if (lineCard) {
-                    const progressElement = lineCard.querySelector('.circular-progress');
-                    const statusElement = lineCard.querySelector('.status');
+    // Polling function to update progress bars and statuses dynamically
+    function startProgressPolling() {
+        setInterval(function () {
+            fetch('/monitor/api/lines/progress')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(line => {
+                        const progressElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .circular-progress`);
+                        const progressValueElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .progress-value`);
+                        const statusElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .status`);
 
-                    // Use the progress value from the server
-                    updateCircularProgress(progressElement, line.progress);
+                        if (progressElement && progressValueElement && statusElement) {
+                            const cappedProgress = Math.min(line.progress, 100).toFixed(1); // Cap at 100%
+                            progressElement.dataset.progress = cappedProgress;
+                            progressValueElement.textContent = `${cappedProgress}%`;
+                            progressElement.style.background = `conic-gradient(#3498db ${cappedProgress * 3.6}deg, #ededed 0deg)`;
 
-                    statusElement.textContent = line.status;
-                    statusElement.className = `status ${line.status.toLowerCase()}`;
-
-                    // Disable simulate button if the line is DEFECTED
-                    const simulateButton = lineCard.querySelector('.simulate-button');
-                    simulateButton.disabled = (line.status === 'DEFECTED');
-                }
-            });
-        });
+                            statusElement.textContent = line.status;
+                            statusElement.className = `status ${line.status.toLowerCase()}`;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching line progress:', error));
+        }, 3000); // Poll every 3 seconds to match backend updates
     }
 
-    // Initial update
-    updateProgress();
-
-    // Update progress every 2 seconds
-    setInterval(updateProgress, 2000);
+    startProgressPolling();
 });
