@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar-->
+    <div class="border-end" id="sidebar-wrapper">
+        <div class="sidebar-heading border-bottom custom-sidebar-heading" style="text-align: center; height: 10vh;">
+            <a class="a-tag" th:href="@{/bio/dashboard}"><h1>Bio One</h1></a>
+        </div>
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item"
+               th:href="@{/bio/Employeeslist}">사원관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:href="@{/bio/bioProductList}">제품관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Events</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:href="@{/bio/BioInvShippinglist}">출고관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Profile</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" href="#!">Status</a>
+            <div th:if="${isAdmin}">
+                <a class="list-group-item list-group-item-action list-group-item-light p-3 custom-menu-item" th:onclick="location.href='/bio/admin'">관리자 페이지</a>
+            </div>
+
+            <div class="company-information">
+                <p><b>Bio One</b></p>
+                <p><b>경기도 성남시 분당구 190번길 45</b></p>
+                <p><b>Tel : 031-250-8900</b></p>
+                <p><b>Fax : 031-250-8901</b></p>
+                <p><b>사업자등록번호 : 111-23-45678</b></p>
+            </div>
+        </div>
+    </div>
+    <!-- Page content wrapper-->
+    <div id="page-content-wrapper">
+        <!-- Top navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom">
+            <div class="container-fluid">
+                <!--<button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>-->
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                    </ul>
+                </div>
+                <!-- login 관련 추가 -->
+                <div class="loginInfo">
+                    <div class="login" th:if="${user == null}">
+                        <button th:onclick="location.href='/bio/login'">로그인</button>
+                    </div>
+                    <div class="logout" th:unless="${user == null}">
+                        <h6>[[${employeeName}]]님 환영합니다.</h6>
+                        <button th:onclick="location.href='/bio/logout'">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Page content-->
+        <div class="container-fluid" layout:fragment="content">
+            <h1 class="mt-4">Simple Sidebar</h1>
+            <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
+            <p>
+                Make sure to keep all page content within the
+                <code>#page-content-wrapper</code>
+                . The top navbar is optional, and just for demonstration. Just create an element with the
+                <code>#sidebarToggle</code>
+                ID which will toggle the menu when clicked.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+<th:block layout:fragment="script"></th:block>
+<script>
+    // Toggle Menu버튼 클릭 처리
+    document.querySelector("#sidebarToggle").addEventListener("click", function (e){
+       e.preventDefault();
+       e.stopPropagation();
+
+       if (document.body.classList.contains('sb-sidenav-toggled')) {
+         document.body.classList.remove('sb-sidenav-toggled');
+       } else {
+         document.body.classList.add('sb-sidenav-toggled');
+       }
+    },false);
+</script>
+</body>
+</html>

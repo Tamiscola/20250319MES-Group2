@@ -10,6 +10,10 @@ import org.example.projects.domain.enums.Status;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.example.projects.domain.enums.Status;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -26,9 +30,8 @@ public class ProductionLineDTO {
     private Integer achievedQty;
     private Integer todayQty;
     private Integer targetQty;
-    private List<ProcessDTO> productionProcesses;
-    private List<ProductDTO> products;
-    private List<Long> productionPlanIds;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate regDate;
 
     public static ProductionLineDTO fromEntity(ProductionLine productionLine) {
         return ProductionLineDTO.builder()
@@ -42,15 +45,7 @@ public class ProductionLineDTO {
                 .achievedQty(productionLine.getAchievedQty())
                 .todayQty(productionLine.getTodayQty())
                 .targetQty(productionLine.getTargetQty())
-                .productionProcesses(productionLine.getProductionProcesses().stream()
-                        .map(ProcessDTO::fromEntity)
-                        .collect(Collectors.toList()))
-                .products(productionLine.getProducts().stream()
-                        .map(ProductDTO::fromEntity)
-                        .collect(Collectors.toList()))
-                .productionPlanIds(productionLine.getProductionPlans().stream()
-                        .map(ProductionPlan::getPlanId)
-                        .collect(Collectors.toList()))
+                .regDate(productionLine.getRegDate())
                 .build();
     }
 }
