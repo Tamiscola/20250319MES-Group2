@@ -45,7 +45,7 @@ public class ProductionLineController {
         return "production-line";
     }
 
-    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
+//    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/create")
     public String createLine(@ModelAttribute ProductionLineDTO productionLineDTO) {
         try {
