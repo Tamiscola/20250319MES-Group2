@@ -1,0 +1,144 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --background-color: #ecf0f1;
+    --normal-status-color: #2ecc71;
+    --defected-status-color: #e74c3c;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.production-lines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.production-line-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.production-line-card:hover {
+    transform: scale(1.02);
+}
+
+.line-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status.normal {
+    background-color: var(--normal-status-color);
+    color: white;
+}
+
+.status.defected {
+    background-color: var(--defected-status-color);
+    color: white;
+}
+
+.progress-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.circular-progress {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(var(--secondary-color) 0%, #ededed 0%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circular-progress::before {
+    content: '';
+    position: absolute;
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 2em;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.line-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.details-toggle {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.details-toggle:hover {
+    background-color: #2980b9;
+}
+
+.line-details {
+    display: none;
+    margin-top: 15px;
+}
+
+.line-details.active {
+    display: block;
+}
+
+.detail-section {
+    margin-bottom: 15px;
+}
+
+.detail-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.detail-section table td {
+    padding: 8px;
+    border-bottom: 1px solid #f1f1f1;
+}

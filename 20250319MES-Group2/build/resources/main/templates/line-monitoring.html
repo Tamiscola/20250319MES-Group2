@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Factory Production Line Monitor</title>
+    <link rel="stylesheet" th:href="@{/css/production-line-monitor.css}">
+</head>
+<body>
+<div class="dashboard-container">
+    <h1>Production Line Monitoring</h1>
+
+    <div class="production-lines-grid">
+        <!-- Semiconductor Line -->
+        <div class="production-line-card semiconductor">
+            <div class="line-header">
+                <h2>Semiconductor Line</h2>
+                <span class="status normal">Normal</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="circular-progress" data-progress="75">
+                    <span class="progress-value">75%</span>
+                </div>
+            </div>
+
+            <div class="line-summary">
+                <div class="summary-item">
+                    <span>Capacity</span>
+                    <strong>100/hr</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Today's Production</span>
+                    <strong>750 units</strong>
+                </div>
+            </div>
+
+            <button class="details-toggle">View Details</button>
+
+            <div class="line-details">
+                <div class="detail-section">
+                    <h3>Line Details</h3>
+                    <table>
+                        <tr>
+                            <td>Location</td>
+                            <td>Building A, Floor 2</td>
+                        </tr>
+                        <tr>
+                            <td>Manager</td>
+                            <td>Kim Jae-sung</td>
+                        </tr>
+                        <tr>
+                            <td>Equipment</td>
+                            <td>Advanced Lithography System</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Current Production Plans</h3>
+                    <ul>
+                        <li>Monthly Target: 22,500 units</li>
+                        <li>Weekly Goal: 5,625 units</li>
+                        <li>Daily Target: 1,125 units</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Chip Line -->
+        <div class="production-line-card memory-chip">
+            <div class="line-header">
+                <h2>Memory Chip Line</h2>
+                <span class="status normal">Normal</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="circular-progress" data-progress="62">
+                    <span class="progress-value">62%</span>
+                </div>
+            </div>
+
+            <div class="line-summary">
+                <div class="summary-item">
+                    <span>Capacity</span>
+                    <strong>80/hr</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Today's Production</span>
+                    <strong>496 units</strong>
+                </div>
+            </div>
+
+            <button class="details-toggle">View Details</button>
+
+            <div class="line-details">
+                <!-- Similar structure to Semiconductor Line -->
+            </div>
+        </div>
+
+        <!-- Processor Line -->
+        <div class="production-line-card processor">
+            <div class="line-header">
+                <h2>Processor Line</h2>
+                <span class="status defected">Defected</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="circular-progress" data-progress="45">
+                    <span class="progress-value">45%</span>
+                </div>
+            </div>
+
+            <div class="line-summary">
+                <div class="summary-item">
+                    <span>Capacity</span>
+                    <strong>60/hr</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Today's Production</span>
+                    <strong>270 units</strong>
+                </div>
+            </div>
+
+            <button class="details-toggle">View Details</button>
+
+            <div class="line-details">
+                <!-- Similar structure to other lines -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/production-line-monitor.js}"></script>
+</body>
+</html>
