@@ -9,7 +9,9 @@ import org.example.projects.domain.enums.Status;
 import org.example.projects.domain.enums.TaskType;
 import org.example.projects.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class ManufacturingSimulator {
 
     @Autowired
     private ProductionLineRepository productionLineRepository;
+
+    @Autowired
+    private ProductionPlanService productionPlanService;
 
     private void resetTasks(ProductionLine line) {
         for (Process process : line.getProductionProcesses()) {
@@ -67,7 +72,10 @@ public class ManufacturingSimulator {
     }
 
     // Simulate production plan execution
-    public void simulateProductionPlan(ProductionPlan plan) {
+    @Async("simulationExecutor")
+    @Transactional(readOnly = true)
+    public void simulateProductionPlan(Long planId) {
+        ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
         productionPlanRepository.save(plan);
         Product product = initializeProduct(plan);
 

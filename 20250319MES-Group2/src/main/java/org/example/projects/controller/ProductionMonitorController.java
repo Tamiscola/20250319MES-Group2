@@ -12,6 +12,7 @@ import org.example.projects.repository.ProductionPlanRepository;
 import org.example.projects.service.ManufacturingSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,42 +47,42 @@ public class ProductionMonitorController {
         return "line-monitoring";
     }
 
-    // Simulate production for a specific production line
     @GetMapping("/simulate/{productionLineCode}")
-    public String simulateProductionLine(@PathVariable String productionLineCode) {
+    @ResponseBody
+    public ResponseEntity<String> simulateProductionLine(@PathVariable String productionLineCode) {
         log.info("Simulating production for line with code: {}", productionLineCode);
 
         ProductionLine line = productionLineRepository.findById(productionLineCode)
                 .orElseThrow(() -> new RuntimeException("Production line not found"));
         log.info("Production line found: {} : {}", productionLineCode, line);
 
-        // Simulate production for the given line
-        simulator.simulateProductionPlan(line.getProductionPlans().iterator().next());
-        log.info("Simulation completed");
+        // Get the first production plan for this line
+        ProductionPlan plan = line.getProductionPlans().stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No production plan found for this line"));
 
-        return "redirect:/monitor/list";
+        // Start simulation in background thread
+        simulator.simulateProductionPlan(plan.getPlanId());
+
+        return ResponseEntity.ok("Simulation started");
     }
 
+
     // API to get progress of all production lines
-    @GetMapping("/api/lines/progress")
+    @GetMapping("/api/lines/progress/{lineCode}")
     @ResponseBody
-    public List<Map<String, Object>> getLinesProgress() {
-        List<ProductionLine> lines = productionLineRepository.findAll();
-        return lines.stream()
-                .map(line -> {
-                    Map<String, Object> progressData = new HashMap<>();
-                    progressData.put("productionLineCode", line.getProductionLineCode());
-                    progressData.put("productionLineName", line.getProductionLineName());
-                    progressData.put("status", line.getProductionLineStatus());
-                    progressData.put("capacity", line.getCapacity());
+    public Map<String, Object> getLineProgress(@PathVariable String lineCode) {
+        ProductionLine line = productionLineRepository.findById(lineCode)
+                .orElseThrow(() -> new RuntimeException("Production line not found"));
 
-                    // Calculate overall progress for the line based on its processes and tasks
-                    double overallProgress = calculateOverallProgressForLine(line);
-                    progressData.put("progress", overallProgress);
+        Map<String, Object> progressData = new HashMap<>();
+        progressData.put("productionLineCode", line.getProductionLineCode());
+        progressData.put("productionLineName", line.getProductionLineName());
+        progressData.put("status", line.getProductionLineStatus());
+        progressData.put("capacity", line.getCapacity());
+        progressData.put("progress", calculateOverallProgressForLine(line));
 
-                    return progressData;
-                })
-                .collect(Collectors.toList());
+        return progressData;
     }
 
     // Helper method to calculate overall progress for a production line

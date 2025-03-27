@@ -78,6 +78,13 @@ public class ProductionPlanService {
         return productionPlanRepository.findById(id).orElse(null);
     }
 
+    // Product, ProductionLine 과 함께 생산계획 ID로 불러오기
+    @Transactional(readOnly = true)
+    public ProductionPlan getProductionPlanWithAssociations(Long id) {
+        return productionPlanRepository.findByIdWithAssociations(id)
+                .orElseThrow(() -> new RuntimeException("Production plan not found with id: " + id));
+    }
+
     // 생산계획 추가 기능
     @Transactional
     public void createProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {

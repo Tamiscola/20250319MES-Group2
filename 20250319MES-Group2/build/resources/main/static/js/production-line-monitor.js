@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lineCode = button.dataset.lineCode;
             $.get(`/monitor/simulate/${lineCode}`, () => {
                 alert('Simulation started for line: ' + lineCode);
-                updateProgress();  // Update progress immediately after starting simulation
+                startProgressPolling(lineCode);  // Start polling for this specific line
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error("Error starting simulation:", textStatus, errorThrown);
                 alert('Failed to start simulation. Please check the console for more details.');
@@ -58,31 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         element.style.background = `conic-gradient(#3498db ${progress * 3.6}deg, #ededed 0deg)`;
     }
 
-    // Polling function to update progress bars and statuses dynamically
-    function startProgressPolling() {
-        setInterval(function () {
-            fetch('/monitor/api/lines/progress')
+    // Polling function to update progress for a specific line
+    function startProgressPolling(lineCode) {
+        const poller = setInterval(() => {
+            fetch(`/monitor/api/lines/progress/${lineCode}`)
                 .then(response => response.json())
                 .then(data => {
-                    data.forEach(line => {
-                        const progressElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .circular-progress`);
-                        const progressValueElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .progress-value`);
-                        const statusElement = document.querySelector(`.production-line-card[data-line-code="${line.productionLineCode}"] .status`);
-
-                        if (progressElement && progressValueElement && statusElement) {
-                            const cappedProgress = Math.min(line.progress, 100).toFixed(1); // Cap at 100%
-                            progressElement.dataset.progress = cappedProgress;
-                            progressValueElement.textContent = `${cappedProgress}%`;
-                            progressElement.style.background = `conic-gradient(#3498db ${cappedProgress * 3.6}deg, #ededed 0deg)`;
-
-                            statusElement.textContent = line.status;
-                            statusElement.className = `status ${line.status.toLowerCase()}`;
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching line progress:', error));
-        }, 3000); // Poll every 3 seconds to match backend updates
+                    updateProgressBar(data);
+                    if (data.progress >= 100) clearInterval(poller);
+                });
+        }, 1000);  // Poll every second
     }
-
-    startProgressPolling();
 });

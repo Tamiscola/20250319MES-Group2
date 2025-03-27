@@ -9,14 +9,27 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public interface ProductionPlanRepository extends JpaRepository<ProductionPlan, Long>, JpaSpecificationExecutor<ProductionPlan> {
     @EntityGraph(attributePaths = {"products", "productionLines"})
     Page<ProductionPlan> findAll(Pageable pageable);
+
+    @Query("SELECT DISTINCT p FROM ProductionPlan p " +
+            "LEFT JOIN FETCH p.productionLines " +  // Force fetch production lines
+            "WHERE p.planId = :id")
+    Optional<ProductionPlan> findByIdWithProductionLines(@Param("id") Long id);
+
+    @Query("SELECT DISTINCT p FROM ProductionPlan p " +
+            "LEFT JOIN FETCH p.productionLines " +
+            "LEFT JOIN FETCH p.products " +
+            "WHERE p.planId = :id")
+    Optional<ProductionPlan> findByIdWithAssociations(@Param("id") Long id);
 
 //    @Query("SELECT DISTINCT p FROM ProductionPlan p LEFT JOIN FETCH p.productionLines")
 //    List<ProductionPlan> findAllWithProductionLines();
