@@ -73,7 +73,7 @@ public class ManufacturingSimulator {
 
     // Simulate production plan execution
     @Async("simulationExecutor")
-    @Transactional(readOnly = true)
+    @Transactional
     public void simulateProductionPlan(Long planId) {
         ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
         productionPlanRepository.save(plan);
@@ -112,9 +112,11 @@ public class ManufacturingSimulator {
                         updateProductQuantity(product, plan, task);
 
                         log.info("Task {} progress after update: {}%", task.getTaskType(), task.getProgress());
+                        // Force a refresh of the line to get updated task progress
+                        line = productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
 
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             log.error("Simulation interrupted", e);

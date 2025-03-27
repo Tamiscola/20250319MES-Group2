@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     simulateButtons.forEach(button => {
         button.addEventListener('click', () => {
             const lineCode = button.dataset.lineCode;
+            console.log("Simulate button clicked for line:", lineCode);
             $.get(`/monitor/simulate/${lineCode}`, () => {
                 alert('Simulation started for line: ' + lineCode);
                 startProgressPolling(lineCode);  // Start polling for this specific line
@@ -50,23 +51,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
     // Function to update circular progress
     function updateCircularProgress(element, progress) {
-        const progressValue = element.querySelector('.progress-value');
-        progressValue.textContent = `${progress.toFixed(1)}%`;
-        element.style.background = `conic-gradient(#3498db ${progress * 3.6}deg, #ededed 0deg)`;
+        const numericProgress = Number(progress);
+        if (!isNaN(numericProgress)) {
+            const progressValue = element.querySelector('.progress-value');
+            progressValue.textContent = `${numericProgress.toFixed(1)}%`;
+            element.style.background = `conic-gradient(#3498db ${numericProgress * 3.6}deg, #ededed 0deg)`;
+        } else {
+            console.error('Invalid progress value:', progress);
+        }
     }
+
 
     // Polling function to update progress for a specific line
     function startProgressPolling(lineCode) {
+        console.log("Starting progress polling for line:", lineCode);
         const poller = setInterval(() => {
             fetch(`/monitor/api/lines/progress/${lineCode}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json()})
                 .then(data => {
                     updateProgressBar(data);
                     if (data.progress >= 100) clearInterval(poller);
-                });
+                })
+                .catch(error => console.error('Error fetching progress:', error));
         }, 1000);  // Poll every second
+    }
+
+
+    function updateProgressBar(data) {
+        console.log("Received progress data:", data);
+        const lineCard = document.querySelector(`.production-line-card[data-line-code="${data.productionLineCode}"]`);
+        if (lineCard) {
+            const progressElement = lineCard.querySelector('.circular-progress');
+            const progressValueElement = lineCard.querySelector('.progress-value');
+            const statusElement = lineCard.querySelector('.status');
+
+            // Update progress
+            const progress = Math.min(Number(data.progress), 100).toFixed(1);
+            console.log("Calculated progress:", progress);
+            updateCircularProgress(progressElement, progress);
+            progressValueElement.textContent = `${progress}%`;
+
+            // Update status
+            statusElement.textContent = data.status;
+            statusElement.className = `status ${data.status.toLowerCase()}`;
+
+            // Update capacity and today's production if available
+            const capacityElement = lineCard.querySelector('.summary-item:nth-child(1) strong');
+            if (capacityElement && data.capacity) {
+                capacityElement.textContent = `${data.capacity}/hr`;
+            }
+
+            const productionElement = lineCard.querySelector('.summary-item:nth-child(2) strong');
+            if (productionElement && data.todayQty) {
+                productionElement.textContent = `${data.todayQty} units`;
+            }
+        }
     }
 });

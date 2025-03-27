@@ -11,7 +11,8 @@
 
     <div class="production-lines-grid">
         <!-- Dynamically generate production line cards -->
-        <div th:each="line : ${productionLines}" th:class="'production-line-card ' + ${line.productionLineName.toLowerCase().replace(' ', '-')}">
+        <div th:each="line : ${productionLines}" th:class="'production-line-card ' + ${line.productionLineName.toLowerCase().replace(' ', '-')}"
+                th:data-line-code="${line.productionLineCode}">
             <div class="line-header">
                 <h2 th:text="${line.productionLineName}">Production Line</h2>
                 <span th:class="'status ' + ${line.productionLineStatus.name().toLowerCase()}" th:text="${line.productionLineStatus}">Status</span>

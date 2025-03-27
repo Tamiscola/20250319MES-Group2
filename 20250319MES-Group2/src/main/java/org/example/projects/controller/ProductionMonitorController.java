@@ -2,11 +2,10 @@ package org.example.projects.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.example.projects.domain.ProductionLine;
-import org.example.projects.domain.ProductionPlan;
+import org.example.projects.domain.*;
 import org.example.projects.domain.Process;
-import org.example.projects.domain.Task;
 import org.example.projects.domain.enums.Status;
+import org.example.projects.domain.enums.TaskType;
 import org.example.projects.repository.ProductionLineRepository;
 import org.example.projects.repository.ProductionPlanRepository;
 import org.example.projects.service.ManufacturingSimulator;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +75,16 @@ public class ProductionMonitorController {
         ProductionLine line = productionLineRepository.findById(lineCode)
                 .orElseThrow(() -> new RuntimeException("Production line not found"));
 
+        double progress = calculateOverallProgressForLine(line);
+        log.info("Calculated progress for line {}: {}%", lineCode, progress);
+
         Map<String, Object> progressData = new HashMap<>();
         progressData.put("productionLineCode", line.getProductionLineCode());
         progressData.put("productionLineName", line.getProductionLineName());
         progressData.put("status", line.getProductionLineStatus());
         progressData.put("capacity", line.getCapacity());
         progressData.put("progress", calculateOverallProgressForLine(line));
+        progressData.put("todayQty", calculateTodayProduction(line));
 
         return progressData;
     }
@@ -93,21 +97,39 @@ public class ProductionMonitorController {
             return 0.0;
         }
 
-        int totalTasks = 0;
+        int totalTasks = TaskType.values().length;
         double totalProgress = 0.0;
 
         for (Process process : processes) {
             for (Task task : process.getTasks()) {
-                totalTasks++;
-                totalProgress += task.getProgress();
+                totalProgress += task.getProgress(); // Add task progress directly
             }
         }
 
         if (totalTasks == 0) {
-            return 0.0;
+            return 0.0; // Avoid division by zero
         }
 
-        return (totalProgress / (totalTasks * 100)) * 100; // Return percentage progress
+        // Calculate the average progress across all tasks
+        double overallProgress = totalProgress / totalTasks;
+        log.info("Overall progress calculation: totalProgress={}, totalTasks={}, result={}%",
+                totalProgress, totalTasks, overallProgress);
+        return overallProgress; // Return the average progress as a percentage
+    }
+
+    private int calculateTodayProduction(ProductionLine line) {
+        int todayProduction = 0;
+        LocalDate today = LocalDate.now();
+
+        for (ProductionPlan plan : line.getProductionPlans()) {
+            if (plan.getStartDate().isEqual(today) || (plan.getStartDate().isBefore(today) && plan.getEndDate().isAfter(today))) {
+                for (Product product : plan.getProducts()) {
+                    todayProduction += product.getQuantity();
+                }
+            }
+        }
+
+        return todayProduction;
     }
 }
 
