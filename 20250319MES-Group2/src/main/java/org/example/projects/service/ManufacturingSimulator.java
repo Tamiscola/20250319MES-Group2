@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -79,26 +80,47 @@ public class ManufacturingSimulator {
         productionPlanRepository.save(plan);
         Product product = initializeProduct(plan);
 
+        boolean simulationCompleted = false;
+
         for (ProductionLine line : plan.getProductionLines()) {
-            resetTasks(line);
+            // Reset existing processes and tasks for the line
+            resetProcessesAndTasks(line);
+
             log.info("Processing production line: {}", line.getProductionLineCode());
 
-            if (line.getProductionProcesses() == null || line.getProductionProcesses().isEmpty()) {
-                log.info("No processes found for line {}. Creating processes...", line.getProductionLineCode());
-                createProcessesForLine(line);
-                // Reload the line to get the updated processes and tasks
-                line = productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
-            }
+            // Always create new processes for the line
+            createProcessesForLine(line);
+
+            // Reload the line to get the updated processes
+            line = productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
 
             List<Process> processes = line.getProductionProcesses();
             log.info("Number of processes for line {}: {}", line.getProductionLineCode(), processes.size());
 
+            plan.setPlanStatus(PlanStatus.IN_PROGRESS);
+            productionPlanRepository.save(plan);
+
             for (Process process : processes) {
                 log.info("Process phase: {}", process.getProcessType());
-                log.info("Number of tasks for process {}: {}", process.getProcessType(), process.getTasks().size());
 
-                plan.setPlanStatus(PlanStatus.IN_PROGRESS);
-                productionPlanRepository.save(plan);
+                // Skip already completed processes
+                if (process.isCompleted()) {
+                    log.info("Process {} already completed, skipping.", process.getProcessType());
+                    continue;
+                }
+
+                // Check for COMPLETED process type
+                if (process.getProcessType() == ProcessType.COMPLETED) {
+                    log.info("Reached COMPLETED process type. Finalizing production.");
+                    Task finalVerificationTask = process.getTasks().get(0);
+                    finalizeProductQuantity(product, plan);
+                    finalVerificationTask.setCompleted(true);
+                    process.setCompleted(true);
+                    simulationCompleted = true;
+                    break;
+                }
+
+                log.info("Number of tasks for process {}: {}", process.getProcessType(), process.getTasks().size());
 
                 for (Task task : process.getTasks()) {
                     log.info("Starting task: {}", task.getTaskType());
@@ -112,8 +134,6 @@ public class ManufacturingSimulator {
                         updateProductQuantity(product, plan, task);
 
                         log.info("Task {} progress after update: {}%", task.getTaskType(), task.getProgress());
-                        // Force a refresh of the line to get updated task progress
-                        line = productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
 
                         try {
                             Thread.sleep(1000);
@@ -126,12 +146,19 @@ public class ManufacturingSimulator {
                     log.info("Task {} completed. Moving to next task.", task.getTaskType());
                     taskRepository.save(task);
                 }
+
                 process.setCompleted(true);
                 processRepository.save(process);
                 log.info("Process {} is Completed", process.getProcessType());
             }
+
+            // Break the main loop if simulation is completed
+            if (simulationCompleted) {
+                break;
+            }
         }
 
+        // Finalize the production
         plan.setPlanStatus(PlanStatus.COMPLETED);
         plan.setEndDate(LocalDate.now());
         productionPlanRepository.save(plan);
@@ -139,51 +166,59 @@ public class ManufacturingSimulator {
         finalizeProductQuantity(product, plan);
     }
 
-    // Create processes and tasks for a production line
-    private void createProcessesForLine(ProductionLine line) {
-        List<Process> processes = new ArrayList<>();
+    private void resetProcessesAndTasks(ProductionLine line) {
+        // Delete existing tasks
+        List<Task> existingTasks = taskRepository.findByProcessProductionLine(line);
+        taskRepository.deleteAll(existingTasks);
 
-        for (ProcessType processType : ProcessType.values()) {
-            if (processType != ProcessType.COMPLETED) {
-                Process process = Process.builder()
-                        .processType(processType)
-                        .productionLine(line)
-                        .completed(false)
-                        .progress(0)
-                        .build();
+        // Delete existing processes
+        List<Process> existingProcesses = processRepository.findByProductionLine(line);
+        processRepository.deleteAll(existingProcesses);
 
-                process = processRepository.save(process);
-
-                List<Task> tasks = createTasksForProcess(process);
-                process.setTasks(tasks);
-                processes.add(process);
-            }
-        }
-
-        line.setProductionProcesses(processes);
+        // Clear the reference in the production line
+        line.setProductionProcesses(new ArrayList<>());
         productionLineRepository.save(line);
-        log.info("Created {} processes for production line {}", processes.size(), line.getProductionLineCode());
+
+        log.info("Reset processes and tasks for production line: {}", line.getProductionLineCode());
     }
 
-    // Helper method to create tasks for a process
-    private List<Task> createTasksForProcess(Process process) {
-        List<Task> tasks = new ArrayList<>();
-        List<TaskType> taskTypes = TaskType.getTasksForProcess(process);
+    private void createProcessesForLine(ProductionLine line) {
+        List<Process> newProcesses = new ArrayList<>();
 
-        for (TaskType taskType : taskTypes) {
-            Task task = Task.builder()
-                    .taskType(taskType)
-                    .process(process)
-                    .completed(false)  // Explicitly set to false
-                    .progress(0)       // Explicitly set to 0
-                    .build();
+        // Create processes for each process type
+        for (ProcessType processType : ProcessType.values()) {
+            Process process = new Process();
+            process.setProcessType(processType);
+            process.setProductionLine(line);
+            process.setCompleted(false);
+            process.setProgress(0);
 
-            task = taskRepository.save(task);
-            tasks.add(task);
-            log.info("Created task {} for process {} with initial progress 0% and completed status false", taskType, process.getProcessType());
+            // Create tasks for this process
+            List<TaskType> tasksForProcess = TaskType.getTasksForProcess(process);
+            List<Task> processTasks = tasksForProcess.stream()
+                    .map(taskType -> {
+                        Task task = new Task();
+                        task.setTaskType(taskType);
+                        task.setProcess(process);
+                        task.setCompleted(false);
+                        task.setProgress(0);
+                        return task;
+                    })
+                    .collect(Collectors.toList());
+
+            process.setTasks(processTasks);
+            newProcesses.add(process);
         }
 
-        return tasks;
+        // Save all new processes (and cascading tasks)
+        processRepository.saveAll(newProcesses);
+
+        // Update the production line with new processes
+        line.setProductionProcesses(newProcesses);
+        productionLineRepository.save(line);
+
+        log.info("Created {} processes for production line: {}",
+                newProcesses.size(), line.getProductionLineCode());
     }
 
     private Product initializeProduct(ProductionPlan plan) {

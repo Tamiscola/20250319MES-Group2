@@ -31,6 +31,9 @@ public class Process {
     @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;
 
-    private boolean completed;
+    @Builder.Default
+    private boolean completed = false;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int progress;
 }

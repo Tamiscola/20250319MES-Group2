@@ -25,7 +25,8 @@ public enum TaskType {
     // Annealing tasks
     RAPID_THERMAL_ANNEALING, FURNACE_ANNEALING, LASER_ANNEALING,
 
-    COMPLETED;
+    // Completion task
+    FINAL_PRODUCT_VERIFICATION;
 
     public static List<TaskType> getTasksForProcess(Process process) {
         if (process == null || process.getProcessType() == null) {
@@ -47,6 +48,8 @@ public enum TaskType {
                 return List.of(ION_IMPLANTATION, DIFFUSION, IN_SITU_DOPING);
             case ANNEALING:
                 return List.of(RAPID_THERMAL_ANNEALING, FURNACE_ANNEALING, LASER_ANNEALING);
+            case COMPLETED:
+                return List.of(FINAL_PRODUCT_VERIFICATION);
             default:
                 throw new IllegalArgumentException("Unknown process type: " + processType);
         }

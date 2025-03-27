@@ -100,8 +100,12 @@ public class ProductionMonitorController {
         int totalTasks = TaskType.values().length;
         double totalProgress = 0.0;
 
+        log.info("Total number of task types: {}", totalTasks);
+
         for (Process process : processes) {
+            log.info("Processing process: {}", process.getProcessType());
             for (Task task : process.getTasks()) {
+                log.info("Task type: {}, Current progress: {}", task.getTaskType(), task.getProgress());
                 totalProgress += task.getProgress(); // Add task progress directly
             }
         }
