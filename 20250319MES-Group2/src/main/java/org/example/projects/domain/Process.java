@@ -11,10 +11,10 @@ import java.util.List;
 @Table(name = "processes")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "productionLine")
+@Builder
 public class Process {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Process {
     @Enumerated(EnumType.STRING)
     private ProcessType processType;
 
-    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)    // Process 안에 여러개의 task (task1, task2, task3 task4)
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)    // Process 안에 여러개의 task (task1, task2, task3 task4)
     @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
@@ -35,5 +35,5 @@ public class Process {
     private boolean completed = false;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private int progress;
+    private int progress = 0;
 }

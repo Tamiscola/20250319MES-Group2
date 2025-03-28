@@ -272,4 +272,3 @@ public class ManufacturingSimulator {
         log.info("Created product batch for production plan {}. Quantity: {}", plan.getPlanId(), plan.getTargetQty());
     }
 }
-

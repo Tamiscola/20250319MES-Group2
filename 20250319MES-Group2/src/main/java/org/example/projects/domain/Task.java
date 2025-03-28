@@ -18,16 +18,18 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_id", nullable = false)
     private Process process;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskType taskType;
 
     @Builder.Default
     private boolean completed = false;
 
+    @Builder.Default
     @Column(nullable = false, columnDefinition = "int default 0")
-    private int progress;
+    private int progress = 0;
 }

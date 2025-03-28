@@ -3,27 +3,28 @@ package org.example.projects.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.Product;
+import org.example.projects.domain.Process;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.ProductionPlan;
-import org.example.projects.domain.enums.PlanStatus;
-import org.example.projects.domain.enums.Priority;
-import org.example.projects.domain.enums.Status;
+import org.example.projects.domain.Task;
+import org.example.projects.domain.enums.*;
 import org.example.projects.dto.ProductionPlanDTO;
-import org.example.projects.repository.ProductRepository;
-import org.example.projects.repository.ProductionLineRepository;
-import org.example.projects.repository.ProductionPlanRepository;
+import org.example.projects.repository.*;
 import org.example.projects.util.FileUploadUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,13 +38,14 @@ import java.util.stream.Collectors;
 public class ProductionPlanService {
     @Autowired
     private ProductionPlanRepository productionPlanRepository;
-
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private ProductionLineRepository productionLineRepository;
-
+    @Autowired
+    private ProcessRepository processRepository;
+    @Autowired
+    private TaskRepository taskRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -100,14 +102,15 @@ public class ProductionPlanService {
                 });
 
         // Create ProductionPlan
-        ProductionPlan plan = new ProductionPlan();
-        plan.setProductName(dto.getProductName());
-        plan.setStartDate(dto.getStartDate());
-        plan.setEndDate(dto.getEndDate());
-        plan.setTargetQty(dto.getTargetQty());
-        plan.setManager(dto.getManager());
-        plan.setPriority(dto.getPriority());
-        plan.setPlanStatus(dto.getPlanStatus());
+        ProductionPlan plan = ProductionPlan.builder()
+                .productName(dto.getProductName())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .targetQty(dto.getTargetQty())
+                .manager(dto.getManager())
+                .priority(dto.getPriority())
+                .planStatus(dto.getPlanStatus())
+                .build();
 
         // Handle file upload
         if (file != null && !file.isEmpty()) {
@@ -117,13 +120,46 @@ public class ProductionPlanService {
             plan.setFileUrl(uploadDir + fileName);
         }
 
-        // Create and save Product
-        Product product = new Product();
-        product.setProductName(dto.getProductName());
-        product.setProductionLine(productionLine);
-        product.setProductionPlan(plan);
-        product.setRegBy(dto.getManager());
+        // Save ProductionPlan
+        productionPlanRepository.save(plan);
 
+        // Create and save Product
+        Product product = Product.builder()
+                .productName(dto.getProductName())
+                .productionLine(productionLine)
+                .productionPlan(plan)
+                .regBy(dto.getManager())
+                .quantity(0)
+                .build();
+
+        productRepository.save(product);
+
+        // Create Processes and Tasks
+        for (ProcessType processType : ProcessType.values()) {
+            Process process = Process.builder()
+                    .processType(processType)
+                    .productionLine(productionLine)
+                    .completed(false)
+                    .progress(0)
+                    .build();
+
+            processRepository.save(process);
+
+            List<TaskType> tasksForProcess = TaskType.getTasksForProcess(process);
+            List<Task> processTasks = tasksForProcess.stream()
+                    .map(taskType -> Task.builder()
+                            .taskType(taskType)
+                            .process(process)
+                            .completed(false)
+                            .progress(0)
+                            .build())
+                    .collect(Collectors.toList());
+
+            taskRepository.saveAll(processTasks);
+            process.setTasks(processTasks);
+            processRepository.save(process);
+
+        }
         // Set up relationships
         plan.getProducts().add(product);
         plan.getProductionLines().add(productionLine);
@@ -158,17 +194,19 @@ public class ProductionPlanService {
         }
 
         // Handle production line change if necessary
-        ProductionLine newProductionLine = productionLineRepository.findByProductionLineName(productionLineName)
-                .orElseGet(() -> {
-                    ProductionLine line = new ProductionLine();
-                    line.setProductionLineName(productionLineName);
-                    line.setProductionLineStatus(Status.NORMAL);
-                    return productionLineRepository.save(line);
-                });
+        List<ProductionLine> productionLines = productionLineRepository.findByProductionLineName(productionLineName);
+        ProductionLine newProductionLine;
+        if (productionLines.isEmpty()) {
+            newProductionLine = new ProductionLine();
+            newProductionLine.setProductionLineName(productionLineName);
+            newProductionLine.setProductionLineStatus(Status.NORMAL);
+            newProductionLine = productionLineRepository.save(newProductionLine);
+        } else {
+            newProductionLine = productionLines.get(0); // Use the first matching production line
+        }
 
         // Correctly manage the production lines
-        // Clear existing production lines before adding the new one
-        plan.getProductionLines().clear();  //  Remove all existing lines
+        plan.getProductionLines().clear();  // Remove all existing lines
         plan.getProductionLines().add(newProductionLine);
 
         productionPlanRepository.save(plan);
@@ -191,14 +229,34 @@ public class ProductionPlanService {
         // Delete file if exists
         if (plan.getFileUrl() != null && !plan.getFileUrl().isEmpty()) {
             try {
-                Path filePath = Paths.get(plan.getFileUrl());
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
+                URI uri = new URI(plan.getFileUrl());
+                if ("file".equals(uri.getScheme())) {
+                    // Handle local files
+                    Path filePath = Paths.get(uri);
+                    Files.deleteIfExists(filePath);
+                } else {
+                    // Handle remote files (HTTP/HTTPS)
+                    deleteRemoteFile(uri); // Implement your HTTP deletion logic
+                }
+            } catch (URISyntaxException | IOException e) {
                 log.warn("Failed to delete file: " + plan.getFileUrl(), e);
             }
         }
         productionPlanRepository.delete(plan);
     }
+
+    // HTTP 첨부파일 삭제
+    private void deleteRemoteFile(URI uri) throws IOException {
+        URL url = uri.toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("DELETE");
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            log.warn("Failed to delete remote file. Response code: " + responseCode);
+        }
+    }
+
 
     // 생산계획 검색 기능 (검색어, 우선순위, 상태)
     public Page<ProductionPlanDTO> searchPlans(String keyword, String priority, String status, Pageable pageable) {

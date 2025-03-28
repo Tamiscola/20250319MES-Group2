@@ -1,6 +1,7 @@
 package org.example.projects.domain;
 
 import lombok.*;
+import org.example.projects.domain.enums.ProcessType;
 import org.example.projects.domain.enums.Status;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -48,6 +49,9 @@ public class ProductionLine {
 
     @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL)
     private List<Process> productionProcesses;      // 생산공정 단계
+
+    @Enumerated(EnumType.STRING)
+    private ProcessType processType;
 
     @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL)
     private List<Product> products;       // 생산품목

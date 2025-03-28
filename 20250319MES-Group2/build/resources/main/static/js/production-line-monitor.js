@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusElement = lineCard.querySelector('.status');
 
             // Update progress
+            console.log("data.progress: ", data.progress);
             const progress = Math.min(Number(data.progress), 100).toFixed(1);
             console.log("Calculated progress:", progress);
             updateCircularProgress(progressElement, progress);
