@@ -15,8 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -28,6 +30,13 @@ public class ProductionLineService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    public List<String> getAllProductionLineName() {
+        // productionLineRepository에서 모든 생산라인을 가져와서 이름만 리스트로 반환
+        return productionLineRepository.findAll().stream()
+                .map(ProductionLine::getProductionLineName) // 각 ProductionLine 객체에서 이름만 가져오기
+                .collect(Collectors.toList());
+    }
 
     public Page<ProductionLineDTO> getAllLines(Pageable pageable){
         Page<ProductionLine> LinePage = productionLineRepository.findAll(pageable);
@@ -86,21 +95,43 @@ public class ProductionLineService {
        productionLineRepository.delete(line);
     }
 
-    // 생산라인 검색 (생산 라인 이름, 상태)
-    public Page<ProductionLineDTO> searchLines(String productionLineName, String productionLineStatus, Pageable pageable) {
+    // 생산라인 검색 (생산 라인 이름, 상태, 날짜)
+    public Page<ProductionLineDTO> searchLines(String productionLineName, String productionLineStatus, LocalDate regDate, Pageable pageable) {
         // status가 비어 있지 않으면 Status enum으로 변환
         Status statusEnum = (productionLineStatus != null && !productionLineStatus.isEmpty()) ? Status.valueOf(productionLineStatus) : null;
 
         Page<ProductionLine> result;
 
+        // productionLineName, status, regDate가 모두 제공된 경우
+        if (productionLineName != null && !productionLineName.isEmpty() && statusEnum != null && regDate != null) {
+            result = productionLineRepository.findByProductionLineNameAndProductionLineStatusAndRegDate(productionLineName, statusEnum, regDate, pageable);
+        }
         // productionLineName과 status가 제공되었을 때 해당 값들로 검색
-        if (productionLineName != null && !productionLineName.isEmpty() && statusEnum != null) {
+        else if (productionLineName != null && !productionLineName.isEmpty() && statusEnum != null) {
             result = productionLineRepository.findByProductionLineNameAndProductionLineStatus(productionLineName, statusEnum, pageable);
-        } else if (productionLineName != null && !productionLineName.isEmpty()) {
+        }
+        // productionLineName과 regDate가 제공된 경우
+        else if (productionLineName != null && !productionLineName.isEmpty() && regDate != null) {
+            result = productionLineRepository.findByProductionLineNameAndRegDate(productionLineName, regDate, pageable);
+        }
+        // status와 regDate가 제공된 경우
+        else if (statusEnum != null && regDate != null) {
+            result = productionLineRepository.findByProductionLineStatusAndRegDate(statusEnum, regDate, pageable);
+        }
+        // productionLineName만 제공된 경우
+        else if (productionLineName != null && !productionLineName.isEmpty()) {
             result = productionLineRepository.findByProductionLineName(productionLineName, pageable);
-        } else if (statusEnum != null) {
+        }
+        // status만 제공된 경우
+        else if (statusEnum != null) {
             result = productionLineRepository.findByProductionLineStatus(statusEnum, pageable);
-        } else {
+        }
+        // regDate만 제공된 경우
+        else if (regDate != null) {
+            result = productionLineRepository.findByRegDate(regDate, pageable);
+        }
+        // 모든 조건이 없을 경우
+        else {
             result = productionLineRepository.findAll(pageable);  // 기본적으로 모든 데이터 조회
         }
 

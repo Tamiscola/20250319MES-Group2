@@ -13,10 +13,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,12 +37,17 @@ public class ProductionLineController {
                        @RequestParam(defaultValue = "DESC") String direction,
                        @PageableDefault(size = 10) Pageable pageable){
 
+        List<String> productionLineNames = productionLineService.getAllProductionLineName();
+
         Sort.Direction sortDirection = Sort.Direction.fromString(direction);
         Sort sortObj = Sort.by(sortDirection, sort);
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
 
         Page<ProductionLineDTO> lineDTOPage = productionLineService.getAllLines(sortedPageable);
+
+        model.addAttribute("productionLineNames", productionLineNames);
         model.addAttribute("lines", lineDTOPage);
+
         return "production-line";
     }
 
@@ -89,20 +98,19 @@ public class ProductionLineController {
     @GetMapping("/search")
     public String searchLines(@RequestParam(required = false, defaultValue = "") String productionLineName,
                               @RequestParam(required = false, defaultValue = "") String productionLineStatus,
+                              @RequestParam(required = false)
+                              @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate regDate,
                               @RequestParam(defaultValue = "productionLineCode") String sort,
                               @RequestParam(defaultValue = "DESC") String direction,
                               @PageableDefault(size = 10) Pageable pageable,
                               Model model) {
 
-        // productionLineName과 status를 필터링
         Status statusEnum = null;
 
-        // status 값이 비어있지 않으면 Status enum으로 변환
         if (productionLineStatus != null && !productionLineStatus.isEmpty()) {
             try {
-                statusEnum = Status.valueOf(productionLineStatus);  // status를 Enum으로 변환
+                statusEnum = Status.valueOf(productionLineStatus);
             } catch (IllegalArgumentException e) {
-                // 잘못된 값이 들어올 경우, 예외 처리 또는 로깅을 할 수 있음
                 model.addAttribute("error", "Invalid status value");
             }
         }
@@ -113,12 +121,17 @@ public class ProductionLineController {
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
 
         // service에서 데이터를 가져옴
-        Page<ProductionLineDTO> searchResult = productionLineService.searchLines(productionLineName, productionLineStatus, sortedPageable);
+        Page<ProductionLineDTO> searchResult = productionLineService.searchLines(productionLineName, productionLineStatus, regDate, sortedPageable);
+
+        // DB에서 모든 생산라인 이름 목록을 가져옵니다.
+        List<String> productionLineNames = productionLineService.getAllProductionLineName();
 
         // 뷰에 전달할 데이터 설정
         model.addAttribute("lines", searchResult);
+        model.addAttribute("productionLineNames", productionLineNames); // 생산라인 이름 목록 // 드롭다운에 사용할 생산라인 목록
         model.addAttribute("selectedProductionLineName", productionLineName);
         model.addAttribute("selectedProductionLineStatus", productionLineStatus);
+        model.addAttribute("selectedRegDate", regDate);
 
         return "production-line";  // JSP 또는 Thymeleaf 뷰 이름
     }
