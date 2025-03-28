@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
         </div>
         <div class="list-group list-group-flush">
             <a class="list-group-item list-group-item-action list-group-item-light p-3"
-               th:href="@{/process/list}">생산관리 모니터링</a>
+               th:href="@{/monitor/list}">생산관리 모니터링</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/product/list}">제품관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/plan/list}">생산계획관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/line/list}">생산라인관리</a>
@@ -55,12 +55,14 @@
                 </div>
                 <!-- login 관련 추가 -->
                 <div class="loginInfo">
-                    <div class="login" th:if="${user == null}">
-                        <button th:onclick="location.href='/bio/login'">로그인</button>
+                    <div class="login" sec:authorize="isAnonymous()">
+                        <button th:onclick="location.href='/login'">로그인</button>
                     </div>
-                    <div class="logout" th:unless="${user == null}">
-                        <h6>[[${employeeName}]]님 환영합니다.</h6>
-                        <button th:onclick="location.href='/bio/logout'">로그아웃</button>
+                    <div class="logout" sec:authorize="isAuthenticated()">
+                        <h6><span sec:authentication="name"></span>님 환영합니다.</h6>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit">로그아웃</button>
+                        </form>
                     </div>
                 </div>
             </div>
