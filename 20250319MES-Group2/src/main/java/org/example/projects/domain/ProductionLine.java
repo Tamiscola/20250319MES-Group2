@@ -25,7 +25,7 @@ public class ProductionLine {
     private String productionLineCode;    // 생산라인 코드(고유, 기본키)
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "production_line_status")
     private Status productionLineStatus;    // 생산라인상태 (정상(Normal), 불량(Defected))
 
     @Column(nullable = false, name = "production_line_name")
