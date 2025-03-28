@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +70,7 @@ public class ProductionMonitorController {
 
 
     // API to get progress of all production lines
+    @Transactional(readOnly = true)
     @GetMapping("/api/lines/progress/{lineCode}")
     @ResponseBody
     public Map<String, Object> getLineProgress(@PathVariable String lineCode) {
@@ -83,7 +85,7 @@ public class ProductionMonitorController {
         progressData.put("productionLineName", line.getProductionLineName());
         progressData.put("status", line.getProductionLineStatus());
         progressData.put("capacity", line.getCapacity());
-        progressData.put("progress", calculateOverallProgressForLine(line));
+        progressData.put("progress", progress);
         progressData.put("todayQty", calculateTodayProduction(line));
 
         return progressData;
@@ -91,10 +93,13 @@ public class ProductionMonitorController {
 
     // Helper method to calculate overall progress for a production line
     private double calculateOverallProgressForLine(ProductionLine line) {
+        line = productionLineRepository.findById(line.getProductionLineCode())
+                .orElseThrow(() -> new RuntimeException("Production line not found"));
+
         List<Process> processes = line.getProductionProcesses();
 
         if (processes == null || processes.isEmpty()) {
-            return 0.0;
+            simulator.createProcessesForLine(line);
         }
 
         int totalTasks = TaskType.values().length;

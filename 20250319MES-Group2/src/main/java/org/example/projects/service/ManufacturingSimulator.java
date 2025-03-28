@@ -11,12 +11,18 @@ import org.example.projects.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -39,6 +45,8 @@ public class ManufacturingSimulator {
 
     @Autowired
     private ProductionPlanService productionPlanService;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     private void resetTasks(ProductionLine line) {
         for (Process process : line.getProductionProcesses()) {
@@ -53,6 +61,7 @@ public class ManufacturingSimulator {
 
 
     // Update task progress incrementally
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateTaskProgress(Task task) {
         log.info("Updating progress for task: {}, current progress: {}%", task.getTaskType(), task.getProgress());
 
@@ -74,11 +83,26 @@ public class ManufacturingSimulator {
 
     // Simulate production plan execution
     @Async("simulationExecutor")
-    @Transactional
     public void simulateProductionPlan(Long planId) {
-        ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
-        productionPlanRepository.save(plan);
-        Product product = initializeProduct(plan);
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+
+        // Use AtomicReference to hold objects that need to be accessed outside the transaction
+        AtomicReference<ProductionPlan> planRef = new AtomicReference<>();
+        AtomicReference<Product> productRef = new AtomicReference<>();
+
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            public Void doInTransaction(TransactionStatus status) {
+                ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
+                productionPlanRepository.save(plan);
+                Product product = initializeProduct(plan);
+                planRef.set(plan);
+                productRef.set(product);
+                return null;
+            }
+        });
+
+        ProductionPlan plan = planRef.get();
+        Product product = productRef.get();
 
         boolean simulationCompleted = false;
 
@@ -92,13 +116,30 @@ public class ManufacturingSimulator {
             createProcessesForLine(line);
 
             // Reload the line to get the updated processes
-            line = productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
+            transactionTemplate.execute(new TransactionCallback<Void>() {
+                public Void doInTransaction(TransactionStatus status) {
+                    resetProcessesAndTasks(line);
+                    createProcessesForLine(line);
+                    return null;
+                }
+            });
 
-            List<Process> processes = line.getProductionProcesses();
-            log.info("Number of processes for line {}: {}", line.getProductionLineCode(), processes.size());
+            // Reload the line to get the updated processes
+            ProductionLine updatedLine = transactionTemplate.execute(new TransactionCallback<ProductionLine>() {
+                public ProductionLine doInTransaction(TransactionStatus status) {
+                    return productionLineRepository.findById(line.getProductionLineCode()).orElseThrow();
+                }
+            });
 
-            plan.setPlanStatus(PlanStatus.IN_PROGRESS);
-            productionPlanRepository.save(plan);
+            List<Process> processes = updatedLine.getProductionProcesses();
+
+            transactionTemplate.execute(new TransactionCallback<Void>() {
+                public Void doInTransaction(TransactionStatus status) {
+                    plan.setPlanStatus(PlanStatus.IN_PROGRESS);
+                    productionPlanRepository.save(plan);
+                    return null;
+                }
+            });
 
             for (Process process : processes) {
                 log.info("Process phase: {}", process.getProcessType());
@@ -129,9 +170,16 @@ public class ManufacturingSimulator {
 
                     // Force the loop to run at least once
                     do {
-                        updateTaskProgress(task);
-                        process.setProgress(calculateProcessProgress(process));
-                        updateProductQuantity(product, plan, task);
+                        transactionTemplate.execute(new TransactionCallback<Void>() {
+                            public Void doInTransaction(TransactionStatus status) {
+                                updateTaskProgress(task);
+                                process.setProgress(calculateProcessProgress(process));
+                                processRepository.save(process);
+                                updateProductQuantity(product, plan, task);
+                                taskRepository.save(task);
+                                return null;
+                            }
+                        });
 
                         log.info("Task {} progress after update: {}%", task.getTaskType(), task.getProgress());
 
@@ -147,8 +195,13 @@ public class ManufacturingSimulator {
                     taskRepository.save(task);
                 }
 
-                process.setCompleted(true);
-                processRepository.save(process);
+                transactionTemplate.execute(new TransactionCallback<Void>() {
+                    public Void doInTransaction(TransactionStatus status) {
+                        process.setCompleted(true);
+                        processRepository.save(process);
+                        return null;
+                    }
+                });
                 log.info("Process {} is Completed", process.getProcessType());
             }
 
@@ -159,11 +212,15 @@ public class ManufacturingSimulator {
         }
 
         // Finalize the production
-        plan.setPlanStatus(PlanStatus.COMPLETED);
-        plan.setEndDate(LocalDate.now());
-        productionPlanRepository.save(plan);
-
-        finalizeProductQuantity(product, plan);
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            public Void doInTransaction(TransactionStatus status) {
+                plan.setPlanStatus(PlanStatus.COMPLETED);
+                plan.setEndDate(LocalDate.now());
+                productionPlanRepository.save(plan);
+                finalizeProductQuantity(product, plan);
+                return null;
+            }
+        });
     }
 
     private void resetProcessesAndTasks(ProductionLine line) {
@@ -182,7 +239,7 @@ public class ManufacturingSimulator {
         log.info("Reset processes and tasks for production line: {}", line.getProductionLineCode());
     }
 
-    private void createProcessesForLine(ProductionLine line) {
+    public void createProcessesForLine(ProductionLine line) {
         List<Process> newProcesses = new ArrayList<>();
 
         // Create processes for each process type

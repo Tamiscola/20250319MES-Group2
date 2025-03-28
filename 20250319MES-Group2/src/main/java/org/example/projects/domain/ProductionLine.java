@@ -47,7 +47,7 @@ public class ProductionLine {
     private Integer achievedQty;   // 달성 수량
     private Integer todayQty;   // 금일 생산 수량
 
-    @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Process> productionProcesses;      // 생산공정 단계
 
     @Enumerated(EnumType.STRING)

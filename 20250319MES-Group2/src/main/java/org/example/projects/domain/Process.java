@@ -23,7 +23,7 @@ public class Process {
     @Enumerated(EnumType.STRING)
     private ProcessType processType;
 
-    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)    // Process 안에 여러개의 task (task1, task2, task3 task4)
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)    // Process 안에 여러개의 task (task1, task2, task3 task4)
     @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
