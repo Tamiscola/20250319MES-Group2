@@ -91,6 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (productionElement && data.todayQty) {
                 productionElement.textContent = `${data.todayQty} units`;
             }
+
+            // Update current process and task
+            const currentProcessElement = lineCard.querySelector('.current-process');
+            const currentTaskElement = lineCard.querySelector('.current-task');
+            const taskProgressElement = lineCard.querySelector('.task-progress');
+
+            if (currentProcessElement) {
+                currentProcessElement.textContent = data.currentProcessType;
+            }
+            if (currentTaskElement) {
+                currentTaskElement.textContent = data.currentTaskType;
+            }
+            if (taskProgressElement) {
+                taskProgressElement.textContent = `${data.currentTaskProgress}%`;
+            }
         }
     }
 });

@@ -19,6 +19,7 @@
 
             </div>
 
+            <!-- 제조 진행률(원형 바) -->
             <div class="progress-container">
                 <div class="circular-progress" th:data-progress="${line.progress}">
                     <span class="progress-value" th:text="${line.progress + '%'}">0%</span>
@@ -40,21 +41,32 @@
             <button class="simulate-button" th:data-line-code="${line.productionLineCode}">Simulate</button>
 
             <div class="line-details">
-                <!-- Add more dynamic details here -->
                 <div class="detail-section">
                     <h3>Line Details</h3>
                     <table>
                         <tr>
                             <td>Location</td>
-                            <td>Building A, Floor 2</td>
+                            <td th:text="${line.location}">Building A, Floor 2</td>
                         </tr>
                         <tr>
                             <td>Manager</td>
-                            <td>Kim Jae-sung</td>
+                            <td th:text="${line.manager}">Kim Jae-sung</td>
                         </tr>
                         <tr>
                             <td>Equipment</td>
-                            <td>Advanced Lithography System</td>
+                            <td th:text="${line.equipment}">Advanced Lithography System</td>
+                        </tr>
+                        <tr>
+                            <td>Current Process</td>
+                            <td class="current-process">N/A</td>
+                        </tr>
+                        <tr>
+                            <td>Current Task</td>
+                            <td class="current-task">N/A</td>
+                        </tr>
+                        <tr>
+                            <td>Task Progress</td>
+                            <td class="task-progress">0%</td>
                         </tr>
                     </table>
                 </div>

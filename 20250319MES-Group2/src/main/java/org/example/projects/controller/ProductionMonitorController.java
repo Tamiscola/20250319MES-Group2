@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.*;
 import org.example.projects.domain.Process;
-import org.example.projects.domain.enums.Status;
 import org.example.projects.domain.enums.TaskType;
 import org.example.projects.repository.ProductionLineRepository;
 import org.example.projects.repository.ProductionPlanRepository;
 import org.example.projects.service.ManufacturingSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -80,6 +76,20 @@ public class ProductionMonitorController {
         double progress = calculateOverallProgressForLine(line);
         log.info("Calculated progress for line {}: {}%", lineCode, progress);
 
+        // Find the current process and task
+        Process currentProcess = line.getProductionProcesses().stream()
+                .filter(p -> !p.isCompleted())
+                .findFirst()
+                .orElse(null);
+
+        Task currentTask = null;
+        if (currentProcess != null) {
+            currentTask = currentProcess.getTasks().stream()
+                    .filter(t -> !t.isCompleted())
+                    .findFirst()
+                    .orElse(null);
+        }
+
         Map<String, Object> progressData = new HashMap<>();
         progressData.put("productionLineCode", line.getProductionLineCode());
         progressData.put("productionLineName", line.getProductionLineName());
@@ -87,6 +97,9 @@ public class ProductionMonitorController {
         progressData.put("capacity", line.getCapacity());
         progressData.put("progress", progress);
         progressData.put("todayQty", calculateTodayProduction(line));
+        progressData.put("currentProcessType", currentProcess != null ? currentProcess.getProcessType().name() : "N/A");
+        progressData.put("currentTaskType", currentTask != null ? currentTask.getTaskType().name() : "N/A");
+        progressData.put("currentTaskProgress", currentTask != null ? currentTask.getProgress() : 0);
 
         return progressData;
     }
