@@ -3,6 +3,9 @@ package org.example.projects.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.ProductionLine;
+import org.example.projects.domain.enums.PlanStatus;
+import org.example.projects.domain.enums.Priority;
+import org.example.projects.domain.enums.Status;
 import org.example.projects.dto.ProductionLineDTO;
 import org.example.projects.repository.ProductionLineRepository;
 import org.modelmapper.ModelMapper;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Log4j2
@@ -74,49 +78,36 @@ public class ProductionLineService {
         productionLineRepository.save(line);
     }
 
-    /*// 생산계획 삭제 기능
     @Transactional
-    public void deleteProductionPlan(Long id) {
-        ProductionPlan plan = productionPlanRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Production plan not found with id: " + id));
+    public void deleteProductionLine(String code) {
+       ProductionLine line = productionLineRepository.findByProductionLineCode(code)
+               .orElseThrow(()->new RuntimeException("Production line not found with code:" + code));
 
-        // Detach from production lines
-        Set<ProductionLine> lines = new HashSet<>(plan.getProductionLines());
-        for (ProductionLine line : lines) {
-            line.getProductionPlans().remove(plan);
-            productionLineRepository.save(line);
-        }
-        plan.getProductionLines().clear();
-
-        // Delete file if exists
-        if (plan.getFileUrl() != null && !plan.getFileUrl().isEmpty()) {
-            try {
-                Path filePath = Paths.get(plan.getFileUrl());
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                log.warn("Failed to delete file: " + plan.getFileUrl(), e);
-            }
-        }
-        productionPlanRepository.delete(plan);
+       productionLineRepository.delete(line);
     }
 
-    // 생산계획 검색 기능 (검색어, 우선순위, 상태)
-    public Page<ProductionPlanDTO> searchPlans(String keyword, String priority, String status, Pageable pageable) {
-        Priority priorityEnum = priority.isEmpty() ? null : Priority.valueOf(priority);
-        PlanStatus statusEnum = status.isEmpty() ? null : PlanStatus.valueOf(status);
+    // 생산라인 검색 (생산 라인 이름, 상태)
+    public Page<ProductionLineDTO> searchLines(String productionLineName, String productionLineStatus, Pageable pageable) {
+        // status가 비어 있지 않으면 Status enum으로 변환
+        Status statusEnum = (productionLineStatus != null && !productionLineStatus.isEmpty()) ? Status.valueOf(productionLineStatus) : null;
 
-        Page<ProductionPlan> result;
+        Page<ProductionLine> result;
 
-        if (priorityEnum != null && statusEnum != null) {
-            result = productionPlanRepository.findByProductNameContainingAndPriorityAndPlanStatus(keyword, priorityEnum, statusEnum, pageable);
-        } else if (priorityEnum != null) {
-            result = productionPlanRepository.findByProductNameContainingAndPriority(keyword, priorityEnum, pageable);
+        // productionLineName과 status가 제공되었을 때 해당 값들로 검색
+        if (productionLineName != null && !productionLineName.isEmpty() && statusEnum != null) {
+            result = productionLineRepository.findByProductionLineNameAndProductionLineStatus(productionLineName, statusEnum, pageable);
+        } else if (productionLineName != null && !productionLineName.isEmpty()) {
+            result = productionLineRepository.findByProductionLineName(productionLineName, pageable);
         } else if (statusEnum != null) {
-            result = productionPlanRepository.findByProductNameContainingAndPlanStatus(keyword, statusEnum, pageable);
+            result = productionLineRepository.findByProductionLineStatus(statusEnum, pageable);
         } else {
-            result = productionPlanRepository.findByProductNameContaining(keyword, pageable);
+            result = productionLineRepository.findAll(pageable);  // 기본적으로 모든 데이터 조회
         }
 
-        return result.map(ProductionPlanDTO::fromEntity);
-    }*/
+        return result.map(ProductionLineDTO::fromEntity);
+    }
+
+
+
+
 }
