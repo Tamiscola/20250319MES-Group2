@@ -264,21 +264,21 @@ tr:hover {
     cursor: pointer;
 }
 
-#modifyPlanForm .form-row {
+#modifyLineForm .form-row {
     margin-bottom: 15px;
 }
 
-#modifyPlanForm label {
+#modifyLineForm label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
     color: #333;
 }
 
-#modifyPlanForm input[type="text"],
-#modifyPlanForm input[type="number"],
-#modifyPlanForm input[type="date"],
-#modifyPlanForm select {
+#modifyLineForm input[type="text"],
+#modifyLineForm input[type="number"],
+#modifyLineForm input[type="date"],
+#modifyLineForm select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -286,22 +286,22 @@ tr:hover {
     font-size: 14px;
 }
 
-#modifyPlanForm .radio-group {
+#modifyLineForm .radio-group {
     display: flex;
     gap: 15px;
 }
 
-#modifyPlanForm .radio-item {
+#modifyLineForm .radio-item {
     display: flex;
     align-items: center;
 }
 
-#modifyPlanForm .form-actions {
+#modifyLineForm .form-actions {
     margin-top: 20px;
     text-align: right;
 }
 
-#modifyPlanForm .button {
+#modifyLineForm .button {
     background-color: #4682b4;
     color: white;
     border: none;
@@ -312,7 +312,7 @@ tr:hover {
     transition: background-color 0.3s;
 }
 
-#modifyPlanForm .button:hover {
+#modifyLineForm .button:hover {
     background-color: #396a93;
 }
 

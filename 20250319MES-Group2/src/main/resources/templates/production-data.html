@@ -288,7 +288,7 @@
         </div>
     </div>
     <div class="company-information">
-        <p><b>Bio One</b></p>
+        <p><b>SemiCon</b></p>
         <p><b>경기도 성남시 분당구 190번길 45</b></p>
         <p><b>Tel : 031-250-8900</b></p>
         <p><b>Fax : 031-250-8901</b></p>
@@ -349,47 +349,24 @@
             <th>Actual Qty</th>
             <th>Yield Rate</th>
             <th>Status</th>
+            <th>Result Date</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>BATCH-2024-001</td>
-            <td>Line A</td>
-            <td>Microprocessor</td>
-            <td>2024-03-15 08:00</td>
-            <td>2024-03-16 17:00</td>
-            <td>1000</td>
-            <td>980</td>
-            <td>98%</td>
+        <tr th:each="result : ${results}">
+            <td th:text="${result.productionResultId}"></td>
+            <td th:text="${result.productionLine.productionLineName}"></td>
+            <td th:text="${result.productName}"></td>
+            <td th:text="${result.startTime}"></td>
+            <td th:text="${result.endTime}"></td>
+            <td th:text="${result.plannedQuantity}"></td>
+            <td th:text="${result.actualQuantity}"></td>
+            <td th:text="${#numbers.formatDecimal(result.yieldRate,1,2)} + '%'"></td>
             <td>
-                <span class="status-cell status-completed">Completed</span>
+                <span th:class="'status-cell status-' + ${result.status.name().toLowerCase()}"
+                      th:text="${result.status.name()}"></span>
             </td>
-        </tr>
-        <tr>
-            <td>BATCH-2024-002</td>
-            <td>Line B</td>
-            <td>Memory Chip</td>
-            <td>2024-03-16 09:00</td>
-            <td>2024-03-17 16:30</td>
-            <td>1500</td>
-            <td>1450</td>
-            <td>96.7%</td>
-            <td>
-                <span class="status-cell status-completed">Completed</span>
-            </td>
-        </tr>
-        <tr>
-            <td>BATCH-2024-003</td>
-            <td>Line A</td>
-            <td>Microprocessor</td>
-            <td>2024-03-17 07:30</td>
-            <td>-</td>
-            <td>1200</td>
-            <td>600</td>
-            <td>50%</td>
-            <td>
-                <span class="status-cell status-in-progress">In Progress</span>
-            </td>
+            <td th:text="${result.resultDate}"></td>
         </tr>
         </tbody>
     </table>

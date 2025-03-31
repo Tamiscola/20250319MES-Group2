@@ -45,8 +45,12 @@ public class ManufacturingSimulator {
 
     @Autowired
     private ProductionPlanService productionPlanService;
+
     @Autowired
     private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    private ProductionDataRepository productionDataRepository;
 
     private void resetTasks(ProductionLine line) {
         for (Process process : line.getProductionProcesses()) {
@@ -316,9 +320,26 @@ public class ManufacturingSimulator {
     }
 
     private void finalizeProductQuantity(Product product, ProductionPlan plan) {
-        product.setQuantity(plan.getTargetQty());  // Ensure final quantity matches target
+        product.setQuantity(plan.getTargetQty());
         productRepository.save(product);
         log.info("Finalized product quantity. Final quantity: {}", product.getQuantity());
+
+        // Create ProductionResult
+        ProductionData result = ProductionData.builder()
+                .productionLine(product.getProductionLine())
+                .productionPlan(plan)
+                .productName(product.getProductName())
+                .plannedQuantity(plan.getTargetQty()) // Target Quantity
+                .actualQuantity(product.getQuantity()) // Actual, post-simulation
+                .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100) // Rate
+                .status(plan.getPlanStatus()) // Copy status from plan
+                .startTime(plan.getStartDate())
+                .endTime(LocalDate.now())   // Mark as completed now
+                .build();
+
+        productionDataRepository.save(result);
+
+        log.info("Created production result: {}", result);
     }
 
     // Helper method to calculate overall progress for a process
