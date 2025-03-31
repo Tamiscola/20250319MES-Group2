@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lineCode = button.dataset.lineCode;
             console.log("Simulate button clicked for line:", lineCode);
             $.get(`/monitor/simulate/${lineCode}`, () => {
-                alert('Simulation started for line: ' + lineCode);
+                console.log('Simulation started for line: ', lineCode);
                 startProgressPolling(lineCode);  // Start polling for this specific line
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error("Error starting simulation:", textStatus, errorThrown);

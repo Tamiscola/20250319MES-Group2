@@ -21,13 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const lineCode = button.dataset.lineCode;
             console.log("Simulate button clicked for line:", lineCode);
             $.get(`/monitor/simulate/${lineCode}`, () => {
-                alert('Simulation started for line: ' + lineCode);
+                console.log('Simulation started for line: ', lineCode);
                 startProgressPolling(lineCode);  // Start polling for this specific line
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error("Error starting simulation:", textStatus, errorThrown);
                 alert('Failed to start simulation. Please check the console for more details.');
             });
         });
+    });
+
+    // Automatically start polling for lines that are already in progress
+    const lineCards = document.querySelectorAll('.production-line-card');
+    lineCards.forEach(lineCard => {
+        const lineCode = lineCard.dataset.lineCode;
+        const statusElement = lineCard.querySelector('.status');
+
+        if (statusElement && statusElement.textContent.trim().toLowerCase() === 'in progress') {
+            console.log(`Line ${lineCode} is already in progress. Starting polling.`);
+            startProgressPolling(lineCode);  // Start polling automatically for active lines
+        }
     });
 
     // Function to update circular progress
@@ -41,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Invalid progress value:', progress);
         }
     }
-
 
     // Polling function to update progress for a specific line
     function startProgressPolling(lineCode) {
