@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,9 @@ public class ProductionLineController {
 
         List<String> productionLineNames = productionLineService.getAllProductionLineName();
 
+        // 오름차순으로 정렬
+        productionLineNames.sort(String::compareTo);
+
         Sort.Direction sortDirection = Sort.Direction.fromString(direction);
         Sort sortObj = Sort.by(sortDirection, sort);
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
@@ -51,7 +55,7 @@ public class ProductionLineController {
         return "production-line";
     }
 
-//    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
+    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/create")
     public String createLine(@ModelAttribute ProductionLineDTO productionLineDTO) {
         try {
@@ -71,7 +75,7 @@ public class ProductionLineController {
         return ResponseEntity.ok(lineDTO);
     }
 
-//    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
+    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
     @PostMapping("/modify")
     public String modifyLine(@ModelAttribute ProductionLineDTO productionLineDTO) {
         try {
@@ -83,7 +87,7 @@ public class ProductionLineController {
         }
     }
 
-//    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/delete/{code}")
     public String deletedLine(@PathVariable String code){
         try{
@@ -96,7 +100,7 @@ public class ProductionLineController {
     }
 
     @GetMapping("/search")
-    public String searchLines(@RequestParam(required = false, defaultValue = "") String productionLineName,
+    public String searchLines(@RequestParam(required = false, defaultValue = "DESC") String productionLineName,
                               @RequestParam(required = false, defaultValue = "") String productionLineStatus,
                               @RequestParam(required = false)
                               @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate regDate,
@@ -126,6 +130,9 @@ public class ProductionLineController {
         // DB에서 모든 생산라인 이름 목록을 가져옵니다.
         List<String> productionLineNames = productionLineService.getAllProductionLineName();
 
+        // 오름차순으로 정렬
+        productionLineNames.sort(String::compareTo);
+
         // 뷰에 전달할 데이터 설정
         model.addAttribute("lines", searchResult);
         model.addAttribute("productionLineNames", productionLineNames); // 생산라인 이름 목록 // 드롭다운에 사용할 생산라인 목록
@@ -133,7 +140,7 @@ public class ProductionLineController {
         model.addAttribute("selectedProductionLineStatus", productionLineStatus);
         model.addAttribute("selectedRegDate", regDate);
 
-        return "production-line";  // JSP 또는 Thymeleaf 뷰 이름
+        return "production-line";
     }
 
 
