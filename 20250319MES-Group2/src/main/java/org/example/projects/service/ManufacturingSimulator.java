@@ -154,11 +154,28 @@ public class ManufacturingSimulator {
                 if (process.getProcessType() == ProcessType.COMPLETED) {
                     log.info("Reached COMPLETED process type. Finalizing production.");
                     Task finalVerificationTask = process.getTasks().get(0);
+
+                    // Process the verification task normally
+                    do {
+                        updateTaskProgress(finalVerificationTask);
+                        process.setProgress(calculateProcessProgress(process));
+                        processRepository.save(process);
+                        updateProductQuantity(product, plan, finalVerificationTask);
+                        taskRepository.save(finalVerificationTask);
+
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            log.error("Simulation interrupted", e);
+                        }
+                    } while (!finalVerificationTask.isCompleted());
+
                     finalizeProductQuantity(product, plan);
-                    finalVerificationTask.setCompleted(true);
                     process.setCompleted(true);
                     simulationCompleted = true;
-                    break;
+                    // Remove the break statement to ensure process completion is saved
+                    processRepository.save(process);
                 }
 
                 log.info("Number of tasks for process {}: {}", process.getProcessType(), process.getTasks().size());
