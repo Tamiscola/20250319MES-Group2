@@ -363,8 +363,8 @@
             <td th:text="${result.actualQuantity}"></td>
             <td th:text="${#numbers.formatDecimal(result.yieldRate,1,2)} + '%'"></td>
             <td>
-                <span th:class="'status-cell status-' + ${result.status.name().toLowerCase()}"
-                      th:text="${result.status.name()}"></span>
+    <span th:class="'status-cell status-' + ${result.status.name().toLowerCase().replace('_', '-')}"
+          th:text="${result.status.name()}"></span>
             </td>
             <td th:text="${result.resultDate}"></td>
         </tr>

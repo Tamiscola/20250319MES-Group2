@@ -324,26 +324,40 @@ public class ManufacturingSimulator {
         productRepository.save(product);
         log.info("Finalized product quantity. Final quantity: {}", product.getQuantity());
 
-        // Create ProductionResult
-        ProductionData result = ProductionData.builder()
-                .productionLine(product.getProductionLine())
-                .productionPlan(plan)
-                .productName(product.getProductName())
-                .plannedQuantity(plan.getTargetQty()) // Target Quantity
-                .actualQuantity(product.getQuantity()) // Actual, post-simulation
-                .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100) // Rate
-                .status(plan.getPlanStatus()) // Copy status from plan
-                .startTime(plan.getStartDate())
-                .endTime(LocalDate.now())   // Mark as completed now
-                .build();
+        // Check if a ProductionResult already exists for this plan
+        ProductionData existingResult = productionDataRepository.findByProductionPlan(plan)
+                .orElse(null);
 
-        productionDataRepository.save(result);
+        if (existingResult != null) {
+            // Update the existing result
+            existingResult.setActualQuantity(product.getQuantity());
+            existingResult.setYieldRate((double) product.getQuantity() / plan.getTargetQty() * 100);
+            existingResult.setStatus(plan.getPlanStatus());
+            existingResult.setEndTime(LocalDate.now()); // Update end time if completed
+            productionDataRepository.save(existingResult);
+            log.info("Updated production result: {}", existingResult);
+        } else {
+            // Create a new result if none exists
+            ProductionData newResult = ProductionData.builder()
+                    .productionLine(product.getProductionLine())
+                    .productionPlan(plan)
+                    .productName(product.getProductName())
+                    .plannedQuantity(plan.getTargetQty()) // Target Quantity
+                    .actualQuantity(product.getQuantity()) // Actual Quantity
+                    .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100) // Yield Rate
+                    .status(plan.getPlanStatus()) // Status
+                    .startTime(plan.getStartDate())
+                    .endTime(LocalDate.now())   // End time
+                    .build();
 
-        log.info("Created production result: {}", result);
+            productionDataRepository.save(newResult);
+
+            log.info("Created production result: {}", newResult);
+        }
     }
 
     // Helper method to calculate overall progress for a process
-    private int calculateProcessProgress(Process process) {
+    private int calculateProcessProgress (Process process){
         return (int) process.getTasks().stream()
                 .mapToDouble(Task::getProgress)
                 .average()
@@ -351,7 +365,7 @@ public class ManufacturingSimulator {
     }
 
     // Create products based on the production plan
-    private void createProducts(ProductionPlan plan) {
+    private void createProducts (ProductionPlan plan){
         Product product = Product.builder()
                 .productName(plan.getProductName())
                 .productionPlan(plan)

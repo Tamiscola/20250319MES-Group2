@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update status
             statusElement.textContent = data.status;
-            statusElement.className = `status ${data.status.toLowerCase()}`;
+            statusElement.className = `status ${data.status.toLowerCase().replace('_', '-')}`;
 
             // Update capacity and today's production if available
             const capacityElement = lineCard.querySelector('.summary-item:nth-child(1) strong');
