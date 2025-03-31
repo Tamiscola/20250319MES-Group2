@@ -8,10 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductionLineRepository extends JpaRepository<ProductionLine, String> {
+
     @EntityGraph(attributePaths = "productionLineCode")
     Page<ProductionLine> findAll(Pageable pageable);
 
@@ -26,4 +28,13 @@ public interface ProductionLineRepository extends JpaRepository<ProductionLine, 
     Page<ProductionLine> findByProductionLineStatus(Status status, Pageable pageable);
 
     Page<ProductionLine> findByProductionLineName(String productionLineName, Pageable pageable);
+
+    Page<ProductionLine> findByProductionLineNameAndProductionLineStatusAndRegDate(String productionLineName, Status status, LocalDate regDate, Pageable pageable);
+
+    Page<ProductionLine> findByProductionLineNameAndRegDate(String productionLineName, LocalDate regDate, Pageable pageable);
+
+    Page<ProductionLine> findByProductionLineStatusAndRegDate(Status status, LocalDate regDate, Pageable pageable);
+
+    Page<ProductionLine> findByRegDate(LocalDate regDate, Pageable pageable);
+
 }

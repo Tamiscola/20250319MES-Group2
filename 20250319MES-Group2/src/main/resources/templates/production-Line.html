@@ -71,25 +71,97 @@
         <!-- Integrated Production Plan Content -->
         <div class="container-fluid" layout:fragment="content">
             <div class="container">
+
+                <!-- 생산라인 입력 폼 -->
+                <div class="form-container">
+                    <div class="section-title">생산라인 입력</div>
+                    <form th:action="@{/line/create}" method="post" enctype="multipart/form-data">
+
+                        <div class="form-row">
+                            <label for="ProductionLineName">라인명:</label>
+                            <input type="text" id="ProductionLineName" name="ProductionLineName" value="" required>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="location">설치 위치 선택:</label>
+                            <select id="location" name="location" class="dropdown" required>
+                                <option value="">위치</option>
+                                <option value="1층">1층</option>
+                                <option value="2층">2층</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="capacity">용량:</label>
+                            <input type="text" id="capacity" name="capacity" value="" required>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="equipment">설비 정보:</label>
+                            <input type="text" id="equipment" name="equipment" value="" required>
+                        </div>
+
+                        <div class="form-row">
+                            <label>상태:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="statusNormal" name="productionLineStatus" value="NORMAL">
+                                    <label for="statusNormal">NORMAL</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="statusDefected" name="productionLineStatus" value="DEFECTED">
+                                    <label for="statusDefected">DEFECTED</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="manager">담당자:</label>
+                            <input type="text" id="manager" name="manager" value="" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="button">저장</button>
+                            <button type="button" class="button">취소</button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- 생산계획 목록 섹션 -->
                 <div class="section-title">생산라인 목록</div>
 
                 <!-- 검색 및 필터 영역 -->
-                <form th:action="@{/line/search}" method="get" class="search-bar">
-                    <select name="productionLineName" class="dropdown">
-                        <option value="">LINE</option>
-                        <option value="생산 라인 1" th:selected="${selectedProductionLineName == '생산 라인 1'}">생산 라인 1</option>
-                        <option value="생산 라인 2" th:selected="${selectedProductionLineName == '생산 라인 2'}">생산 라인 2</option>
-                        <option value="생산 라인 3" th:selected="${selectedProductionLineName == '생산 라인 3'}">생산 라인 3</option>
-                    </select>
+                <form th:action="@{/line/search}" method="get" class="search-bar row d-flex justify-content-center">
+                    <div class="col-auto">
+                        <select name="productionLineName" class="dropdown">
+                            <option value="">LINE</option>
+                            <!-- DB에서 가져온 생산라인 이름을 드롭다운으로 출력 -->
+                            <th:block th:each="lineName : ${productionLineNames}">
+                                <option th:value="${lineName}"
+                                        th:text="${lineName}"
+                                        th:selected="${lineName == selectedProductionLineName}">LINE</option>
+                            </th:block>
+                        </select>
+                    </div>
 
-                    <select name="productionLineStatus" class="dropdown">
-                        <option value="">STATUS</option>
-                        <option value="NORMAL" th:selected="${selectedProductionLineStatus == 'NORMAL'}">NORMAL</option>
-                        <option value="DEFECTED" th:selected="${selectedProductionLineStatus == 'DEFECTED'}">DEFECTED</option>
-                    </select>
 
-                    <button type="submit" class="button">검색</button>
+                    <div class="col-auto">
+                        <select name="productionLineStatus" class="dropdown">
+                            <option value="">STATUS</option>
+                            <option value="NORMAL" th:selected="${selectedProductionLineStatus == 'NORMAL'}">NORMAL</option>
+                            <option value="DEFECTED" th:selected="${selectedProductionLineStatus == 'DEFECTED'}">DEFECTED</option>
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <input type="date" name="regDate" class="form-control" th:value="${selectedRegDate}">
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">검색</button>
+                        <button type="button" id="reset" class="btn btn-secondary">초기화</button>
+                    </div>
+
                 </form>
 
                 <!-- 생산라인 테이블 -->
@@ -100,12 +172,11 @@
                         <th data-column="productionLineCode" class="sortable">코드</th>
                         <th data-column="productionLineName" class="sortable">라인명</th>
                         <th data-column="location" class="sortable">위치</th>
-                        <th data-column="manager" class="sortable">담당자</th>
                         <th data-column="capacity" class="sortable">용량</th>
                         <th data-column="equipment" class="sortable">설비정보</th>
-                        <th data-column="todayQty" class="sortable">금일목표수량</th>
                         <th data-column="productionLineStatus" class="sortable">상태</th>
-                        <th data-column="achievedQty" class="sortable">달성수량</th>
+                        <th data-column="manager" class="sortable">담당자</th>
+                        <th data-column="regDate" class="sortable">등록날짜</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -114,12 +185,11 @@
                         <td th:text="${iterStat.count + (lines.number * lines.size)}"></td>
                         <td><span th:text="${line.productionLineName}"></span></td>
                         <td th:text="${line.location}"></td>
-                        <td th:text="${line.manager}"></td>
                         <td th:text="${line.capacity}"></td>
                         <th th:text="${line.equipment}"></th>
-                        <td th:text="${line.todayQty}"></td>
                         <td th:text="${line.productionLineStatus}"></td>
-                        <td th:text="${line.achievedQty}"></td>
+                        <td th:text="${line.manager}"></td>
+                        <td th:text="${line.regDate}"></td>
                         <td class="action-btn">
                             <button class="button" th:data-production-line-code="${line.productionLineCode}" onclick="openModifyModal(this.getAttribute('data-production-line-code'))">수정</button>
                         </td>
@@ -159,71 +229,6 @@
                         다음
                     </button>
                 </div>
-
-
-                <!-- 생산라인 입력 폼 -->
-                <div class="form-container">
-                    <div class="section-title">생산라인 입력</div>
-                    <form th:action="@{/line/create}" method="post" enctype="multipart/form-data">
-                        <div class="form-row">
-                            <label for="ProductionLineName">라인명 선택:</label>
-                            <select id="ProductionLineName" name="ProductionLineName" class="dropdown" required>
-                                <option value="">라인명</option>
-                                <option value="생산 라인 1">생산 라인 1</option>
-                                <option value="생산 라인 2">생산 라인 2</option>
-                                <option value="생산 라인 3">생산 라인 3</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="location">설치 위치 선택:</label>
-                            <select id="location" name="location" class="dropdown" required>
-                                <option value="">위치</option>
-                                <option value="1층">1층</option>
-                                <option value="2층">2층</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="manager">담당자:</label>
-                            <input type="text" id="manager" name="manager" value="홍길동" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="capacity">용량:</label>
-                            <input type="text" id="capacity" name="capacity" value="1000" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="equipment">설비 정보:</label>
-                            <input type="text" id="equipment" name="equipment" value="" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="todayQty">금일 목표 수량:</label>
-                            <input type="text" id="todayQty" name="todayQty" value="1000" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label>상태:</label>
-                            <div class="radio-group">
-                                <div class="radio-item">
-                                    <input type="radio" id="statusNormal" name="productionLineStatus" value="NORMAL">
-                                    <label for="statusNormal">NORMAL</label>
-                                </div>
-                                <div class="radio-item">
-                                    <input type="radio" id="statusDefected" name="productionLineStatus" value="DEFECTED">
-                                    <label for="statusDefected">DEFECTED</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="button">저장</button>
-                            <button type="button" class="button">취소</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -237,13 +242,8 @@
         <form id="modifyLineForm" th:action="@{/line/modify}" method="post" enctype="multipart/form-data">
             <input type="hidden" id="modifyProductionLineCode" name="productionLineCode">
             <div class="form-row">
-                <label for="modifyProductionLineName">라인명 선택:</label>
-                <select id="modifyProductionLineName" name="productionLineName" class="dropdown" required>
-                    <option value="">라인명</option>
-                    <option value="생산 라인 1">생산 라인 1</option>
-                    <option value="생산 라인 2">생산 라인 2</option>
-                    <option value="생산 라인 3">생산 라인 3</option>
-                </select>
+                <label for="modifyProductionLineName">라인명:</label>
+                <input type="text" id="modifyProductionLineName" name="productionLineName" required>
             </div>
 
             <div class="form-row">
@@ -256,11 +256,6 @@
             </div>
 
             <div class="form-row">
-                <label for="modifyManager">담당자:</label>
-                <input type="text" id="modifyManager" name="manager" required>
-            </div>
-
-            <div class="form-row">
                 <label for="modifyCapacity">용량:</label>
                 <input type="text" id="modifyCapacity" name="capacity" required>
             </div>
@@ -268,11 +263,6 @@
             <div class="form-row">
                 <label for="modifyEquipment">설비 정보:</label>
                 <input type="text" id="modifyEquipment" name="equipment" required>
-            </div>
-
-            <div class="form-row">
-                <label for="modifyTodayQty">금일 목표 수량:</label>
-                <input type="text" id="modifyTodayQty" name="todayQty" required>
             </div>
 
             <div class="form-row">
@@ -290,8 +280,8 @@
             </div>
 
             <div class="form-row">
-                <label for="modifyAchievedQty">달성 수량:</label>
-                <input type="text" id="modifyAchievedQty" name="achievedQty" required>
+                <label for="modifyManager">담당자:</label>
+                <input type="text" id="modifyManager" name="manager" required>
             </div>
 
             <div class="form-actions">
@@ -314,6 +304,19 @@
        $("#selectAll").click(function(){
            $("input[name='selectedLine']").prop('checked', $(this).prop('checked'));
        });
+
+
+        // 초기화 버튼 클릭 시 검색 폼 리셋
+        $('#reset').click(function() {
+            // 검색 폼 초기화
+            $('select[name="productionLineName"]').val('');
+            $('select[name="productionLineStatus"]').val('');
+            $('input[name="regDate"]').val('');
+
+            // 초기화 후 폼을 제출하지 않고 URL 파라미터도 초기화하려면 새로고침
+            window.location.href = window.location.pathname;
+        });
+
 
        $("#deleteSelected").click(function(e) {
            e.preventDefault();
@@ -389,7 +392,7 @@
            success: function(data) {
 
                $('#modifyProductionLineCode').val(data.productionLineCode);
-               $('#modifyProductionLineName option[value="' + data.productionLineName + '"]').prop('selected', true);
+               $('#modifyProductionLineName').val(data.productionLineName);
                $('#modifyLocation option[value="' + data.location + '"]').prop('selected', true);
                $('#modifyManager').val(data.manager);
                $('#modifyCapacity').val(data.capacity);
