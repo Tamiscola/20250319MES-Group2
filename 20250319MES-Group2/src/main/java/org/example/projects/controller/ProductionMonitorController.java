@@ -113,16 +113,17 @@ public class ProductionMonitorController {
 
         if (processes == null || processes.isEmpty()) {
             simulator.createProcessesForLine(line);
+            processes = line.getProductionProcesses(); // Get newly created processes
         }
 
-        int totalTasks = TaskType.values().length;
         double totalProgress = 0.0;
-
-        log.info("Total number of task types: {}", totalTasks);
+        int totalTasks = 0;
 
         for (Process process : processes) {
+            List<Task> tasks = process.getTasks();
+            totalTasks += tasks.size();  // Count actual existing tasks
             log.info("Processing process: {}", process.getProcessType());
-            for (Task task : process.getTasks()) {
+            for (Task task : tasks) {
                 log.info("Task type: {}, Current progress: {}", task.getTaskType(), task.getProgress());
                 totalProgress += task.getProgress(); // Add task progress directly
             }
@@ -133,10 +134,10 @@ public class ProductionMonitorController {
         }
 
         // Calculate the average progress across all tasks
-        double overallProgress = totalProgress / totalTasks;
+        double overallProgress = (totalProgress / totalTasks);
         log.info("Overall progress calculation: totalProgress={}, totalTasks={}, result={}%",
                 totalProgress, totalTasks, overallProgress);
-        return overallProgress; // Return the average progress as a percentage
+        return Math.min(overallProgress, 100.0);  // Ensure maximum 100%
     }
 
     private int calculateTodayProduction(ProductionLine line) {

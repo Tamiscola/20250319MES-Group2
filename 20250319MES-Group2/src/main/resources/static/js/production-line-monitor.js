@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update progress
             console.log("data.progress: ", data.progress);
-            const progress = Math.min(Number(data.progress), 100).toFixed(1);
+            const progress = Math.min(Math.max(Number(data.progress), 0), 100).toFixed(1);
             console.log("Calculated progress:", progress);
             updateCircularProgress(progressElement, progress);
             progressValueElement.textContent = `${progress}%`;
