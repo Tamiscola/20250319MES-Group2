@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailsToggles = document.querySelectorAll('.details-toggle');
     // Reset button
     const resetButton = document.getElementById('reset-progress');
+    if (!resetButton) {
+            console.error("Reset button not found in DOM.");
+            return;
+        }
 
     detailsToggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
@@ -123,8 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
             progressValueElement.textContent = `${progress}%`;
 
             // Update status
-            statusElement.textContent = data.status;
-            statusElement.className = `status ${data.status.toLowerCase().replace('_', '-')}`;
+            if (data.planStatus) {
+                statusElement.textContent = data.planStatus;
+                statusElement.className = `status ${data.planStatus.toLowerCase().replace('_', '-')}`;
+            } else {
+                console.error("planStatus is undefined or invalid:", data.planStatus);
+                statusElement.textContent = "Unknown";
+                statusElement.className = "status unknown";
+            }
 
             // Update capacity and today's production if available
             const capacityElement = lineCard.querySelector('.summary-item:nth-child(1) strong');
@@ -155,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     resetButton.addEventListener('click', () => {
+        console.log(resetButton);
         if (confirm("Are you sure you want to reset all progress? This action cannot be undone.")) {
             fetch('/monitor/reset', { method: 'POST' })
                 .then(response => {

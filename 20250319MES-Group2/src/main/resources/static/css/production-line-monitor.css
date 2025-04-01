@@ -16,6 +16,8 @@ body {
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    padding: 20px;
 }
 
 .production-lines-grid {
@@ -59,6 +61,20 @@ body {
     background-color: var(--defected-status-color);
     color: white;
 }
+
+/* Update status classes to match PlanStatus */
+.status.standby {
+    color: blue;
+}
+
+.status.in-progress {
+    color: orange;
+}
+
+.status.completed {
+    color: green;
+}
+
 
 .progress-container {
     display: flex;
@@ -143,12 +159,15 @@ body {
     border-bottom: 1px solid #f1f1f1;
 }
 
-.reset-container {
-    margin: 20px 0;
-    text-align: center;
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 .reset-button {
+    position: relative; /* Adjust based on your layout */
+    margin-top: 10px;
+    margin-bottom: 20px;
     background-color: #e74c3c;
     color: white;
     border: none;

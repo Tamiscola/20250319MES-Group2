@@ -6,12 +6,10 @@ import org.example.projects.domain.*;
 import org.example.projects.domain.Process;
 import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.TaskType;
-import org.example.projects.repository.ProcessRepository;
-import org.example.projects.repository.ProductionLineRepository;
-import org.example.projects.repository.ProductionPlanRepository;
-import org.example.projects.repository.TaskRepository;
+import org.example.projects.repository.*;
 import org.example.projects.service.ManufacturingSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +42,9 @@ public class ProductionMonitorController {
     @Autowired
     private ProcessRepository processRepository;
 
+    @Autowired
+    private ProductionDataRepository productionDataRepository;
+
     @GetMapping("/list")
     public String list(Model model) {
         List<ProductionLine> lines = productionLineRepository.findAll();
@@ -58,18 +59,21 @@ public class ProductionMonitorController {
         List<ProductionLine> lines = productionLineRepository.findAll();
 
         return lines.stream().map(line -> {
-            double progress = calculateOverallProgressForLine(line);
+            // Get the first production plan for this line
+            ProductionPlan plan = line.getProductionPlans().stream()
+                    .findFirst()
+                    .orElse(null);
+
+            PlanStatus planStatus = plan != null ?
+                    plan.getPlanStatus() :
+                    PlanStatus.STANDBY;
 
             Map<String, Object> progressData = new HashMap<>();
             progressData.put("productionLineCode", line.getProductionLineCode());
             progressData.put("productionLineName", line.getProductionLineName());
-            progressData.put("status", line.getProductionLineStatus());
-            progressData.put("planStatus", line.getProductionPlans().stream()
-                    .findFirst()
-                    .map(ProductionPlan::getPlanStatus)
-                    .orElse(PlanStatus.STANDBY));
+            progressData.put("planStatus", planStatus.name());
             progressData.put("capacity", line.getCapacity());
-            progressData.put("progress", progress);
+            progressData.put("progress", calculateOverallProgressForLine(line));
             progressData.put("todayQty", calculateTodayProduction(line));
 
             // Include current process and task details
@@ -208,28 +212,44 @@ public class ProductionMonitorController {
 
     @PostMapping("/reset")
     public ResponseEntity<String> resetProgress() {
-        // Reset all tasks
-        List<Task> tasks = taskRepository.findAll();
-        tasks.forEach(task -> {
-            task.setProgress(0);
-            task.setCompleted(false);
-        });
-        taskRepository.saveAll(tasks);
+        try {
+            // Reset all production plans
+            List<ProductionPlan> plans = productionPlanRepository.findAll();
+            plans.forEach(plan -> {
+                plan.setPlanStatus(PlanStatus.STANDBY);
+                plan.setEndDate(null);
+            });
+            productionPlanRepository.saveAll(plans);
 
-        // Reset all processes
-        List<Process> processes = processRepository.findAll();
-        processes.forEach(process -> {
-            process.setProgress(0);
-            process.setCompleted(false);
-        });
-        processRepository.saveAll(processes);
+            // Reset all tasks
+            List<Task> tasks = taskRepository.findAll();
+            tasks.forEach(task -> {
+                task.setProgress(0);
+                task.setCompleted(false);
+            });
+            taskRepository.saveAll(tasks);
 
-        // Reset all production lines
-        List<ProductionLine> productionLines = productionLineRepository.findAll();
-        productionLines.forEach(line -> line.setProgress(0.0));
-        productionLineRepository.saveAll(productionLines);
+            // Reset all processes
+            List<Process> processes = processRepository.findAll();
+            processes.forEach(process -> {
+                process.setProgress(0);
+                process.setCompleted(false);
+            });
+            processRepository.saveAll(processes);
 
-        return ResponseEntity.ok("All progress has been reset.");
+            // Reset all production lines
+            List<ProductionLine> lines = productionLineRepository.findAll();
+            lines.forEach(line -> line.setProgress(0.0));
+            productionLineRepository.saveAll(lines);
+
+            // Delete incomplete production results
+            productionDataRepository.deleteByStatus(PlanStatus.IN_PROGRESS);
+
+            return ResponseEntity.ok("All progress has been reset.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to reset progress.");
+        }
     }
 }
 

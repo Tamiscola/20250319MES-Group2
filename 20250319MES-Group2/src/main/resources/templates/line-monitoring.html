@@ -8,6 +8,7 @@
 <body>
 <div class="dashboard-container">
     <h1>Production Line Monitoring</h1>
+    <button id="reset-progress" class="reset-button">Reset Progress</button>
 
     <div class="production-lines-grid">
         <!-- Dynamically generate production line cards -->
@@ -35,11 +36,14 @@
                     <span>Today's Production</span>
                     <strong th:text="${line.todayQty + ' units'}">0 units</strong>
                 </div>
+                <div class="summary-item">
+                    <span th:class="'status-cell status-' + ${line.getPlanStatus().name().toLowerCase().replace('_', '-')}"
+                          th:text="${line.getPlanStatus().name()}"></span>
+                </div>
             </div>
 
             <button class="details-toggle">View Details</button>
             <button class="simulate-button" th:data-line-code="${line.productionLineCode}">Simulate</button>
-            <button id="reset-progress" class="reset-button">Reset Progress</button>
 
             <div class="line-details">
                 <div class="detail-section">

@@ -1,6 +1,8 @@
 package org.example.projects.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.ProcessType;
 import org.example.projects.domain.enums.Status;
 import org.hibernate.annotations.GenericGenerator;
@@ -29,6 +31,19 @@ public class ProductionLine {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "production_line_status")
     private Status productionLineStatus;    // 생산라인상태 (정상(Normal), 불량(Defected))
+
+    @Transient // Marks this as a derived field (not persisted in DB)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public PlanStatus getPlanStatus() {
+        if (productionPlans == null || productionPlans.isEmpty()) {
+            return PlanStatus.STANDBY;
+        }
+        // Get the first plan's status (assuming one active plan per line)
+        return productionPlans.stream()
+                .findFirst()
+                .map(ProductionPlan::getPlanStatus)
+                .orElse(PlanStatus.STANDBY);
+    }
 
     @Column(nullable = false, name = "production_line_name")
     private String productionLineName;  // 생산라인명
