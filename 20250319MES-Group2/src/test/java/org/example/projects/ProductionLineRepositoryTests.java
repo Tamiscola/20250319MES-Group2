@@ -12,8 +12,11 @@ import org.example.projects.repository.ProductionPlanRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -71,6 +74,38 @@ public class ProductionLineRepositoryTests {
             ProductionPlan result = productionPlanRepository.save(plan);
             log.info("Saved Production Plan - ID: " + result.getPlanId());
         });
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED) // Prevent rollback for testing purposes
+    public void createProductionLines() {
+        List<String> productionLineNames = List.of(
+                "Advanced Semiconductor Line 1",
+                "High-Precision Assembly Line 2",
+                "Automotive Electronics Line 3",
+                "AI Processor Manufacturing Line 4",
+                "IoT Sensor Production Line 5"
+        );
+
+        productionLineNames.forEach(name -> {
+            ProductionLine productionLine = ProductionLine.builder()
+                    .productionLineName(name)
+                    .productionLineStatus(Status.NORMAL) // Assuming NORMAL is a valid status in your Status enum
+                    .location("Factory A") // Example location, customize as needed
+                    .manager("Manager " + name.split(" ")[3]) // Example manager name based on line number
+                    .capacity(1000) // Example capacity (units per hour)
+                    .equipment("Standard Equipment Set") // Example equipment description
+                    .regDate(LocalDate.now()) // Registration date
+                    .build();
+
+            productionLineRepository.save(productionLine);
+            log.info("Saved production line: {}", productionLine);
+        });
+
+        // Verify saved lines
+        List<ProductionLine> savedLines = productionLineRepository.findAll();
+        log.info("Total production lines saved: {}", savedLines.size());
+        savedLines.forEach(line -> log.info("Production Line: {}", line));
     }
 }
 
