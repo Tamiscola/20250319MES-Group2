@@ -1,16 +1,24 @@
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #3498db;
-    --background-color: #ecf0f1;
-    --normal-status-color: #2ecc71;
-    --defected-status-color: #e74c3c;
+    --background-light: #f4f6f7;
+    --text-color: #333;
+    --border-color: #e0e4e6;
+    --sidebar-background: #e3f2fd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: var(--background-color);
-    margin: 0;
-    padding: 20px;
+    line-height: 1.6;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    display: flex;
 }
 
 .dashboard-container {
@@ -20,16 +28,90 @@ body {
     padding: 20px;
 }
 
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--sidebar-background);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-menu a:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.company-information {
+    padding: 15px;
+    background-color: rgba(0,0,0,0.05);
+    font-size: 0.8em;
+    text-align: center;
+}
+
+/* Main Content Styles */
+.production-data-container {
+    flex-grow: 1;
+    max-width: 1200px;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+/* Keeping previous CSS for production data page */
+.page-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .production-lines-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    display: flex;           /* Use flexbox for horizontal arrangement */
+    flex-wrap: wrap;        /* Allow items to wrap to the next line */
+    justify-content: flex-start; /* Align items to the left */
+    align-items: stretch;   /* Stretch items to equal height */
+    gap: 20px;              /* Gap between cards */
+    width: 100%;
 }
 
 .production-line-card {
+    flex: 1 0 300px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
     padding: 20px;
     transition: transform 0.3s ease;
 }

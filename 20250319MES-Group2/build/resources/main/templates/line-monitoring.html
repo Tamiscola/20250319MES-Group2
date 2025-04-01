@@ -6,8 +6,37 @@
     <link rel="stylesheet" th:href="@{/css/production-line-monitor.css}">
 </head>
 <body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <a th:href="@{/bio/dashboard}">SemiCon</a>
+    </div>
+    <div class="sidebar-menu">
+        <a th:href="@{/monitor/list}">생산관리 모니터링</a>
+        <a th:href="@{/monitor/list}">제품관리</a>
+        <a th:href="@{/plan/list}">생산계획관리</a>
+        <a th:href="@{/line/list}">생산라인관리</a>
+        <a th:href="@{/data/list}">생산실적</a>
+
+        <div th:if="${isAdmin}">
+            <a th:href="@{/bio/admin}">관리자 페이지</a>
+        </div>
+    </div>
+    <div class="company-information">
+        <p><b>SemiCon</b></p>
+        <p><b>경기도 성남시 분당구 190번길 45</b></p>
+        <p><b>Tel : 031-250-8900</b></p>
+        <p><b>Fax : 031-250-8901</b></p>
+        <p><b>사업자등록번호 : 111-23-45678</b></p>
+    </div>
+</div>
+
+<!-- Main Content -->
 <div class="dashboard-container">
-    <h1>Production Line Monitoring</h1>
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Production Line Monitoring</h1>
+    </div>
     <button id="reset-progress" class="reset-button">Reset Progress</button>
 
     <div class="production-lines-grid">
