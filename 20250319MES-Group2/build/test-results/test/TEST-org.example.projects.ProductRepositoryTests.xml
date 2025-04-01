@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.projects.ProductRepositoryTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-04-01T06:49:31" hostname="DESKTOP-T64HO54" time="0.238">
+  <properties/>
+  <testcase name="createProducts()" classname="org.example.projects.ProductRepositoryTests" time="0.238"/>
+  <system-out><![CDATA[15:49:24.042 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+15:49:24.052 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+15:49:24.082 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.example.projects.ProductRepositoryTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+15:49:24.092 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.example.projects.ProductRepositoryTests], using SpringBootContextLoader
+15:49:24.095 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTests-context.xml] does not exist
+15:49:24.096 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTestsContext.groovy] does not exist
+15:49:24.097 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.example.projects.ProductRepositoryTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+15:49:24.098 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.example.projects.ProductRepositoryTests]: ProductRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:49:24.138 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.example.projects.ProductRepositoryTests]
+15:49:24.194 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [D:\20250319MES-Group2\20250319MES-Group2\build\classes\java\main\org\example\Main.class]
+15:49:24.195 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.example.Main for test class org.example.projects.ProductRepositoryTests
+15:49:24.298 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.example.projects.ProductRepositoryTests]: using defaults.
+15:49:24.298 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+15:49:24.315 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@66b72664, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@7a34b7b8, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@58cd06cb, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3be8821f, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@64b31700, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3b65e559, org.springframework.test.context.transaction.TransactionalTestExecutionListener@bae47a0, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@74a9c4b0, org.springframework.test.context.event.EventPublishingTestExecutionListener@85ec632, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1c05a54d, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@65ef722a, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5fd9b663, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@214894fc, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@10567255, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@e362c57]
+15:49:24.319 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@1c65121 testClass = ProductRepositoryTests, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@159e366 testClass = ProductRepositoryTests, locations = '{}', classes = '{class org.example.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@16ecee1, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@4721d212, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@62dae540, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@636e8cc, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@78a287ed, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@2fba3fc4], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2025-04-01 15:49:24.671  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Starting ProductRepositoryTests using Java 11.0.2 on DESKTOP-T64HO54 with PID 19112 (started by human-08 in D:\20250319MES-Group2\20250319MES-Group2)
+2025-04-01 15:49:24.673  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : No active profile set, falling back to 1 default profile: "default"
+2025-04-01 15:49:25.920  INFO 19112 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-01 15:49:26.006  INFO 19112 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 7 JPA repository interfaces.
+2025-04-01 15:49:26.161  WARN 19112 --- [    Test worker] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[org.example]' package. Please check your configuration.
+2025-04-01 15:49:26.751  INFO 19112 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-01 15:49:26.804  INFO 19112 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2025-04-01 15:49:27.007  INFO 19112 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-04-01 15:49:27.134  INFO 19112 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-01 15:49:27.252  INFO 19112 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-01 15:49:27.271  INFO 19112 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2025-04-01 15:49:28.294  INFO 19112 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-04-01 15:49:28.301  INFO 19112 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-01 15:49:29.012 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)
+2025-04-01 15:49:29.032 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.054 TRACE 19112 --- [    Test worker] o.s.s.a.i.a.MethodSecurityInterceptor    : Validated configuration attributes
+2025-04-01 15:49:29.056 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-01 15:49:29.056 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.057 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-01 15:49:29.057 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.345 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-01 15:49:29.346 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.347 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-01 15:49:29.347 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.347 DEBUG 19112 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value="hasRole('USER')") found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)
+2025-04-01 15:49:29.347 DEBUG 19112 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-01 15:49:29.417 TRACE 19112 --- [    Test worker] eGlobalAuthenticationAutowiredConfigurer : Eagerly initializing {customSecurityConfig=org.example.projects.config.CustomSecurityConfig$$EnhancerBySpringCGLIB$$6b7e3ae8@198a0416}
+2025-04-01 15:49:29.493  INFO 19112 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : ---------------------config-----------------------------
+2025-04-01 15:49:29.627 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login?error=true']
+2025-04-01 15:49:29.628 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-01 15:49:29.628 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-01 15:49:29.628 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/login']
+2025-04-01 15:49:29.628 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/oauth2/**']
+2025-04-01 15:49:29.628 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/error']
+2025-04-01 15:49:29.629 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [hasRole('ROLE_USER')] for Ant [pattern='/plan/**']
+2025-04-01 15:49:29.629 DEBUG 19112 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [authenticated] for any request
+2025-04-01 15:49:29.634 TRACE 19112 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-01 15:49:29.635 TRACE 19112 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-01 15:49:29.643  INFO 19112 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2d6cbbdb, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@408a0e92, org.springframework.security.web.context.SecurityContextPersistenceFilter@7fe40b9f, org.springframework.security.web.header.HeaderWriterFilter@6fe55fcf, org.springframework.security.web.authentication.logout.LogoutFilter@16df0ebd, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@36995784, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4a9d6eb9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@157a2c86, org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter@70313b0b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2d18d9ed, org.springframework.security.web.session.SessionManagementFilter@42c9f2cd, org.springframework.security.web.access.ExceptionTranslationFilter@4f5ad6b7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6391d34f]
+2025-04-01 15:49:29.655  INFO 19112 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : -------------------------web configure--------------------
+2025-04-01 15:49:29.661  WARN 19112 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@6015c745. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-04-01 15:49:29.661  INFO 19112 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@6015c745
+2025-04-01 15:49:29.939  WARN 19112 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-01 15:49:31.074  INFO 19112 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-04-01 15:49:31.164  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Started ProductRepositoryTests in 6.776 seconds (JVM running for 7.991)
+Hibernate: 
+    select
+        count(*) as col_0_0_ 
+    from
+        user_role userrole0_
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, production_plan_id, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-04-01 15:49:31.434  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Saved product: Product(productId=01358ddd-dab3-4e1b-a8ed-05aff84304e6, productName=14nm FinFET Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, production_plan_id, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-04-01 15:49:31.441  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Saved product: Product(productId=c664d410-a764-46ca-a3a9-fb88e24c68c8, productName=5nm AI Processor, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, production_plan_id, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-04-01 15:49:31.451  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Saved product: Product(productId=9997429a-4fd1-49b0-8429-0f031732d6b3, productName=7nm Automotive SoC, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, production_plan_id, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-04-01 15:49:31.458  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Saved product: Product(productId=22c991c0-72e7-4276-aea2-ca777001a107, productName=3nm High-Performance Computing Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, production_plan_id, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-04-01 15:49:31.466  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Saved product: Product(productId=76dc92db-0c16-4df8-9073-bb072109ead8, productName=10nm IoT Sensor Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+Hibernate: 
+    select
+        product0_.product_id as product_1_7_,
+        product0_.manufactured_date as manufact2_7_,
+        product0_.product_name as product_3_7_,
+        product0_.product_status as product_4_7_,
+        product0_.production_line_code as producti8_7_,
+        product0_.production_plan_id as producti9_7_,
+        product0_.quantity as quantity5_7_,
+        product0_.reg_by as reg_by6_7_,
+        product0_.reg_date as reg_date7_7_ 
+    from
+        products product0_
+2025-04-01 15:49:31.495  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Total products saved: 5
+2025-04-01 15:49:31.495  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Product: Product(productId=01358ddd-dab3-4e1b-a8ed-05aff84304e6, productName=14nm FinFET Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+2025-04-01 15:49:31.495  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Product: Product(productId=22c991c0-72e7-4276-aea2-ca777001a107, productName=3nm High-Performance Computing Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+2025-04-01 15:49:31.496  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Product: Product(productId=76dc92db-0c16-4df8-9073-bb072109ead8, productName=10nm IoT Sensor Chip, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+2025-04-01 15:49:31.496  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Product: Product(productId=9997429a-4fd1-49b0-8429-0f031732d6b3, productName=7nm Automotive SoC, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+2025-04-01 15:49:31.496  INFO 19112 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Product: Product(productId=c664d410-a764-46ca-a3a9-fb88e24c68c8, productName=5nm AI Processor, productionPlan=null, productStatus=null, manufacturedDate=null, regBy=Admin, regDate=2025-04-01, quantity=100)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -27,6 +27,7 @@
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/monitor/list}">제품관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/plan/list}">생산계획관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/line/list}">생산라인관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/data/list}">생산실적</a>
 
             <div th:if="${isAdmin}">
                 <a class="list-group-item list-group-item-action list-group-item-light p-3" th:onclick="location.href='/bio/admin'">관리자 페이지</a>
@@ -66,8 +67,8 @@
                 </div>
             </div>
         </nav>
+
         <!-- Page content-->
-        <!-- Integrated Production Plan Content -->
         <div class="container-fluid" layout:fragment="content">
             <div class="container">
                 <!-- 생산계획 목록 섹션 -->
@@ -124,10 +125,6 @@
                         <td th:text="${plan.planStatus}"></td>
                         <td class="action-btn">
                             <button class="button" th:onclick="'openModifyModal(\'' + ${plan.planId} + '\')'">수정</button>
-<!--                            <form th:action="@{/plan/delete/{id}(id=${plan.planId})}" method="post" style="display: inline;">-->
-<!--                                <button type="submit" class="button delete"-->
-<!--                                        onclick="return confirm('정말 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')">삭제</button>-->
-<!--                            </form>-->
                         </td>
                     </tr>
                     </tbody>
