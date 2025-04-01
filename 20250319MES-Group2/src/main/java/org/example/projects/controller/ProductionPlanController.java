@@ -2,8 +2,12 @@ package org.example.projects.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.example.projects.domain.Product;
+import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.ProductionPlan;
 import org.example.projects.dto.ProductionPlanDTO;
+import org.example.projects.repository.ProductRepository;
+import org.example.projects.repository.ProductionLineRepository;
 import org.example.projects.service.ProductionPlanService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +23,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/plan")
 public class ProductionPlanController {
     private final ProductionPlanService productionPlanService;
+    private final ProductRepository productRepository;
+    private final ProductionLineRepository productionLineRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -35,21 +43,35 @@ public class ProductionPlanController {
                        @RequestParam(defaultValue = "DESC") String direction,
                        @PageableDefault(size = 10) Pageable pageable) {
 
+        // Fetch sorted plans
         Sort.Direction sortDirection = Sort.Direction.fromString(direction);
         Sort sortObj = Sort.by(sortDirection, sort);
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortObj);
 
         Page<ProductionPlanDTO> planDTOPage = productionPlanService.getAllPlans(sortedPageable);
         model.addAttribute("plans", planDTOPage);
-        return "production-plan";
+
+        // Fetch products and production lines for dropdowns
+        List<Product> products = productRepository.findAll();
+        List<ProductionLine> productionLines = productionLineRepository.findAll();
+
+        // Add them to the model
+        model.addAttribute("products", products);
+        model.addAttribute("productionLines", productionLines);
+
+        // Add an empty DTO for form binding
+        model.addAttribute("productionPlanDTO", new ProductionPlanDTO());
+
+        return "production-plan"; // Return your Thymeleaf template name
     }
 
-    @PreAuthorize("hasRole('USER')") // ROLE_USER인가(권한)을 가진 사람만 사용 가능
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public String createPlan(@ModelAttribute ProductionPlanDTO productionPlanDTO,
                              @RequestParam("productionLineName") String productionLineName,
                              @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
+            // Call service to create a plan
             productionPlanService.createProductionPlan(productionPlanDTO, productionLineName, file);
             return "redirect:/plan/list";
         } catch (Exception e) {

@@ -36,5 +36,4 @@ public interface ProductionLineRepository extends JpaRepository<ProductionLine, 
     Page<ProductionLine> findByProductionLineStatusAndRegDate(Status status, LocalDate regDate, Pageable pageable);
 
     Page<ProductionLine> findByRegDate(LocalDate regDate, Pageable pageable);
-
 }

@@ -92,14 +92,13 @@ public class ProductionPlanService {
     // 생산계획 추가 기능
     @Transactional
     public void createProductionPlan(ProductionPlanDTO dto, String productionLineName, MultipartFile file) throws IOException {
-        // Find or create ProductionLine
+        // Find the existing ProductionLine by name
         ProductionLine productionLine = productionLineRepository.findFirstByProductionLineName(productionLineName)
-                .orElseGet(() -> {
-                    ProductionLine newProductionLine = new ProductionLine();
-                    newProductionLine.setProductionLineName(productionLineName);
-                    newProductionLine.setProductionLineStatus(Status.NORMAL);
-                    return productionLineRepository.save(newProductionLine);
-                });
+                .orElseThrow(() -> new IllegalArgumentException("Production line with name '" + productionLineName + "' does not exist"));
+
+        // Validate that the product exists in the production line's metadata
+        Product productMetadata = productRepository.findFirstByProductName(dto.getProductName())
+                .orElseThrow(() -> new IllegalArgumentException("Product with name '" + dto.getProductName() + "' does not exist"));
 
         // Create ProductionPlan
         ProductionPlan plan = ProductionPlan.builder()
@@ -123,22 +122,22 @@ public class ProductionPlanService {
         // Save ProductionPlan
         productionPlanRepository.save(plan);
 
-        // Create and save Product
+        // Create Product instance linked to the plan and production line
         Product product = Product.builder()
-                .productName(dto.getProductName())
-                .productionLine(productionLine)
-                .productionPlan(plan)
-                .regBy(dto.getManager())
-                .quantity(0)
+                .productName(productMetadata.getProductName()) // Use metadata product name
+                .productionLine(productionLine) // Link to the existing production line
+                .productionPlan(plan) // Link to the newly created plan
+                .regBy(dto.getManager()) // Manager from DTO
+                .quantity(0) // Initial quantity
                 .build();
 
         productRepository.save(product);
 
-        // Create Processes and Tasks
+        // Create Processes and Tasks based on metadata
         for (ProcessType processType : ProcessType.values()) {
             Process process = Process.builder()
                     .processType(processType)
-                    .productionLine(productionLine)
+                    .productionLine(productionLine) // Link to existing production line
                     .completed(false)
                     .progress(0)
                     .build();
@@ -158,14 +157,14 @@ public class ProductionPlanService {
             taskRepository.saveAll(processTasks);
             process.setTasks(processTasks);
             processRepository.save(process);
-
         }
-        // Set up relationships
+
+        // Set up relationships between plan, product, and production line
         plan.getProducts().add(product);
         plan.getProductionLines().add(productionLine);
         productionLine.getProductionPlans().add(plan);
 
-        // Save the plan and productionLine
+        // Save the updated plan and production line relationships
         productionPlanRepository.save(plan);
         productionLineRepository.save(productionLine);
     }

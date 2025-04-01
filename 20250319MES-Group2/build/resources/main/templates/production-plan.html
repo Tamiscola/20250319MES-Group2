@@ -159,38 +159,43 @@
                 <div class="form-container">
                     <div class="section-title">생산계획 입력</div>
                     <form th:action="@{/plan/create}" method="post" enctype="multipart/form-data">
+                        <!-- Product Selection -->
                         <div class="form-row">
                             <label for="productName">제품 선택:</label>
                             <select id="productName" name="productName" class="dropdown" required>
                                 <option value="">제품을 선택하세요</option>
-                                <option value="14nm FinFET Chip">14nm FinFET Chip</option>
-                                <option value="5nm AI Processor">5nm AI Processor</option>
-                                <option value="7nm Automotive SoC">7nm Automotive SoC</option>
-                                <option value="3nm High-Performance Computing Chip">3nm High-Performance Computing Chip</option>
-                                <option value="10nm IoT Sensor Chip">10nm IoT Sensor Chip</option>
+                                <option th:each="product : ${products}"
+                                        th:value="${product.productName}"
+                                        th:text="${product.productName}">
+                                </option>
                             </select>
                         </div>
 
+                        <!-- Start Date -->
                         <div class="form-row">
                             <label for="startDate">생산 시작일:</label>
                             <input type="date" id="startDate" name="startDate" pattern="yyyy-MM-dd" required>
                         </div>
 
+                        <!-- End Date -->
                         <div class="form-row">
                             <label for="endDate">생산 종료일:</label>
                             <input type="date" id="endDate" name="endDate" pattern="yyyy-MM-dd" required>
                         </div>
 
+                        <!-- Target Quantity -->
                         <div class="form-row">
                             <label for="targetQty">목표 수량:</label>
                             <input type="number" id="targetQty" name="targetQty" value="1000" required>
                         </div>
 
+                        <!-- Manager -->
                         <div class="form-row">
                             <label for="manager">생산 책임 담당자:</label>
                             <input type="text" id="manager" name="manager" value="홍길동" required>
                         </div>
 
+                        <!-- Priority -->
                         <div class="form-row">
                             <label>우선순위:</label>
                             <div class="radio-group">
@@ -209,16 +214,19 @@
                             </div>
                         </div>
 
+                        <!-- Production Line Selection -->
                         <div class="form-row">
                             <label for="productionLineName">생산 라인:</label>
                             <select id="productionLineName" name="productionLineName" class="dropdown" required>
                                 <option value="">생산 라인을 선택하세요</option>
-                                <option value="생산 라인 1">생산 라인 1</option>
-                                <option value="생산 라인 2">생산 라인 2</option>
-                                <option value="생산 라인 3">생산 라인 3</option>
+                                <option th:each="line : ${productionLines}"
+                                        th:value="${line.productionLineName}"
+                                        th:text="${line.productionLineName}">
+                                </option>
                             </select>
                         </div>
 
+                        <!-- Plan Status -->
                         <div class="form-row">
                             <label>상태:</label>
                             <div class="radio-group">
@@ -237,14 +245,16 @@
                             </div>
                         </div>
 
+                        <!-- File Upload -->
                         <div class="form-row">
                             <label for="file">파일 업로드:</label>
                             <input type="file" id="file" name="file">
                         </div>
 
+                        <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="submit" class="button">저장</button>
-                            <button type="button" class="button">취소</button>
+                            <button type="" onclick="" >취소</button >
                         </div>
                     </form>
                 </div>
