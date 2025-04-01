@@ -142,3 +142,22 @@ body {
     padding: 8px;
     border-bottom: 1px solid #f1f1f1;
 }
+
+.reset-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.reset-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.reset-button:hover {
+    background-color: #c0392b;
+}

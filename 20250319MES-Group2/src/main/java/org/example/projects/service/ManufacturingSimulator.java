@@ -244,6 +244,31 @@ public class ManufacturingSimulator {
         });
     }
 
+    // a result is created or updated whenever the status changes.
+    private void updateProductionResult(Product product, ProductionPlan plan) {
+        ProductionData existingResult = productionDataRepository.findByProductionPlan(plan).orElse(null);
+
+        if (existingResult == null) {
+            existingResult = ProductionData.builder()
+                    .productionLine(product.getProductionLine())
+                    .productionPlan(plan)
+                    .productName(product.getProductName())
+                    .plannedQuantity(plan.getTargetQty())
+                    .actualQuantity(product.getQuantity()) // Initial quantity might be 0 or partial
+                    .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100)
+                    .status(plan.getPlanStatus())
+                    .startTime(plan.getStartDate())
+                    .build();
+        } else {
+            existingResult.setActualQuantity(product.getQuantity());
+            existingResult.setYieldRate((double) product.getQuantity() / plan.getTargetQty() * 100);
+            existingResult.setStatus(plan.getPlanStatus());
+        }
+
+        productionDataRepository.save(existingResult);
+    }
+
+
     private void resetProcessesAndTasks(ProductionLine line) {
         // Delete existing tasks
         List<Task> existingTasks = taskRepository.findByProcessProductionLine(line);

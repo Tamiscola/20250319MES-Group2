@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Details Toggle
     const detailsToggles = document.querySelectorAll('.details-toggle');
+    // Reset button
+    const resetButton = document.getElementById('reset-progress');
 
     detailsToggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
@@ -12,6 +14,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? 'Hide Details'
                 : 'View Details';
         });
+    });
+
+    // Initial data fetch with cache control
+    fetch(`/monitor/api/lines/progress/all?${Date.now()}`, {
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        console.log("Initial progress data:", data);
+        data.forEach(updateProgressBar);
+        data.forEach(line => {
+            if (line.planStatus.toLowerCase() === 'in_progress') { // Use planStatus
+                startProgressPolling(line.productionLineCode);
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching initial progress:', error));
+
+    // Handle tab visibility changes
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            fetch(`/monitor/api/lines/progress/all?${Date.now()}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Initial progress data:", data);
+                    data.forEach(updateProgressBar);
+                    data.forEach(line => {
+                        if (line.planStatus.toLowerCase() === 'in_progress') { // Use planStatus
+                            startProgressPolling(line.productionLineCode);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching initial progress:', error));
+        }
     });
 
     // Simulation trigger
@@ -41,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Invalid progress value:', progress);
         }
     }
-
 
     // Polling function to update progress for a specific line
     function startProgressPolling(lineCode) {
@@ -108,4 +153,41 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    resetButton.addEventListener('click', () => {
+        if (confirm("Are you sure you want to reset all progress? This action cannot be undone.")) {
+            fetch('/monitor/reset', { method: 'POST' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(message => {
+                    alert(message); // Notify user of successful reset
+
+                    // Reset progress in the UI
+                    const lineCards = document.querySelectorAll('.production-line-card');
+                    lineCards.forEach(lineCard => {
+                        const progressElement = lineCard.querySelector('.circular-progress');
+                        const progressValueElement = lineCard.querySelector('.progress-value');
+                        const statusElement = lineCard.querySelector('.status');
+
+                        if (progressElement) {
+                            updateCircularProgress(progressElement, 0); // Reset circular progress
+                        }
+                        if (progressValueElement) {
+                            progressValueElement.textContent = "0.0%"; // Reset text progress
+                        }
+                        if (statusElement) {
+                            statusElement.textContent = "STANDBY"; // Reset status to default
+                            statusElement.className = "status standby"; // Update CSS class
+                        }
+                    });
+
+                    console.log("All progress has been reset.");
+                })
+                .catch(error => console.error('Error resetting progress:', error));
+        }
+    });
 });

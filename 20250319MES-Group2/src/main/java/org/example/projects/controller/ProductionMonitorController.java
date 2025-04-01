@@ -4,24 +4,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.*;
 import org.example.projects.domain.Process;
+import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.TaskType;
+import org.example.projects.repository.ProcessRepository;
 import org.example.projects.repository.ProductionLineRepository;
 import org.example.projects.repository.ProductionPlanRepository;
+import org.example.projects.repository.TaskRepository;
 import org.example.projects.service.ManufacturingSimulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,12 +38,62 @@ public class ProductionMonitorController {
     @Autowired
     private ProductionPlanRepository productionPlanRepository;
 
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private ProcessRepository processRepository;
+
     @GetMapping("/list")
     public String list(Model model) {
         List<ProductionLine> lines = productionLineRepository.findAll();
         model.addAttribute("productionLines", lines);
         return "line-monitoring";
     }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/api/lines/progress/all")
+    @ResponseBody
+    public List<Map<String, Object>> getAllLinesProgress() {
+        List<ProductionLine> lines = productionLineRepository.findAll();
+
+        return lines.stream().map(line -> {
+            double progress = calculateOverallProgressForLine(line);
+
+            Map<String, Object> progressData = new HashMap<>();
+            progressData.put("productionLineCode", line.getProductionLineCode());
+            progressData.put("productionLineName", line.getProductionLineName());
+            progressData.put("status", line.getProductionLineStatus());
+            progressData.put("planStatus", line.getProductionPlans().stream()
+                    .findFirst()
+                    .map(ProductionPlan::getPlanStatus)
+                    .orElse(PlanStatus.STANDBY));
+            progressData.put("capacity", line.getCapacity());
+            progressData.put("progress", progress);
+            progressData.put("todayQty", calculateTodayProduction(line));
+
+            // Include current process and task details
+            Process currentProcess = line.getProductionProcesses().stream()
+                    .filter(p -> !p.isCompleted())
+                    .findFirst()
+                    .orElse(null);
+
+            Task currentTask = null;
+            if (currentProcess != null) {
+                currentTask = currentProcess.getTasks().stream()
+                        .filter(t -> !t.isCompleted())
+                        .findFirst()
+                        .orElse(null);
+            }
+
+            progressData.put("currentProcessType", currentProcess != null ? currentProcess.getProcessType().name() : "N/A");
+            progressData.put("currentTaskType", currentTask != null ? currentTask.getTaskType().name() : "N/A");
+            progressData.put("currentTaskProgress", currentTask != null ? currentTask.getProgress() : 0);
+
+            return progressData;
+        }).collect(Collectors.toList());
+    }
+
 
     @GetMapping("/simulate/{productionLineCode}")
     @ResponseBody
@@ -154,6 +205,33 @@ public class ProductionMonitorController {
 
         return todayProduction;
     }
+
+    @PostMapping("/reset")
+    public ResponseEntity<String> resetProgress() {
+        // Reset all tasks
+        List<Task> tasks = taskRepository.findAll();
+        tasks.forEach(task -> {
+            task.setProgress(0);
+            task.setCompleted(false);
+        });
+        taskRepository.saveAll(tasks);
+
+        // Reset all processes
+        List<Process> processes = processRepository.findAll();
+        processes.forEach(process -> {
+            process.setProgress(0);
+            process.setCompleted(false);
+        });
+        processRepository.saveAll(processes);
+
+        // Reset all production lines
+        List<ProductionLine> productionLines = productionLineRepository.findAll();
+        productionLines.forEach(line -> line.setProgress(0.0));
+        productionLineRepository.saveAll(productionLines);
+
+        return ResponseEntity.ok("All progress has been reset.");
+    }
 }
+
 
 
