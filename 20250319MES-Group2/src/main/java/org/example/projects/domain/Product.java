@@ -45,6 +45,14 @@ public class Product {
     private LocalDate regDate = LocalDate.now();
 
     @Column(nullable = false)
-    private Integer quantity;
-}
+    private Integer quantity = 0;
 
+    public void change(String productName,
+                        String regBy,
+                        LocalDate regDate
+    ) {
+        this.productName = productName;
+        this.regBy = regBy;
+        this.regDate = regDate;
+    }
+}

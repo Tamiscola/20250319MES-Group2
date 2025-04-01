@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.projects.domain.Product;
-import org.example.projects.domain.enums.Status;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -16,23 +16,16 @@ import java.time.LocalDate;
 public class ProductDTO {
     private String productId;
     private String productName;
-    private Status productStatus;
-    private LocalDate manufacturedDate;
     private String regBy;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate regDate;
-    private String productionLineCode;
-    private Long productionPlanId;
 
     public static ProductDTO fromEntity(Product product) {
         return ProductDTO.builder()
                 .productId(product.getProductId())
                 .productName(product.getProductName())
-                .productStatus(product.getProductStatus())
-                .manufacturedDate(product.getManufacturedDate())
                 .regBy(product.getRegBy())
                 .regDate(product.getRegDate())
-                .productionLineCode(product.getProductionLine().getProductionLineCode())
-                .productionPlanId(product.getProductionPlan().getPlanId())
                 .build();
     }
 }
