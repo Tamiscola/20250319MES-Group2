@@ -122,16 +122,16 @@ public class ProductionPlanService {
         // Save ProductionPlan
         productionPlanRepository.save(plan);
 
-        // Create Product instance linked to the plan and production line
-        Product product = Product.builder()
-                .productName(productMetadata.getProductName()) // Use metadata product name
-                .productionLine(productionLine) // Link to the existing production line
-                .productionPlan(plan) // Link to the newly created plan
-                .regBy(dto.getManager()) // Manager from DTO
-                .quantity(0) // Initial quantity
-                .build();
-
-        productRepository.save(product);
+//        // Create Product instance linked to the plan and production line
+//        Product product = Product.builder()
+//                .productName(productMetadata.getProductName()) // Use metadata product name
+//                .productionLine(productionLine) // Link to the existing production line
+//                .productionPlan(plan) // Link to the newly created plan
+//                .regBy(dto.getManager()) // Manager from DTO
+//                .quantity(0) // Initial quantity
+//                .build();
+//
+//        productRepository.save(product);
 
         // Create Processes and Tasks based on metadata
         for (ProcessType processType : ProcessType.values()) {
@@ -160,7 +160,7 @@ public class ProductionPlanService {
         }
 
         // Set up relationships between plan, product, and production line
-        plan.getProducts().add(product);
+//        plan.getProducts().add(product);
         plan.getProductionLines().add(productionLine);
         productionLine.getProductionPlans().add(plan);
 

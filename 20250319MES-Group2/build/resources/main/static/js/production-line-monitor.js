@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             progressValueElement.textContent = `${progress}%`;
 
             // Update status
+            console.log("data.planStatus: ", data.planStatus);
             if (data.planStatus) {
                 statusElement.textContent = data.planStatus;
                 statusElement.className = `status ${data.planStatus.toLowerCase().replace('_', '-')}`;

@@ -274,11 +274,10 @@
                 <label for="modifyProductName">제품 선택:</label>
                 <select id="modifyProductName" name="productName" class="dropdown" required>
                     <option value="">제품을 선택하세요</option>
-                    <option value="14nm FinFET Chip">14nm FinFET Chip</option>
-                    <option value="5nm AI Processor">5nm AI Processor</option>
-                    <option value="7nm Automotive SoC">7nm Automotive SoC</option>
-                    <option value="3nm High-Performance Computing Chip">3nm High-Performance Computing Chip</option>
-                    <option value="10nm IoT Sensor Chip">10nm IoT Sensor Chip</option>
+                    <option th:each="product : ${products}"
+                            th:value="${product.productName}"
+                            th:text="${product.productName}">
+                    </option>
                 </select>
             </div>
 
@@ -324,9 +323,10 @@
                 <label for="modifyProductionLineName">생산 라인:</label>
                 <select id="modifyProductionLineName" name="productionLineName" class="dropdown" required>
                     <option value="">생산 라인을 선택하세요</option>
-                    <option value="생산 라인 1">생산 라인 1</option>
-                    <option value="생산 라인 2">생산 라인 2</option>
-                    <option value="생산 라인 3">생산 라인 3</option>
+                    <option th:each="line : ${productionLines}"
+                            th:value="${line.productionLineName}"
+                            th:text="${line.productionLineName}">
+                    </option>
                 </select>
             </div>
 
