@@ -8,6 +8,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+    // Animate circular progress bars
+    const progressBars = document.querySelectorAll('.circular-progress');
+
+    progressBars.forEach(progressBar => {
+        const targetProgress = parseFloat(progressBar.dataset.progress); // Get target progress from data attribute
+        let currentProgress = 0; // Start from 0
+
+        const interval = setInterval(() => {
+            currentProgress += 1; // Increment progress
+            if (currentProgress >= targetProgress) {
+                currentProgress = targetProgress; // Stop at target progress
+                clearInterval(interval); // Clear interval
+            }
+
+            // Update circular progress bar background and text
+            progressBar.style.background = `conic-gradient(#3498db ${currentProgress * 3.6}deg, #ededed 0deg)`;
+            const progressValue = progressBar.querySelector('.progress-value');
+            if (progressValue) {
+                progressValue.textContent = `${currentProgress.toFixed(1)}%`;
+            }
+        }, 20); // Adjust speed of animation (20ms per increment)
+    });
+
+
     detailsToggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
             const lineCard = toggle.closest('.production-line-card');

@@ -200,9 +200,27 @@ public class ProductionMonitorController {
         LocalDate today = LocalDate.now();
 
         for (ProductionPlan plan : line.getProductionPlans()) {
-            if (plan.getStartDate().isEqual(today) || (plan.getStartDate().isBefore(today) && plan.getEndDate().isAfter(today))) {
+            if (plan == null) {
+                log.error("Null ProductionPlan found for line: {}", line.getProductionLineCode());
+                continue;
+            }
+            if (plan.getStartDate() == null) {
+                log.error("Null startDate in ProductionPlan: {}", plan.getPlanId());
+                continue;
+            }
+
+            // Handle null endDate (assume plan is ongoing)
+            boolean isOngoing = plan.getEndDate() == null || plan.getEndDate().isAfter(today);
+
+            if (plan.getStartDate().isEqual(today) || (plan.getStartDate().isBefore(today) && isOngoing)) {
+                if (plan.getProducts() == null || plan.getProducts().isEmpty()) {
+                    log.warn("No products found for ProductionPlan: {}", plan.getPlanId());
+                    continue;
+                }
                 for (Product product : plan.getProducts()) {
-                    todayProduction += product.getQuantity();
+                    if (product != null) {
+                        todayProduction += product.getQuantity();
+                    }
                 }
             }
         }
