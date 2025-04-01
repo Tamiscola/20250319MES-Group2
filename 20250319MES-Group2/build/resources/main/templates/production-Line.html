@@ -28,7 +28,7 @@
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/product/list}">제품관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/plan/list}">생산계획관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/line/list}">생산라인관리</a>
-
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/data/list}">생산실적</a>
             <div th:if="${isAdmin}">
                 <a class="list-group-item list-group-item-action list-group-item-light p-3" th:onclick="location.href='/admin'">관리자 페이지</a>
             </div>
@@ -169,6 +169,7 @@
                     <thead>
                     <tr>
                         <th><input type="checkbox" id="selectAll"></th>
+                        <th>번호</th>
                         <th data-column="productionLineCode" class="sortable">코드</th>
                         <th data-column="productionLineName" class="sortable">라인명</th>
                         <th data-column="location" class="sortable">위치</th>
@@ -184,6 +185,7 @@
                     <tr th:each="line, iterStat : ${lines.content}">
                         <td><input type="checkbox" name="selectedLine" th:value="${line.productionLineCode}" class="lineCheckbox"></td>
                         <td th:text="${iterStat.count + (lines.number * lines.size)}"></td>
+                        <td th:text="${line.productionLineCode}"></td>
                         <td><span th:text="${line.productionLineName}"></span></td>
                         <td th:text="${line.location}"></td>
                         <td th:text="${line.capacity}"></td>
