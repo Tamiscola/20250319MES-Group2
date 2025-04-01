@@ -19,6 +19,7 @@ public class ProductDTO {
     private Status productStatus;
     private LocalDate manufacturedDate;
     private String regBy;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate regDate;
     private String productionLineCode;
     private Long productionPlanId;
