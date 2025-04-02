@@ -149,6 +149,7 @@ public class ProductionMonitorController {
         progressData.put("productionLineCode", line.getProductionLineCode());
         progressData.put("productionLineName", line.getProductionLineName());
         progressData.put("status", line.getProductionLineStatus());
+        progressData.put("planStatus", line.getPlanStatus());
         progressData.put("capacity", line.getCapacity());
         progressData.put("progress", progress);
         progressData.put("todayQty", calculateTodayProduction(line));
