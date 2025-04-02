@@ -100,8 +100,8 @@ public class ProductionLineController {
     }
 
     @GetMapping("/search")
-    public String searchLines(@RequestParam(required = false, defaultValue = "DESC") String productionLineName,
-                              @RequestParam(required = false, defaultValue = "") String productionLineStatus,
+    public String searchLines(@RequestParam(required = false) String productionLineName,
+                              @RequestParam(required = false) String productionLineStatus,
                               @RequestParam(required = false)
                               @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate regDate,
                               @RequestParam(defaultValue = "productionLineCode") String sort,
