@@ -277,7 +277,7 @@
         <a th:href="@{/bio/dashboard}">SemiCon</a>
     </div>
     <div class="sidebar-menu">
-        <a th:href="@{/monitor/list}">생산관리 모니터링</a>
+        <a th:href="@{/plan/list}">생산관리 모니터링</a>
         <a th:href="@{/monitor/list}">제품관리</a>
         <a th:href="@{/plan/list}">생산계획관리</a>
         <a th:href="@{/line/list}">생산라인관리</a>
@@ -305,37 +305,43 @@
         </div>
     </div>
 
-    <div class="filter-section">
+    <form th:action="@{/data/list}" method="get" class="filter-section">
         <div class="filter-item">
             <label>Production Line</label>
-            <select>
-                <option>All Lines</option>
-                <option>Line A</option>
-                <option>Line B</option>
+            <select name="productionLineName" class="dropdown">
+                <option value="">All Lines</option>
+                <option th:each="line : ${productionLines}"
+                        th:value="${line.productionLineName}"
+                        th:text="${line.productionLineName}">
+                </option>
             </select>
         </div>
         <div class="filter-item">
             <label>Product Type</label>
-            <select>
-                <option>All Products</option>
-                <option>Microprocessor</option>
-                <option>Memory Chip</option>
+            <select name="productType" class="dropdown">
+                <option value="">All Products</option>
+                <option th:each="product : ${products}"
+                        th:value="${product.productName}"
+                        th:text="${product.productName}">
+                </option>
             </select>
         </div>
         <div class="filter-item">
             <label>Date Range</label>
-            <input type="date">
+            <input type="date" name="startDate">
+            <input type="date" name="endDate">
         </div>
         <div class="filter-item">
             <label>Status</label>
-            <select>
-                <option>All Statuses</option>
-                <option>Completed</option>
-                <option>In Progress</option>
-                <option>Pending</option>
+            <select name="status" class="dropdown">
+                <option value="">All Statuses</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="PENDING">Pending</option>
             </select>
         </div>
-    </div>
+        <button type="submit">Search</button>
+    </form>
 
     <table class="production-data-table">
         <thead>
