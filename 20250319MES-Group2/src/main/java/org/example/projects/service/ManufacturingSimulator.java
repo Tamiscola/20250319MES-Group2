@@ -70,7 +70,7 @@ public class ManufacturingSimulator {
         log.info("Updating progress for task: {}, current progress: {}%", task.getTaskType(), task.getProgress());
 
         Random random = new Random();
-        int increment = random.nextInt(10) + 1; // Increment between 1-10%
+        int increment = random.nextInt(40) + 50; // Increment between 1-10%
         int newProgress = Math.min(task.getProgress() + increment, 100);
 
         log.info("Increment: {}%, New progress: {}%", increment, newProgress);
@@ -239,6 +239,7 @@ public class ManufacturingSimulator {
                 plan.setEndDate(LocalDate.now());
                 productionPlanRepository.save(plan);
                 finalizeProductQuantity(product, plan);
+                log.info("Production finalized for plan: {}", plan.getPlanId());
                 return null;
             }
         });
@@ -366,6 +367,7 @@ public class ManufacturingSimulator {
             ProductionData newResult = ProductionData.builder()
                     .productionLine(product.getProductionLine())
                     .productionPlan(plan)
+                    .product(product)
                     .productName(product.getProductName())
                     .plannedQuantity(plan.getTargetQty()) // Target Quantity
                     .actualQuantity(product.getQuantity()) // Actual Quantity

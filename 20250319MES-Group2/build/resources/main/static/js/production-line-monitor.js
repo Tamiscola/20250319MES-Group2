@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 20); // Adjust speed of animation (20ms per increment)
     });
 
-
     detailsToggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
             const lineCard = toggle.closest('.production-line-card');
@@ -133,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error fetching progress:', error));
         }, 1000);  // Poll every second
     }
-
 
     function updateProgressBar(data) {
         console.log("Received progress data:", data);
