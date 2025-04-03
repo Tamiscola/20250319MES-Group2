@@ -373,7 +373,7 @@ public class ManufacturingSimulator {
         } else {
             // Create a new result if none exists
             ProductionData newResult = ProductionData.builder()
-                    .productionLine(product.getProductionLine())
+                    .productionLine(plan.getProductionLines().iterator().next())
                     .productionPlan(plan)
                     .product(product)
                     .productName(product.getProductName())

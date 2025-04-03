@@ -31,7 +31,7 @@ public class ProductionPlan {
     @Builder.Default
     private Set<ProductionLine> productionLines = new HashSet<>();   // 생산라인
 
-    @ManyToMany(mappedBy = "productionPlans")
+    @ManyToMany(mappedBy = "productionPlans", fetch = FetchType.EAGER)
     private Set<Product> products = new HashSet<>();
 
     private String productName;  // 제품명
