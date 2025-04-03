@@ -90,17 +90,46 @@ public class ManufacturingSimulator {
     @Async("simulationExecutor")
     public void simulateProductionPlan(Long planId) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-
-        // Use AtomicReference to hold objects that need to be accessed outside the transaction
         AtomicReference<ProductionPlan> planRef = new AtomicReference<>();
         AtomicReference<Product> productRef = new AtomicReference<>();
 
+        // STEP 1: Load the production plan
         transactionTemplate.execute(new TransactionCallback<Void>() {
             public Void doInTransaction(TransactionStatus status) {
                 ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
-                productionPlanRepository.save(plan);
-                Product product = initializeProduct(plan);
                 planRef.set(plan);
+                return null;
+            }
+        });
+
+        // STEP 2: Initialize and save the product properly first
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            public Void doInTransaction(TransactionStatus status) {
+                ProductionPlan plan = planRef.get();
+                Product product = initializeProduct(plan);
+
+                // Save product first to get ID
+                product = productRepository.saveAndFlush(product);
+
+                // Now create and set up the production data
+                ProductionData productionData = ProductionData.builder()
+                        .product(product)
+                        .productionPlan(plan)
+                        .productionLine(plan.getProductionLines().iterator().next()) // Or however you select the line
+                        .productName(product.getProductName())
+                        .plannedQuantity(plan.getTargetQty())
+                        .actualQuantity(0)
+                        .status(PlanStatus.IN_PROGRESS)
+                        .startTime(LocalDate.now())
+                        .build();
+
+                // Set up bidirectional relationship
+                product.setProductionData(productionData);
+
+                // Save production data
+                productionDataRepository.save(productionData);
+
+                // Update the reference
                 productRef.set(product);
                 return null;
             }
@@ -239,37 +268,14 @@ public class ManufacturingSimulator {
                 plan.setPlanStatus(PlanStatus.COMPLETED);
                 plan.setEndDate(LocalDate.now());
                 productionPlanRepository.save(plan);
+
+                Product product = productRef.get();
                 finalizeProductQuantity(product, plan);
                 log.info("Production finalized for plan: {}", plan.getPlanId());
                 return null;
             }
         });
     }
-
-    // a result is created or updated whenever the status changes.
-    private void updateProductionResult(Product product, ProductionPlan plan) {
-        ProductionData existingResult = productionDataRepository.findByProductionPlan(plan).orElse(null);
-
-        if (existingResult == null) {
-            existingResult = ProductionData.builder()
-                    .productionLine(product.getProductionLine())
-                    .productionPlan(plan)
-                    .productName(product.getProductName())
-                    .plannedQuantity(plan.getTargetQty())
-                    .actualQuantity(product.getQuantity()) // Initial quantity might be 0 or partial
-                    .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100)
-                    .status(plan.getPlanStatus())
-                    .startTime(plan.getStartDate())
-                    .build();
-        } else {
-            existingResult.setActualQuantity(product.getQuantity());
-            existingResult.setYieldRate((double) product.getQuantity() / plan.getTargetQty() * 100);
-            existingResult.setStatus(plan.getPlanStatus());
-        }
-
-        productionDataRepository.save(existingResult);
-    }
-
 
     private void resetProcessesAndTasks(ProductionLine line) {
         // Delete existing tasks
@@ -354,8 +360,13 @@ public class ManufacturingSimulator {
     }
 
     private void finalizeProductQuantity(Product product, ProductionPlan plan) {
+        // Save product if not already persisted
+        if (product.getProductId() == null) {
+            product = productRepository.saveAndFlush(product); // Use saveAndFlush to ensure persistence
+        }
+
         product.setQuantity(plan.getTargetQty());
-        productRepository.save(product);
+        productRepository.save(product); // Persist updated product
         log.info("Finalized product quantity. Final quantity: {}", product.getQuantity());
 
         // Check if a ProductionResult already exists for this plan
@@ -375,7 +386,7 @@ public class ManufacturingSimulator {
             ProductionData newResult = ProductionData.builder()
                     .productionLine(plan.getProductionLines().iterator().next())
                     .productionPlan(plan)
-                    .product(product)
+                    .product(product) // Associate persisted product
                     .productName(product.getProductName())
                     .plannedQuantity(plan.getTargetQty()) // Target Quantity
                     .actualQuantity(product.getQuantity()) // Actual Quantity

@@ -20,52 +20,55 @@ public class ProductRepositoryTests {
     private ProductRepository productRepository;
 
     @Test
-    @DisplayName("Should save dummy products to the database")
-    void saveDummyProducts() {
-        // Given
-        List<Product> products = List.of(
+    @DisplayName("Should successfully save products with dummy data")
+    void shouldSaveDummyProducts() {
+        // Given: Dummy data for products
+        List<Product> dummyProducts = List.of(
                 Product.builder()
                         .productName("14nm FinFET Chip")
-                        .productStatus(Status.NORMAL)
-                        .manufacturedDate(LocalDate.of(2025, 4, 1))
                         .regBy("admin")
                         .regDate(LocalDate.now())
+                        .productStatus(Status.NORMAL)
                         .build(),
                 Product.builder()
                         .productName("3nm High-Performance Computing Chip")
-                        .productStatus(Status.NORMAL)
-                        .manufacturedDate(LocalDate.of(2025, 4, 2))
                         .regBy("admin")
                         .regDate(LocalDate.now())
+                        .productStatus(Status.NORMAL)
                         .build(),
                 Product.builder()
                         .productName("10nm IoT Sensor Chip")
-                        .productStatus(Status.NORMAL)
-                        .manufacturedDate(LocalDate.of(2025, 4, 3))
                         .regBy("admin")
                         .regDate(LocalDate.now())
+                        .productStatus(Status.NORMAL)
                         .build(),
                 Product.builder()
                         .productName("7nm Automotive SoC")
-                        .productStatus(Status.NORMAL)
-                        .manufacturedDate(LocalDate.of(2025, 4, 4))
                         .regBy("admin")
                         .regDate(LocalDate.now())
+                        .productStatus(Status.NORMAL)
                         .build(),
                 Product.builder()
                         .productName("5nm AI Processor")
-                        .productStatus(Status.NORMAL)
-                        .manufacturedDate(LocalDate.of(2025, 4, 5))
                         .regBy("admin")
                         .regDate(LocalDate.now())
+                        .productStatus(Status.NORMAL)
                         .build()
         );
 
-        // When
-        productRepository.saveAll(products);
+        // When: Save all dummy products
+        productRepository.saveAll(dummyProducts);
 
-        // Then
-        List<Product> savedProducts = productRepository.findAll();
-        Assertions.assertThat(savedProducts).hasSize(products.size());
+        // Then: Verify the products are saved successfully
+        Assertions.assertThat(productRepository.findAll())
+                .hasSize(dummyProducts.size())
+                .extracting(Product::getProductName)
+                .containsExactlyInAnyOrder(
+                        "14nm FinFET Chip",
+                        "3nm High-Performance Computing Chip",
+                        "10nm IoT Sensor Chip",
+                        "7nm Automotive SoC",
+                        "5nm AI Processor"
+                );
     }
 }

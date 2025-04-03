@@ -31,7 +31,13 @@ public class ProductionPlan {
     @Builder.Default
     private Set<ProductionLine> productionLines = new HashSet<>();   // 생산라인
 
-    @ManyToMany(mappedBy = "productionPlans", fetch = FetchType.EAGER)
+    @ManyToMany
+    @JoinTable(
+            name = "production_plan_product",
+            joinColumns = @JoinColumn(name = "production_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    @Builder.Default
     private Set<Product> products = new HashSet<>();
 
     private String productName;  // 제품명
