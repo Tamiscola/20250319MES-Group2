@@ -1,13 +1,14 @@
 package org.example.projects;
 
 import lombok.extern.log4j.Log4j2;
+import org.assertj.core.api.Assertions;
 import org.example.projects.domain.Product;
 import org.example.projects.repository.ProductRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.example.projects.domain.enums.Status;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,31 +20,52 @@ public class ProductRepositoryTests {
     private ProductRepository productRepository;
 
     @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED) // Prevent rollback for testing purposes
-    public void createProducts() {
-        List<String> productNames = List.of(
-                "14nm FinFET Chip",
-                "5nm AI Processor",
-                "7nm Automotive SoC",
-                "3nm High-Performance Computing Chip",
-                "10nm IoT Sensor Chip"
+    @DisplayName("Should save dummy products to the database")
+    void saveDummyProducts() {
+        // Given
+        List<Product> products = List.of(
+                Product.builder()
+                        .productName("14nm FinFET Chip")
+                        .productStatus(Status.NORMAL)
+                        .manufacturedDate(LocalDate.of(2025, 4, 1))
+                        .regBy("admin")
+                        .regDate(LocalDate.now())
+                        .build(),
+                Product.builder()
+                        .productName("3nm High-Performance Computing Chip")
+                        .productStatus(Status.NORMAL)
+                        .manufacturedDate(LocalDate.of(2025, 4, 2))
+                        .regBy("admin")
+                        .regDate(LocalDate.now())
+                        .build(),
+                Product.builder()
+                        .productName("10nm IoT Sensor Chip")
+                        .productStatus(Status.NORMAL)
+                        .manufacturedDate(LocalDate.of(2025, 4, 3))
+                        .regBy("admin")
+                        .regDate(LocalDate.now())
+                        .build(),
+                Product.builder()
+                        .productName("7nm Automotive SoC")
+                        .productStatus(Status.NORMAL)
+                        .manufacturedDate(LocalDate.of(2025, 4, 4))
+                        .regBy("admin")
+                        .regDate(LocalDate.now())
+                        .build(),
+                Product.builder()
+                        .productName("5nm AI Processor")
+                        .productStatus(Status.NORMAL)
+                        .manufacturedDate(LocalDate.of(2025, 4, 5))
+                        .regBy("admin")
+                        .regDate(LocalDate.now())
+                        .build()
         );
 
-        productNames.forEach(name -> {
-            Product product = Product.builder()
-                    .productName(name)
-                    .regBy("Admin") // Replace with actual user or system registering the product
-                    .regDate(LocalDate.now())
-                    .quantity(100) // Set default quantity (required field)
-                    .build();
+        // When
+        productRepository.saveAll(products);
 
-            productRepository.save(product);
-            log.info("Saved product: {}", product);
-        });
-
-        // Verify saved products
+        // Then
         List<Product> savedProducts = productRepository.findAll();
-        log.info("Total products saved: {}", savedProducts.size());
-        savedProducts.forEach(product -> log.info("Product: {}", product));
+        Assertions.assertThat(savedProducts).hasSize(products.size());
     }
 }

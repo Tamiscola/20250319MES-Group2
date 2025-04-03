@@ -21,6 +21,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -326,15 +327,22 @@ public class ManufacturingSimulator {
     }
 
     private Product initializeProduct(ProductionPlan plan) {
+        // Check if a product already exists for this plan
+        Optional<Product> existingProduct = productRepository.findByNameAndPlan(plan.getProductName(), plan);
+        if (existingProduct.isPresent()) {
+            return existingProduct.get(); // Reuse existing product
+        }
+
+        // Create a new product only if none exists
         Product product = Product.builder()
                 .productName(plan.getProductName())
-                .productionPlan(plan)
-                .productionLine(plan.getProductionLines().iterator().next()) // Assuming one line for simplicity
                 .productStatus(Status.NORMAL)
                 .manufacturedDate(LocalDate.now())
                 .regBy(plan.getManager())
                 .quantity(0) // Start with 0 quantity
                 .build();
+
+        product.getProductionPlans().add(plan); // Associate product with plan
         return productRepository.save(product);
     }
 
@@ -389,22 +397,5 @@ public class ManufacturingSimulator {
                 .mapToDouble(Task::getProgress)
                 .average()
                 .orElse(0.0);
-    }
-
-    // Create products based on the production plan
-    private void createProducts (ProductionPlan plan){
-        Product product = Product.builder()
-                .productName(plan.getProductName())
-                .productionPlan(plan)
-                .productionLine(plan.getProductionLines().iterator().next()) // Assuming one line for simplicity
-                .productStatus(Status.NORMAL)
-                .manufacturedDate(LocalDate.now())
-                .regBy(plan.getManager())
-                .quantity(plan.getTargetQty())  // Set the quantity to the target quantity
-                .build();
-
-        productRepository.save(product);
-
-        log.info("Created product batch for production plan {}. Quantity: {}", plan.getPlanId(), plan.getTargetQty());
     }
 }

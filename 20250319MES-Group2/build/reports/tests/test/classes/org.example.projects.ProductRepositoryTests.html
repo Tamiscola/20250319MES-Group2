@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ProductRepositoryTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ProductRepositoryTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/org.example.projects.html">org.example.projects</a> &gt; ProductRepositoryTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.323s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">Should save dummy products to the database</td>
+<td class="success">saveDummyProducts()</td>
+<td class="success">0.323s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>10:50:03.310 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+10:50:03.320 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+10:50:03.355 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.example.projects.ProductRepositoryTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+10:50:03.367 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.example.projects.ProductRepositoryTests], using SpringBootContextLoader
+10:50:03.371 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTests-context.xml] does not exist
+10:50:03.372 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTestsContext.groovy] does not exist
+10:50:03.372 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.example.projects.ProductRepositoryTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+10:50:03.372 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.example.projects.ProductRepositoryTests]: ProductRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:50:03.415 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.example.projects.ProductRepositoryTests]
+10:50:03.478 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [D:\20250319MES-Group2\20250319MES-Group2\build\classes\java\main\org\example\Main.class]
+10:50:03.479 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.example.Main for test class org.example.projects.ProductRepositoryTests
+10:50:03.583 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.example.projects.ProductRepositoryTests]: using defaults.
+10:50:03.584 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+10:50:03.600 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@eadb475, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@4d4d48a6, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@315df4bb, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3fc08eec, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5cad8b7d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7b02e036, org.springframework.test.context.transaction.TransactionalTestExecutionListener@25243bc1, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@1e287667, org.springframework.test.context.event.EventPublishingTestExecutionListener@2e6ee0bc, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@4201a617, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@467f77a5, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@1bb9aa43, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@420bc288, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@df5f5c0, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@308a6984]
+10:50:03.604 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6b5f8707 testClass = ProductRepositoryTests, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@772485dd testClass = ProductRepositoryTests, locations = '{}', classes = '{class org.example.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@51cd7ffc, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3f053c80, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1d8062d2, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@295eaa7c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@14f5da2c, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@6692b6c6], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2025-04-03 10:50:03.969  INFO 7464 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Starting ProductRepositoryTests using Java 11.0.2 on DESKTOP-T64HO54 with PID 7464 (started by human-08 in D:\20250319MES-Group2\20250319MES-Group2)
+2025-04-03 10:50:03.970  INFO 7464 --- [    Test worker] o.e.projects.ProductRepositoryTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-04-03 10:50:05.211  INFO 7464 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 10:50:05.296  INFO 7464 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 77 ms. Found 7 JPA repository interfaces.
+2025-04-03 10:50:05.439  WARN 7464 --- [    Test worker] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[org.example]' package. Please check your configuration.
+2025-04-03 10:50:06.023  INFO 7464 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 10:50:06.076  INFO 7464 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2025-04-03 10:50:06.277  INFO 7464 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-04-03 10:50:06.393  INFO 7464 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-03 10:50:06.483  INFO 7464 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-03 10:50:06.500  INFO 7464 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2025-04-03 10:50:07.642  INFO 7464 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-04-03 10:50:07.681  INFO 7464 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 10:50:08.514 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-03 10:50:08.537 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.555 TRACE 7464 --- [    Test worker] o.s.s.a.i.a.MethodSecurityInterceptor    : Validated configuration attributes
+2025-04-03 10:50:08.556 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)
+2025-04-03 10:50:08.557 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.557 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-03 10:50:08.558 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.705 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)
+2025-04-03 10:50:08.705 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.706 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-03 10:50:08.707 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.707 DEBUG 7464 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-03 10:50:08.708 DEBUG 7464 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-03 10:50:08.773 TRACE 7464 --- [    Test worker] eGlobalAuthenticationAutowiredConfigurer : Eagerly initializing {customSecurityConfig=org.example.projects.config.CustomSecurityConfig$$EnhancerBySpringCGLIB$$7d2fdc7a@80b70fd}
+2025-04-03 10:50:08.854  INFO 7464 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : ---------------------config-----------------------------
+2025-04-03 10:50:08.978 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login?error=true']
+2025-04-03 10:50:08.980 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-03 10:50:08.980 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-03 10:50:08.980 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/login']
+2025-04-03 10:50:08.981 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/oauth2/**']
+2025-04-03 10:50:08.981 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/error']
+2025-04-03 10:50:08.981 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [hasRole('ROLE_USER')] for Ant [pattern='/plan/**']
+2025-04-03 10:50:08.981 DEBUG 7464 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [authenticated] for any request
+2025-04-03 10:50:08.986 TRACE 7464 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-03 10:50:08.987 TRACE 7464 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-03 10:50:08.993  INFO 7464 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@a486851, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@52539624, org.springframework.security.web.context.SecurityContextPersistenceFilter@5efa05f9, org.springframework.security.web.header.HeaderWriterFilter@207358ad, org.springframework.security.web.authentication.logout.LogoutFilter@6c04310f, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6015c745, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@204beb58, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2e10f765, org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter@8b93c88, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1001b435, org.springframework.security.web.session.SessionManagementFilter@492e9e87, org.springframework.security.web.access.ExceptionTranslationFilter@359903b6, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@65a7bc80]
+2025-04-03 10:50:09.007  INFO 7464 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : -------------------------web configure--------------------
+2025-04-03 10:50:09.013  WARN 7464 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@1545ef47. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-04-03 10:50:09.014  INFO 7464 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@1545ef47
+2025-04-03 10:50:09.276  WARN 7464 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 10:50:10.407  INFO 7464 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-04-03 10:50:10.500  INFO 7464 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Started ProductRepositoryTests in 6.826 seconds (JVM running for 8.12)
+Hibernate: 
+    select
+        count(*) as col_0_0_ 
+    from
+        user_role userrole0_
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        product0_.product_id as product_1_8_,
+        product0_.manufactured_date as manufact2_8_,
+        product0_.product_name as product_3_8_,
+        product0_.product_status as product_4_8_,
+        product0_.production_line_code as producti8_8_,
+        product0_.quantity as quantity5_8_,
+        product0_.reg_by as reg_by6_8_,
+        product0_.reg_date as reg_date7_8_ 
+    from
+        products product0_
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_0_,
+        production0_.actual_quantity as actual_q2_4_0_,
+        production0_.end_time as end_time3_4_0_,
+        production0_.planned_quantity as planned_4_4_0_,
+        production0_.product_id as product10_4_0_,
+        production0_.product_name as product_5_4_0_,
+        production0_.production_line_code as product11_4_0_,
+        production0_.production_plan_id as product12_4_0_,
+        production0_.result_date as result_d6_4_0_,
+        production0_.start_time as start_ti7_4_0_,
+        production0_.status as status8_4_0_,
+        production0_.yield_rate as yield_ra9_4_0_ 
+    from
+        production_data production0_ 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_0_,
+        production0_.actual_quantity as actual_q2_4_0_,
+        production0_.end_time as end_time3_4_0_,
+        production0_.planned_quantity as planned_4_4_0_,
+        production0_.product_id as product10_4_0_,
+        production0_.product_name as product_5_4_0_,
+        production0_.production_line_code as product11_4_0_,
+        production0_.production_plan_id as product12_4_0_,
+        production0_.result_date as result_d6_4_0_,
+        production0_.start_time as start_ti7_4_0_,
+        production0_.status as status8_4_0_,
+        production0_.yield_rate as yield_ra9_4_0_ 
+    from
+        production_data production0_ 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_0_,
+        production0_.actual_quantity as actual_q2_4_0_,
+        production0_.end_time as end_time3_4_0_,
+        production0_.planned_quantity as planned_4_4_0_,
+        production0_.product_id as product10_4_0_,
+        production0_.product_name as product_5_4_0_,
+        production0_.production_line_code as product11_4_0_,
+        production0_.production_plan_id as product12_4_0_,
+        production0_.result_date as result_d6_4_0_,
+        production0_.start_time as start_ti7_4_0_,
+        production0_.status as status8_4_0_,
+        production0_.yield_rate as yield_ra9_4_0_ 
+    from
+        production_data production0_ 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_0_,
+        production0_.actual_quantity as actual_q2_4_0_,
+        production0_.end_time as end_time3_4_0_,
+        production0_.planned_quantity as planned_4_4_0_,
+        production0_.product_id as product10_4_0_,
+        production0_.product_name as product_5_4_0_,
+        production0_.production_line_code as product11_4_0_,
+        production0_.production_plan_id as product12_4_0_,
+        production0_.result_date as result_d6_4_0_,
+        production0_.start_time as start_ti7_4_0_,
+        production0_.status as status8_4_0_,
+        production0_.yield_rate as yield_ra9_4_0_ 
+    from
+        production_data production0_ 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_0_,
+        production0_.actual_quantity as actual_q2_4_0_,
+        production0_.end_time as end_time3_4_0_,
+        production0_.planned_quantity as planned_4_4_0_,
+        production0_.product_id as product10_4_0_,
+        production0_.product_name as product_5_4_0_,
+        production0_.production_line_code as product11_4_0_,
+        production0_.production_plan_id as product12_4_0_,
+        production0_.result_date as result_d6_4_0_,
+        production0_.start_time as start_ti7_4_0_,
+        production0_.status as status8_4_0_,
+        production0_.yield_rate as yield_ra9_4_0_ 
+    from
+        production_data production0_ 
+    where
+        production0_.product_id=?
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.5</a> at 2025. 4. 3. 오전 10:50:11</p>
+</div>
+</div>
+</body>
+</html>

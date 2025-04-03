@@ -6,6 +6,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -32,9 +34,14 @@ public class Product {
     @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_plan_id")
-    private ProductionPlan productionPlan;
+    @ManyToMany
+    @JoinTable(
+            name = "product_plan",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "production_plan_id")
+    )
+    @Builder.Default
+    private Set<ProductionPlan> productionPlans = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private Status productStatus;
@@ -47,7 +54,6 @@ public class Product {
     @Builder.Default
     private LocalDate regDate = LocalDate.now();
 
-    @Column(nullable = false)
     private Integer quantity = 0;
 
     public void change(String productName,

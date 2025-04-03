@@ -71,90 +71,6 @@
         <!-- Page content-->
         <div class="container-fluid" layout:fragment="content">
             <div class="container">
-                <!-- 생산계획 목록 섹션 -->
-                <div class="section-title">생산계획 목록</div>
-
-                <!-- 검색 및 필터 영역 -->
-                <form th:action="@{/plan/search}" method="get" class="search-bar">
-                    <label for="search">검색:</label>
-                    <input type="text" id="search" name="keyword" placeholder="검색어 입력" th:value="${keyword}">
-
-                    <select name="priority" class="dropdown">
-                        <option value="">우선순위 ▼</option>
-                        <option value="HIGH" th:selected="${selectedPriority == 'HIGH'}">높음</option>
-                        <option value="NORMAL" th:selected="${selectedPriority == 'NORMAL'}">보통</option>
-                        <option value="LOW" th:selected="${selectedPriority == 'LOW'}">낮음</option>
-                    </select>
-
-                    <select name="status" class="dropdown">
-                        <option value="">상태 ▼</option>
-                        <option value="STANDBY" th:selected="${selectedStatus == 'STANDBY'}">대기</option>
-                        <option value="IN_PROGRESS" th:selected="${selectedStatus == 'IN_PROGRESS'}">진행 중</option>
-                        <option value="COMPLETED" th:selected="${selectedStatus == 'COMPLETED'}">완료</option>
-                    </select>
-
-                    <button type="submit" class="button">검색</button>
-                </form>
-
-                <!-- 생산계획 테이블 -->
-                <table th:if="${!plans.empty}" class="board-table">
-                    <thead>
-                    <tr>
-                        <th><input type="checkbox" id="selectAll"></th>
-                        <th data-column="planId" class="sortable">번호</th>
-                        <th data-column="productName" class="sortable">제품명</th>
-                        <th data-column="productionLineNames" class="sortable">생산라인</th>
-                        <th data-column="startDate" class="sortable">생산기간</th>
-                        <th data-column="targetQty" class="sortable">목표수량</th>
-                        <th data-column="manager" class="sortable">담당자</th>
-                        <th data-column="priority" class="sortable">우선순위</th>
-                        <th data-column="planStatus" class="sortable">상태</th>
-                        <th>관리</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="plan, iterStat : ${plans.content}">
-                        <td><input type="checkbox" name="selectedPlan" th:value="${plan.planId}" class="planCheckbox"></td>
-                        <td th:text="${iterStat.count + (plans.number * plans.size)}"></td>
-                        <td><span th:text="${plan.productName}"></span></td>
-                        <td th:text="${plan.productionLineNames != null ? #strings.setJoin(plan.productionLineNames, ', ') : ''}"></td>
-                        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' - ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${plan.targetQty}"></td>
-                        <td th:text="${plan.manager}"></td>
-                        <td th:text="${plan.priority}"></td>
-                        <td th:text="${plan.planStatus}"></td>
-                        <td class="action-btn">
-                            <button class="button" th:onclick="'openModifyModal(\'' + ${plan.planId} + '\')'">수정</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Delete Button -->
-                <div th:if="${!plans.empty}">
-                    <button id="deleteSelected" class="button delete">선택 삭제</button>
-                </div>
-
-                <!-- No results message -->
-                <div th:if="${plans.empty}" class="no-results">
-                    <p>검색 결과가 없습니다.</p>
-                </div>
-
-                <!-- 페이지네이션 -->
-                <div class="pagination" th:if="${!plans.empty}">
-                    <button th:if="${plans.hasPrevious()}"
-                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number - 1})} + '\''">이전</button>
-
-                    <th:block th:each="pageNumber : ${#numbers.sequence(0, plans.totalPages - 1)}">
-                        <button th:text="${pageNumber + 1}"
-                                th:class="${pageNumber == plans.number} ? 'active'"
-                                th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${pageNumber})} + '\''"></button>
-                    </th:block>
-
-                    <button th:if="${plans.hasNext()}"
-                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number + 1})} + '\''">다음</button>
-                </div>
-
                 <!-- 생산계획 입력 폼 -->
                 <div class="form-container">
                     <div class="section-title">생산계획 입력</div>
@@ -257,6 +173,91 @@
                             <button type="" onclick="" >취소</button >
                         </div>
                     </form>
+                </div>
+                <br>
+
+                <!-- 생산계획 목록 섹션 -->
+                <div class="section-title">생산계획 목록</div>
+
+                <!-- 검색 및 필터 영역 -->
+                <form th:action="@{/plan/search}" method="get" class="search-bar">
+                    <label for="search">검색:</label>
+                    <input type="text" id="search" name="keyword" placeholder="검색어 입력" th:value="${keyword}">
+
+                    <select name="priority" class="dropdown">
+                        <option value="">우선순위 ▼</option>
+                        <option value="HIGH" th:selected="${selectedPriority == 'HIGH'}">높음</option>
+                        <option value="NORMAL" th:selected="${selectedPriority == 'NORMAL'}">보통</option>
+                        <option value="LOW" th:selected="${selectedPriority == 'LOW'}">낮음</option>
+                    </select>
+
+                    <select name="status" class="dropdown">
+                        <option value="">상태 ▼</option>
+                        <option value="STANDBY" th:selected="${selectedStatus == 'STANDBY'}">대기</option>
+                        <option value="IN_PROGRESS" th:selected="${selectedStatus == 'IN_PROGRESS'}">진행 중</option>
+                        <option value="COMPLETED" th:selected="${selectedStatus == 'COMPLETED'}">완료</option>
+                    </select>
+
+                    <button type="submit" class="button">검색</button>
+                </form>
+
+                <!-- 생산계획 테이블 -->
+                <table th:if="${!plans.empty}" class="board-table">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th data-column="planId" class="sortable">번호</th>
+                        <th data-column="productName" class="sortable">제품명</th>
+                        <th data-column="productionLineNames" class="sortable">생산라인</th>
+                        <th data-column="startDate" class="sortable">생산기간</th>
+                        <th data-column="targetQty" class="sortable">목표수량</th>
+                        <th data-column="manager" class="sortable">담당자</th>
+                        <th data-column="priority" class="sortable">우선순위</th>
+                        <th data-column="planStatus" class="sortable">상태</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="plan, iterStat : ${plans.content}">
+                        <td><input type="checkbox" name="selectedPlan" th:value="${plan.planId}" class="planCheckbox"></td>
+                        <td th:text="${iterStat.count + (plans.number * plans.size)}"></td>
+                        <td><span th:text="${plan.productName}"></span></td>
+                        <td th:text="${plan.productionLineNames != null ? #strings.setJoin(plan.productionLineNames, ', ') : ''}"></td>
+                        <td th:text="${#temporals.format(plan.startDate, 'yyyy-MM-dd')} + ' - ' + ${#temporals.format(plan.endDate, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${plan.targetQty}"></td>
+                        <td th:text="${plan.manager}"></td>
+                        <td th:text="${plan.priority}"></td>
+                        <td th:text="${plan.planStatus}"></td>
+                        <td class="action-btn">
+                            <button class="button" th:onclick="'openModifyModal(\'' + ${plan.planId} + '\')'">수정</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Delete Button -->
+                <div th:if="${!plans.empty}">
+                    <button id="deleteSelected" class="button delete">선택 삭제</button>
+                </div>
+
+                <!-- No results message -->
+                <div th:if="${plans.empty}" class="no-results">
+                    <p>검색 결과가 없습니다.</p>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination" th:if="${!plans.empty}">
+                    <button th:if="${plans.hasPrevious()}"
+                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number - 1})} + '\''">이전</button>
+
+                    <th:block th:each="pageNumber : ${#numbers.sequence(0, plans.totalPages - 1)}">
+                        <button th:text="${pageNumber + 1}"
+                                th:class="${pageNumber == plans.number} ? 'active'"
+                                th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${pageNumber})} + '\''"></button>
+                    </th:block>
+
+                    <button th:if="${plans.hasNext()}"
+                            th:onclick="'location.href=\'' + @{/plan/search(keyword=${keyword},priority=${selectedPriority},status=${selectedStatus},page=${plans.number + 1})} + '\''">다음</button>
                 </div>
             </div>
         </div>
