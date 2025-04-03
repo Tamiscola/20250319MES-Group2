@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -333,23 +334,20 @@ public class ManufacturingSimulator {
     }
 
     private Product initializeProduct(ProductionPlan plan) {
-        // Check if a product already exists for this plan
-        Optional<Product> existingProduct = productRepository.findByNameAndPlan(plan.getProductName(), plan);
-        if (existingProduct.isPresent()) {
-            return existingProduct.get(); // Reuse existing product
-        }
+        // Get the first product associated with this plan
+        final Product initialProduct = plan.getProducts().stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No product associated with plan: " + plan.getPlanId()));
 
-        // Create a new product only if none exists
-        Product product = Product.builder()
-                .productName(plan.getProductName())
-                .productStatus(Status.NORMAL)
-                .manufacturedDate(LocalDate.now())
-                .regBy(plan.getManager())
-                .quantity(0) // Start with 0 quantity
-                .build();
+        // Ensure we have the latest version from the database
+        Product product = productRepository.findById(initialProduct.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + initialProduct.getProductId()));
 
-        product.getProductionPlans().add(plan); // Associate product with plan
-        return productRepository.save(product);
+        // Reset quantity for simulation
+        product.setQuantity(0);
+        product.setManufacturedDate(LocalDate.now());
+
+        return product;
     }
 
     private void updateProductQuantity(Product product, ProductionPlan plan, Task task) {

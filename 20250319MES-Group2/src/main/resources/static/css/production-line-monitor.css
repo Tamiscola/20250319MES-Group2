@@ -157,6 +157,18 @@ body {
     color: green;
 }
 
+.status-cell.standby {
+    color: blue;
+}
+
+.status-cell.in-progress {
+    color: orange;
+}
+
+.status-cell.completed {
+    color: green;
+}
+
 
 .progress-container {
     display: flex;
