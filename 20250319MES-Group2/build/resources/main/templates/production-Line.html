@@ -17,10 +17,9 @@
 <body>
 <div class="d-flex" id="wrapper">
     <!-- Sidebar-->
-    <!-- Sidebar-->
     <div class="border-end bg-light" id="sidebar-wrapper" style="background-color: #e3f2fd !important;">
         <div class="sidebar-heading border-bottom custom-sidebar-heading" style="text-align: center; height: 10vh;">
-            <a class="a-tag" th:href="@{/bio/dashboard}"><h1>SemiCon</h1></a>
+            <a class="a-tag" th:href="@{/data/list}"><h1>SemiCon</h1></a>
         </div>
         <div class="list-group list-group-flush">
             <a class="list-group-item list-group-item-action list-group-item-light p-3"
@@ -28,13 +27,14 @@
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/products/list}">제품관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/plan/list}">생산계획관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/line/list}">생산라인관리</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/material/list}">자재관리</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/data/list}">생산실적</a>
             <div th:if="${isAdmin}">
                 <a class="list-group-item list-group-item-action list-group-item-light p-3" th:onclick="location.href='/admin'">관리자 페이지</a>
             </div>
 
             <div class="company-information">
-                <p><b>Bio One</b></p>
+                <p><b>SemiCon</b></p>
                 <p><b>경기도 성남시 분당구 190번길 45</b></p>
                 <p><b>Tel : 031-250-8900</b></p>
                 <p><b>Fax : 031-250-8901</b></p>
@@ -42,6 +42,7 @@
             </div>
         </div>
     </div>
+
     <!-- Page content wrapper-->
     <div id="page-content-wrapper">
         <!-- Top navigation-->
@@ -83,12 +84,8 @@
                         </div>
 
                         <div class="form-row">
-                            <label for="location">설치 위치 선택:</label>
-                            <select id="location" name="location" class="dropdown" required>
-                                <option value="">위치</option>
-                                <option value="1층">1층</option>
-                                <option value="2층">2층</option>
-                            </select>
+                            <label for="location">설치 위치:</label>
+                            <input type="text" id="location" name="location" value="" required>
                         </div>
 
                         <div class="form-row">
@@ -127,7 +124,7 @@
                     </form>
                 </div>
 
-                <!-- 생산계획 목록 섹션 -->
+                <!-- 생산라인 목록 섹션 -->
                 <div class="section-title">생산라인 목록</div>
 
                 <!-- 검색 및 필터 영역 -->
@@ -249,12 +246,8 @@
             </div>
 
             <div class="form-row">
-                <label for="modifyLocation">설치 위치 선택:</label>
-                <select id="modifyLocation" name="Location" class="dropdown" required>
-                    <option value="">위치</option>
-                    <option value="1층">1층</option>
-                    <option value="2층">2층</option>
-                </select>
+                <label for="modifyLocation">위치:</label>
+                <input type="text" id="modifyLocation" name="location" required>
             </div>
 
             <div class="form-row">
@@ -395,7 +388,7 @@
 
                $('#modifyProductionLineCode').val(data.productionLineCode);
                $('#modifyProductionLineName').val(data.productionLineName);
-               $('#modifyLocation option[value="' + data.location + '"]').prop('selected', true);
+               $('#modifyLocation').val(data.location);
                $('#modifyManager').val(data.manager);
                $('#modifyCapacity').val(data.capacity);
                $('#modifyEquipment').val(data.equipment);
@@ -407,8 +400,8 @@
                modal.style.display = "block";
            },
            error: function(error) {
-               console.error('Error fetching plan details:', error);
-               alert('Error fetching plan details.');
+               console.error('Error fetching line details:', error);
+               alert('Error fetching line details.');
            }
        });
 

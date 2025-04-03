@@ -175,9 +175,11 @@ tr:hover {
 }
 
 .form-row {
-    margin-bottom: 15px;
     display: flex;
-    align-items: center;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 20px; /* 항목들 간의 간격 */
+    flex-wrap: wrap; /* 두 개씩 한 줄에 배치하고, 줄 바꿈 처리 */
+    margin-bottom: 20px;
 }
 
 .form-row label {
@@ -351,4 +353,32 @@ tr:hover {
 .sortable.desc::after {
     content: '\25BC'; /* Down arrow */
     visibility: visible;
+}
+
+/* radio-group을 flexbox로 변경하여 한 줄에 두 개씩 배치 */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* 항목들 간의 간격을 제거 */
+    width: 100%; /* 부모 요소의 너비에 맞게 채운다 */
+}
+
+/* radio-item을 두 개씩 배치 */
+.radio-item {
+    width: 45%; /* 두 개씩 한 줄에 배치 */
+    box-sizing: border-box; /* padding, margin 포함한 너비 계산 */
+    margin-right: 0; /* 추가적인 간격을 제거 */
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: flex-start; /* label을 왼쪽 정렬 */
+}
+
+/* radio-item의 input과 label 사이 간격을 적당히 유지 */
+.radio-item input, .radio-item label {
+    margin-right: 10px; /* label과 input 사이에 간격 추가 */
+}
+
+/* 추가: 수평 중앙 정렬을 위한 처리 */
+.radio-group .radio-item:nth-child(odd) {
+    margin-right: 5%; /* 왼쪽 항목과 오른쪽 항목 간의 간격을 맞추기 위함 */
 }
