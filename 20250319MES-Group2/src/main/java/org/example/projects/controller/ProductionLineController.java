@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class ProductionLineController {
             productionLineService.deleteProductionLine(code);
             return "redirect:/line/list";
         }catch (Exception e){
-            log.error("Error modifying production line", e);
+            log.error("Error deleting production line", e);
             return "error";
         }
     }
