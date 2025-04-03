@@ -19,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -94,14 +93,14 @@ public class ProductionLineController {
             productionLineService.deleteProductionLine(code);
             return "redirect:/line/list";
         }catch (Exception e){
-            log.error("Error modifying production line", e);
+            log.error("Error deleting production line", e);
             return "error";
         }
     }
 
     @GetMapping("/search")
-    public String searchLines(@RequestParam(required = false, defaultValue = "DESC") String productionLineName,
-                              @RequestParam(required = false, defaultValue = "") String productionLineStatus,
+    public String searchLines(@RequestParam(required = false) String productionLineName,
+                              @RequestParam(required = false) String productionLineStatus,
                               @RequestParam(required = false)
                               @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate regDate,
                               @RequestParam(defaultValue = "productionLineCode") String sort,

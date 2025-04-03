@@ -3,8 +3,6 @@ package org.example.projects.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.projects.domain.ProductionLine;
-import org.example.projects.domain.enums.PlanStatus;
-import org.example.projects.domain.enums.Priority;
 import org.example.projects.domain.enums.Status;
 import org.example.projects.dto.ProductionLineDTO;
 import org.example.projects.repository.ProductionLineRepository;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,10 +41,6 @@ public class ProductionLineService {
             ProductionLineDTO dto = ProductionLineDTO.fromEntity(line);
             return dto;
         });
-    }
-
-    public List<ProductionLine> getAllLinesAsEntity(){
-        return productionLineRepository.findAll();
     }
 
     public ProductionLine getProductionLineByCode(String code) {
