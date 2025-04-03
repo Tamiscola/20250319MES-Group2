@@ -70,6 +70,32 @@
         <!-- Integrated Production Plan Content -->
         <div class="container-fluid" layout:fragment="content">
             <div class="container">
+                <!-- 제품 등록 테이블 -->
+                <div class="form-container">
+                    <div class="section-title">제품 등록</div>
+                    <form th:action="@{/products/register}" th:object="${productDTO}" method="post" enctype="multipart/form-data">
+                        <div class="form-row">
+                            <label for="productName">제품명</label>
+                            <input type="text" id="productName" name="productName" placeholder="제품명">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="regBy">등록자:</label>
+                            <input type="text" id="regBy" name="regBy" value="홍길동" required>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="regDate">등록일자:</label>
+                            <input type="date" id="regDate" name="regDate" pattern="yyyy-MM-dd" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="button">저장</button>
+                            <button type="button" class="button">취소</button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- 제품 목록 섹션 -->
                 <div class="section-title">제품 목록</div>
 
@@ -129,32 +155,6 @@
                     <button class="page-item" th:if="${responseDTO.next}" th:data-num="${responseDTO.end + 1}">
                         Next
                     </button>
-                </div>
-
-                <!-- 제품 등록 테이블 -->
-                <div class="form-container">
-                    <div class="section-title">제품 등록</div>
-                    <form th:action="@{/products/register}" th:object="${productDTO}" method="post" enctype="multipart/form-data">
-                        <div class="form-row">
-                            <label for="productName">제품명</label>
-                            <input type="text" id="productName" name="productName" placeholder="제품명">
-                        </div>
-
-                        <div class="form-row">
-                            <label for="regBy">등록자:</label>
-                            <input type="text" id="regBy" name="regBy" value="홍길동" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="regDate">등록일자:</label>
-                            <input type="date" id="regDate" name="regDate" pattern="yyyy-MM-dd" required>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="button">저장</button>
-                            <button type="button" class="button">취소</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>

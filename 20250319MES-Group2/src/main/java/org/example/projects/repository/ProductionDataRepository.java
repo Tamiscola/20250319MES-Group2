@@ -29,5 +29,4 @@ public interface ProductionDataRepository extends JpaRepository<ProductionData, 
                                               @Param("endDate") LocalDate endDate,
                                               @Param("status") PlanStatus status,
                                               Pageable pageable);
-
 }

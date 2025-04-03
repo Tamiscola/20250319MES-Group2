@@ -25,6 +25,9 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProductionData productionData;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_line_code")
     private ProductionLine productionLine;

@@ -13,11 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,5 +52,11 @@ public class ProductionDataController {
         model.addAttribute("products", products);
         model.addAttribute("results", results);
         return "production-data";
+    }
+
+    @DeleteMapping("/api/production-data/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProductionData(@PathVariable String id) {
+        productionDataService.deleteProductionData(id);
     }
 }

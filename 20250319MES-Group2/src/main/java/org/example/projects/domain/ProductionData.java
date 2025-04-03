@@ -29,7 +29,7 @@ public class ProductionData {
     @JoinColumn(name = "production_plan_id", nullable = false)
     private ProductionPlan productionPlan;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
