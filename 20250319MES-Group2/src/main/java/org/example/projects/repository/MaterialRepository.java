@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -17,9 +19,17 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     Optional<Material> findById(Long mId);
 
-    Page<Material> findByMProcessAndMStatus(ProcessType process, Status status, Pageable pageable);
+    @Query("SELECT m FROM Material m WHERE m.mProcess = :mProcess AND m.mStatus = :mStatus")
+    Page<Material> findByMProcessAndMStatus(@Param("mProcess") ProcessType mProcess,
+                                            @Param("mStatus") Status mStatus,
+                                            Pageable pageable);
 
-    Page<Material> findByMProcess(ProcessType process, Pageable pageable);
 
-    Page<Material> findByMStatus(Status status, Pageable pageable);
+    @Query("SELECT m FROM Material m WHERE m.mProcess = :mProcess")
+    Page<Material> findByMProcess(@Param("mProcess") ProcessType mProcess, Pageable pageable);
+
+
+    @Query("SELECT m FROM Material m WHERE m.mStatus = :mStatus")
+    Page<Material> findByMStatus(@Param("mStatus") Status mStatus, Pageable pageable);
+
 }
