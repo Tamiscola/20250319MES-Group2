@@ -39,6 +39,10 @@ public class ProductionDataDTO {
 
     private LocalDate resultDate;
 
+    private Double totalMaterialCost;
+
+    private Double unitCost;
+
     public static ProductionDataDTO fromEntity(ProductionData entity) {
         return ProductionDataDTO.builder()
                 .productionResultId(entity.getProductionResultId())
@@ -53,6 +57,8 @@ public class ProductionDataDTO {
                 .startTime(entity.getStartTime())
                 .endTime(entity.getEndTime())
                 .resultDate(entity.getResultDate())
+                .totalMaterialCost(entity.getTotalMaterialCost())
+                .unitCost(entity.getUnitCost())
                 .build();
     }
 }

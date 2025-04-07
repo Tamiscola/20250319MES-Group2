@@ -355,8 +355,8 @@
             <th>Planned Qty</th>
             <th>Actual Qty</th>
             <th>Yield Rate</th>
+            <th>Production Cost</th>
             <th>Status</th>
-            <th>Result Date</th>
             <th>Manage</th>
         </tr>
         </thead>
@@ -370,11 +370,12 @@
             <td th:text="${result.plannedQuantity}"></td>
             <td th:text="${result.actualQuantity}"></td>
             <td th:text="${#numbers.formatDecimal(result.yieldRate,1,2)} + '%'"></td>
+            <td th:text="${#numbers.formatDecimal(result.totalMaterialCost,1,2)}"></td>
             <td>
     <span th:class="'status-cell status-' + ${result.status.name().toLowerCase().replace('_', '-')}"
           th:text="${result.status.name()}"></span>
             </td>
-            <td th:text="${result.resultDate}"></td>
+
             <td>
                 <button class="delete-button" th:data-id="${result.productionResultId}">Delete</button>
             </td>
