@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,8 +61,20 @@ public class ProductService {
     }
 
     @Transactional
-    public void productRemove(String productId) {
+    public boolean productRemove(String productId) {
+        // Fetch the product by ID
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
+
+        // Check if the product is associated with any production plans
+        if (!product.getProductionPlans().isEmpty()) {
+            // Return false to indicate that deletion is not allowed
+            return false;
+        }
+
+        // If no associations exist, delete the product
         productRepository.deleteById(productId);
+        return true;
     }
 
     @Transactional

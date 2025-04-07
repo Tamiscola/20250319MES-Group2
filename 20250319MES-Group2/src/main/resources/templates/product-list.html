@@ -292,23 +292,29 @@
               return;
           }
 
-          // 삭제 요청을 위한 폼 생성
-          let formObj = document.createElement("form");
-          formObj.method = 'post';
-          formObj.action = `/products/remove`; // 삭제 요청 URL
-
-          // 숨겨진 input 필드 생성 (productId 전달)
-          let input = document.createElement("input");
-          input.type = "hidden";
-          input.name = "productId";
-          input.value = productId;
-          formObj.appendChild(input);
-
-          // 폼을 문서에 추가하고 제출
-          document.body.appendChild(formObj);
-          formObj.submit();
-      }
-  }, false);
+          // AJAX 요청을 사용하여 삭제 처리
+        fetch(`/products/remove?productId=${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("제품이 성공적으로 삭제되었습니다.");
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    return response.text(); // 오류 메시지 반환
+                }
+            })
+            .then(errorMessage => {
+                if (errorMessage) {
+                    alert(errorMessage); // 오류 메시지 표시
+                }
+            })
+            .catch(error => console.error("삭제 요청 중 오류 발생:", error));
+    }
+}, false);
 
 </script>
 </body>

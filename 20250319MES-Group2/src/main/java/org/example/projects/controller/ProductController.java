@@ -12,6 +12,7 @@ import org.example.projects.dto.pageDTO.PageResponseDTO;
 import org.example.projects.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -117,15 +118,15 @@ public class ProductController {
     }
 
     @PostMapping("/remove")
-    public String productRemove(ProductDTO productDTO, RedirectAttributes redirectAttributes) {
-        String productId = productDTO.getProductId();
+    @ResponseBody
+    public ResponseEntity<String> removeProduct(@RequestParam String productId) {
+        boolean isDeleted = productService.productRemove(productId);
 
-        log.info("remove post" + productId);
+        if (!isDeleted) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Cannot delete product. It is associated with one or more production plans.");
+        }
 
-        productService.productRemove(productId);
-
-        redirectAttributes.addFlashAttribute("result", "removed");
-
-        return "redirect:/products/list";
+        return ResponseEntity.ok("Product deleted successfully.");
     }
 }
