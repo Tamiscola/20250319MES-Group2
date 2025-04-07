@@ -1,11 +1,13 @@
 package org.example.projects.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.example.projects.domain.MaterialConsumption;
 import org.example.projects.domain.Product;
 import org.example.projects.domain.ProductionData;
 import org.example.projects.domain.ProductionPlan;
 import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.dto.ProductionDataDTO;
+import org.example.projects.repository.MaterialConsumptionRepository;
 import org.example.projects.repository.ProductionDataRepository;
 import org.example.projects.repository.ProductionPlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,6 +31,9 @@ public class ProductionDataService {
 
     @Autowired
     private ProductionPlanRepository productionPlanRepository;
+
+    @Autowired
+    private MaterialConsumptionRepository materialConsumptionRepository;
 
     public List<ProductionData> getAllProductionResults() {
         return productionDataRepository.findAll();
@@ -52,29 +58,21 @@ public class ProductionDataService {
 
         log.info("Found ProductionData: {}", productionData);
 
-        // Get the product before nullifying the relationship
-        Product product = productionData.getProduct();
-
-        if (product != null) {
-            // Remove the product from all production plans first
-            for (ProductionPlan plan : new HashSet<>(product.getProductionPlans())) {
-                plan.getProducts().remove(product);
-                // Save the updated plan if you're not using cascade
-                productionPlanRepository.save(plan);
-            }
-            product.getProductionPlans().clear();
-
-            // Clear bidirectional relationship
-            product.setProductionData(null);
-            productionDataRepository.save(productionData);
-        }
-
-        // Break relationships
+        // Break relationships without deleting Product
         productionData.setProduct(null);
         productionData.setProductionLine(null);
         productionData.setProductionPlan(null);
 
-        // Delete entity
+        // Delete MaterialConsumptions if necessary (if cascade is not used)
+        for (MaterialConsumption consumption : new ArrayList<>(productionData.getMaterialConsumptions())) {
+            materialConsumptionRepository.delete(consumption);
+        }
+
+        // Clear materialConsumptions list
+        productionData.getMaterialConsumptions().clear();
+        productionDataRepository.save(productionData);
+
+        // Delete ProductionData
         productionDataRepository.delete(productionData);
     }
 }

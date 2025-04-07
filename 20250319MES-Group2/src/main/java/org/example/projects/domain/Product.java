@@ -27,7 +27,7 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
     private ProductionData productionData;
 
     @ManyToOne(fetch = FetchType.LAZY)

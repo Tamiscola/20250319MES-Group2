@@ -31,7 +31,7 @@ public class ProductionData {
     @JoinColumn(name = "production_plan_id", nullable = false)
     private ProductionPlan productionPlan;
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
