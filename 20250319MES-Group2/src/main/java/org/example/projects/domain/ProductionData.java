@@ -5,11 +5,13 @@ import lombok.*;
 import org.example.projects.domain.enums.PlanStatus;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "production_data")
 @Getter
-@Setter
+@Setter // Keep this, but exclude materialConsumptions
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,5 +54,26 @@ public class ProductionData {
 
     @Builder.Default
     private LocalDate resultDate = LocalDate.now();
-}
 
+    // New fields for material cost tracking
+    private Double totalMaterialCost; // Total cost of materials used
+
+    private Double unitCost; // Cost per unit (totalMaterialCost / actualQuantity)
+
+    // Bidirectional relationship with MaterialConsumption
+    @OneToMany(mappedBy = "productionData", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<MaterialConsumption> materialConsumptions = new ArrayList<>();
+
+    // Custom methods to manage the collection
+    public void addMaterialConsumption(MaterialConsumption consumption) {
+        materialConsumptions.add(consumption);
+        consumption.setProductionData(this);
+    }
+
+    public void removeMaterialConsumption(MaterialConsumption consumption) {
+        materialConsumptions.remove(consumption);
+        consumption.setProductionData(null);
+    }
+
+}

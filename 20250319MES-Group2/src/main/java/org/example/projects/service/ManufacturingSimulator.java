@@ -54,6 +54,9 @@ public class ManufacturingSimulator {
     @Autowired
     private ProductionDataRepository productionDataRepository;
 
+    @Autowired
+    private MaterialService materialService;
+
     private void resetTasks(ProductionLine line) {
         for (Process process : line.getProductionProcesses()) {
             for (Task task : process.getTasks()) {
@@ -64,7 +67,6 @@ public class ManufacturingSimulator {
         }
         log.info("Reset all tasks for production line {}", line.getProductionLineCode());
     }
-
 
     // Update task progress incrementally
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -93,6 +95,7 @@ public class ManufacturingSimulator {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
         AtomicReference<ProductionPlan> planRef = new AtomicReference<>();
         AtomicReference<Product> productRef = new AtomicReference<>();
+        AtomicReference<ProductionData> productionDataRef = new AtomicReference<>();
 
         // STEP 1: Load the production plan
         transactionTemplate.execute(new TransactionCallback<Void>() {
@@ -122,22 +125,27 @@ public class ManufacturingSimulator {
                         .actualQuantity(0)
                         .status(PlanStatus.IN_PROGRESS)
                         .startTime(LocalDate.now())
+                        .totalMaterialCost(0.0) // Initialize cost tracking
+                        .unitCost(0.0)
+                        .materialConsumptions(new ArrayList<>()) // Initialize with empty list
                         .build();
 
                 // Set up bidirectional relationship
                 product.setProductionData(productionData);
 
                 // Save production data
-                productionDataRepository.save(productionData);
+                productionData = productionDataRepository.save(productionData);
 
-                // Update the reference
+                // Update the references
                 productRef.set(product);
+                productionDataRef.set(productionData);
                 return null;
             }
         });
 
         ProductionPlan plan = planRef.get();
         Product product = productRef.get();
+        ProductionData productionData = productionDataRef.get();
 
         boolean simulationCompleted = false;
 
@@ -184,6 +192,18 @@ public class ManufacturingSimulator {
                     log.info("Process {} already completed, skipping.", process.getProcessType());
                     continue;
                 }
+
+                // Consume materials for this process type
+                transactionTemplate.execute(new TransactionCallback<Void>() {
+                    public Void doInTransaction(TransactionStatus status) {
+                        // Consume materials at the beginning of each process
+                        if (process.getProcessType() != ProcessType.COMPLETED) {
+                            double processCost = materialService.consumeMaterialsForProcess(productionData, process.getProcessType());
+                            log.info("Consumed materials for process {} with cost: {}", process.getProcessType(), processCost);
+                        }
+                        return null;
+                    }
+                });
 
                 // Check for COMPLETED process type
                 if (process.getProcessType() == ProcessType.COMPLETED) {
@@ -266,6 +286,9 @@ public class ManufacturingSimulator {
         // Finalize the production
         transactionTemplate.execute(new TransactionCallback<Void>() {
             public Void doInTransaction(TransactionStatus status) {
+                // Update product cost with total material costs
+                materialService.updateProductionCost(productionData);
+
                 plan.setPlanStatus(PlanStatus.COMPLETED);
                 plan.setEndDate(LocalDate.now());
                 productionPlanRepository.save(plan);
@@ -391,7 +414,10 @@ public class ManufacturingSimulator {
                     .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100) // Yield Rate
                     .status(plan.getPlanStatus()) // Status
                     .startTime(plan.getStartDate())
-                    .endTime(LocalDate.now())   // End time
+                    .endTime(LocalDate.now()) // End time
+                    .totalMaterialCost(0.0) // Initialize material cost
+                    .unitCost(0.0) // Initialize unit cost
+                    .materialConsumptions(new ArrayList<>()) // Initialize with empty list
                     .build();
 
             productionDataRepository.save(newResult);
