@@ -97,7 +97,7 @@ public class ProductionPlanService {
                 .orElseThrow(() -> new IllegalArgumentException("Production line with name '" + productionLineName + "' does not exist"));
 
         // Validate that the product exists in the production line's metadata
-        Product productMetadata = productRepository.findFirstByProductName(dto.getProductName())
+        Product product = productRepository.findFirstByProductName(dto.getProductName())
                 .orElseThrow(() -> new IllegalArgumentException("Product with name '" + dto.getProductName() + "' does not exist"));
 
         // Create ProductionPlan
@@ -119,25 +119,14 @@ public class ProductionPlanService {
             plan.setFileUrl(uploadDir + fileName);
         }
 
-        // Save ProductionPlan
+        // Save ProductionPlan first to get ID
         productionPlanRepository.save(plan);
-
-        // Create Product instance linked to the plan and production line
-        Product product = Product.builder()
-                .productName(productMetadata.getProductName()) // Use metadata product name
-                .productionLine(productionLine) // Link to the existing production line
-                .productionPlan(plan) // Link to the newly created plan
-                .regBy(dto.getManager()) // Manager from DTO
-                .quantity(0) // Initial quantity
-                .build();
-
-        productRepository.save(product);
 
         // Create Processes and Tasks based on metadata
         for (ProcessType processType : ProcessType.values()) {
             Process process = Process.builder()
                     .processType(processType)
-                    .productionLine(productionLine) // Link to existing production line
+                    .productionLine(productionLine)
                     .completed(false)
                     .progress(0)
                     .build();
@@ -160,11 +149,14 @@ public class ProductionPlanService {
         }
 
         // Set up relationships between plan, product, and production line
-        plan.getProducts().add(product);
+        plan.getProducts().add(product); // Now using the correctly named 'product' variable
+        product.getProductionPlans().add(plan); // Add bidirectional relationship
+
         plan.getProductionLines().add(productionLine);
         productionLine.getProductionPlans().add(plan);
 
-        // Save the updated plan and production line relationships
+        // Save all updated entities
+        productRepository.save(product);
         productionPlanRepository.save(plan);
         productionLineRepository.save(productionLine);
     }

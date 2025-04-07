@@ -31,9 +31,14 @@ public class ProductionPlan {
     @Builder.Default
     private Set<ProductionLine> productionLines = new HashSet<>();   // 생산라인
 
-    @OneToMany(mappedBy = "productionPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "production_plan_product",
+            joinColumns = @JoinColumn(name = "production_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     @Builder.Default
-    private Set<Product> products = new HashSet<>();     // 생산품목
+    private Set<Product> products = new HashSet<>();
 
     private String productName;  // 제품명
     private LocalDate startDate; // 생산 시작일

@@ -64,14 +64,10 @@ public class ProductionMonitorController {
                     .findFirst()
                     .orElse(null);
 
-            PlanStatus planStatus = plan != null ?
-                    plan.getPlanStatus() :
-                    PlanStatus.STANDBY;
-
             Map<String, Object> progressData = new HashMap<>();
             progressData.put("productionLineCode", line.getProductionLineCode());
             progressData.put("productionLineName", line.getProductionLineName());
-            progressData.put("planStatus", planStatus.name());
+            progressData.put("planStatus", line.getPlanStatus().name());
             progressData.put("capacity", line.getCapacity());
             progressData.put("progress", calculateOverallProgressForLine(line));
             progressData.put("todayQty", calculateTodayProduction(line));
@@ -149,6 +145,7 @@ public class ProductionMonitorController {
         progressData.put("productionLineCode", line.getProductionLineCode());
         progressData.put("productionLineName", line.getProductionLineName());
         progressData.put("status", line.getProductionLineStatus());
+        progressData.put("planStatus", line.getPlanStatus());
         progressData.put("capacity", line.getCapacity());
         progressData.put("progress", progress);
         progressData.put("todayQty", calculateTodayProduction(line));
@@ -270,6 +267,3 @@ public class ProductionMonitorController {
         }
     }
 }
-
-
-

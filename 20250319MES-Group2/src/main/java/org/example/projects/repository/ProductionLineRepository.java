@@ -1,6 +1,5 @@
 package org.example.projects.repository;
 
-import org.example.projects.domain.Process;
 import org.example.projects.domain.ProductionLine;
 import org.example.projects.domain.enums.Status;
 import org.springframework.data.domain.Page;

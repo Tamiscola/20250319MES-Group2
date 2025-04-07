@@ -1,6 +1,7 @@
 package org.example.projects.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.example.projects.domain.enums.PlanStatus;
 import org.example.projects.domain.enums.ProcessType;
@@ -33,7 +34,7 @@ public class ProductionLine {
     private Status productionLineStatus;    // 생산라인상태 (정상(Normal), 불량(Defected))
 
     @Transient // Marks this as a derived field (not persisted in DB)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("planStatus") // Ensures this field is included in
     public PlanStatus getPlanStatus() {
         if (productionPlans == null || productionPlans.isEmpty()) {
             return PlanStatus.STANDBY;
@@ -71,7 +72,7 @@ public class ProductionLine {
     @OneToMany(mappedBy = "productionLine", cascade = CascadeType.ALL)
     private List<Product> products;       // 생산품목
 
-    @ManyToMany(mappedBy = "productionLines")
+    @ManyToMany(mappedBy = "productionLines", fetch = FetchType.EAGER)
     @Builder.Default
     private Set<ProductionPlan> productionPlans = new HashSet<>();  // 생산계획 (ex: 월 목표수량)
 

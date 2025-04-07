@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ProductRepositoryTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ProductRepositoryTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/org.example.projects.html">org.example.projects</a> &gt; ProductRepositoryTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.413s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">Should successfully save products with dummy data</td>
+<td class="success">shouldSaveDummyProducts()</td>
+<td class="success">0.413s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>12:01:30.039 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+12:01:30.051 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+12:01:30.086 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [org.example.projects.ProductRepositoryTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+12:01:30.097 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [org.example.projects.ProductRepositoryTests], using SpringBootContextLoader
+12:01:30.102 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTests-context.xml] does not exist
+12:01:30.103 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [org.example.projects.ProductRepositoryTests]: class path resource [org/example/projects/ProductRepositoryTestsContext.groovy] does not exist
+12:01:30.103 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [org.example.projects.ProductRepositoryTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+12:01:30.104 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.example.projects.ProductRepositoryTests]: ProductRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+12:01:30.152 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [org.example.projects.ProductRepositoryTests]
+12:01:30.214 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [D:\20250319MES-Group2\20250319MES-Group2\build\classes\java\main\org\example\Main.class]
+12:01:30.216 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.example.Main for test class org.example.projects.ProductRepositoryTests
+12:01:30.311 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [org.example.projects.ProductRepositoryTests]: using defaults.
+12:01:30.311 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+12:01:30.331 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@eadb475, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@4d4d48a6, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@315df4bb, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@3fc08eec, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5cad8b7d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7b02e036, org.springframework.test.context.transaction.TransactionalTestExecutionListener@25243bc1, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@1e287667, org.springframework.test.context.event.EventPublishingTestExecutionListener@2e6ee0bc, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@4201a617, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@467f77a5, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@1bb9aa43, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@420bc288, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@df5f5c0, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@308a6984]
+12:01:30.334 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6b5f8707 testClass = ProductRepositoryTests, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@772485dd testClass = ProductRepositoryTests, locations = '{}', classes = '{class org.example.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@51cd7ffc, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3f053c80, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1d8062d2, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@295eaa7c, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@14f5da2c, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@6692b6c6], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2025-04-07 12:01:30.695  INFO 7932 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Starting ProductRepositoryTests using Java 11.0.2 on DESKTOP-T64HO54 with PID 7932 (started by human-08 in D:\20250319MES-Group2\20250319MES-Group2)
+2025-04-07 12:01:30.696  INFO 7932 --- [    Test worker] o.e.projects.ProductRepositoryTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-04-07 12:01:31.973  INFO 7932 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-07 12:01:32.062  INFO 7932 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 80 ms. Found 9 JPA repository interfaces.
+2025-04-07 12:01:32.209  WARN 7932 --- [    Test worker] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[org.example]' package. Please check your configuration.
+2025-04-07 12:01:32.910  INFO 7932 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-07 12:01:32.984  INFO 7932 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2025-04-07 12:01:33.242  INFO 7932 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-04-07 12:01:33.379  INFO 7932 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-07 12:01:33.464  INFO 7932 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-07 12:01:33.486  INFO 7932 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MariaDBDialect
+2025-04-07 12:01:34.628  INFO 7932 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-04-07 12:01:34.637  INFO 7932 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-07 12:01:35.736 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)
+2025-04-07 12:01:35.770 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.deletedLine(java.lang.String)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:35.789 TRACE 7932 --- [    Test worker] o.s.s.a.i.a.MethodSecurityInterceptor    : Validated configuration attributes
+2025-04-07 12:01:35.791 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-07 12:01:35.792 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.modifyLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:35.792 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)
+2025-04-07 12:01:35.792 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionLineController; public java.lang.String org.example.projects.controller.ProductionLineController.createLine(org.example.projects.dto.ProductionLineDTO)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:35.952 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-07 12:01:35.953 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.createPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:35.954 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)
+2025-04-07 12:01:35.954 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.modifyPlan(org.example.projects.dto.ProductionPlanDTO,java.lang.String,org.springframework.web.multipart.MultipartFile)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:35.954 DEBUG 7932 --- [    Test worker] .PrePostAnnotationSecurityMetadataSource : @org.springframework.security.access.prepost.PreAuthorize(value=&quot;hasRole('USER')&quot;) found on specific method: public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)
+2025-04-07 12:01:35.955 DEBUG 7932 --- [    Test worker] m.DelegatingMethodSecurityMetadataSource : Caching method [CacheKey[org.example.projects.controller.ProductionPlanController; public java.lang.String org.example.projects.controller.ProductionPlanController.deletePlan(java.lang.Long)]] with attributes [[authorize: 'hasRole('USER')', filter: 'null', filterTarget: 'null']]
+2025-04-07 12:01:36.063  INFO 7932 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : -------------------------web configure--------------------
+2025-04-07 12:01:36.107 TRACE 7932 --- [    Test worker] eGlobalAuthenticationAutowiredConfigurer : Eagerly initializing {customSecurityConfig=org.example.projects.config.CustomSecurityConfig$$EnhancerBySpringCGLIB$$3efb5553@53086bdc}
+2025-04-07 12:01:36.228  INFO 7932 --- [    Test worker] o.e.p.config.CustomSecurityConfig        : ---------------------config-----------------------------
+2025-04-07 12:01:36.386 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login?error=true']
+2025-04-07 12:01:36.393 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-07 12:01:36.393 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for ExactUrl [processUrl='/login']
+2025-04-07 12:01:36.394 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/login']
+2025-04-07 12:01:36.394 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/oauth2/**']
+2025-04-07 12:01:36.394 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/error']
+2025-04-07 12:01:36.394 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [hasRole('ROLE_USER')] for Ant [pattern='/plan/**']
+2025-04-07 12:01:36.395 DEBUG 7932 --- [    Test worker] edFilterInvocationSecurityMetadataSource : Adding web access control expression [authenticated] for any request
+2025-04-07 12:01:36.407 TRACE 7932 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-07 12:01:36.408 TRACE 7932 --- [    Test worker] o.s.s.w.a.i.FilterSecurityInterceptor    : Validated configuration attributes
+2025-04-07 12:01:36.417  INFO 7932 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@33f059ad, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6c7bc8ac, org.springframework.security.web.context.SecurityContextPersistenceFilter@ab11e76, org.springframework.security.web.header.HeaderWriterFilter@42c9c0a1, org.springframework.security.web.authentication.logout.LogoutFilter@30e734a1, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@37d50217, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3d273300, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3fe7c87c, org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter@11703cc8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@25131637, org.springframework.security.web.session.SessionManagementFilter@4bfaff23, org.springframework.security.web.access.ExceptionTranslationFilter@7af5ce66, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@32cda33c]
+2025-04-07 12:01:36.428  WARN 7932 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@2802caa2. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2025-04-07 12:01:36.428  INFO 7932 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure org.springframework.boot.autoconfigure.security.servlet.StaticResourceRequest$StaticResourceRequestMatcher@2802caa2
+2025-04-07 12:01:36.700  WARN 7932 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-07 12:01:37.898  INFO 7932 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-04-07 12:01:37.977  INFO 7932 --- [    Test worker] o.e.projects.ProductRepositoryTests      : Started ProductRepositoryTests in 7.575 seconds (JVM running for 8.832)
+Hibernate: 
+    select
+        count(*) as col_0_0_ 
+    from
+        user_role userrole0_
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        products
+        (manufactured_date, product_name, product_status, production_line_code, quantity, reg_by, reg_date, product_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        product0_.product_id as product_1_9_,
+        product0_.manufactured_date as manufact2_9_,
+        product0_.product_name as product_3_9_,
+        product0_.product_status as product_4_9_,
+        product0_.production_line_code as producti8_9_,
+        product0_.quantity as quantity5_9_,
+        product0_.reg_by as reg_by6_9_,
+        product0_.reg_date as reg_date7_9_ 
+    from
+        products product0_
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_2_,
+        production0_.actual_quantity as actual_q2_4_2_,
+        production0_.end_time as end_time3_4_2_,
+        production0_.planned_quantity as planned_4_4_2_,
+        production0_.product_id as product12_4_2_,
+        production0_.product_name as product_5_4_2_,
+        production0_.production_line_code as product13_4_2_,
+        production0_.production_plan_id as product14_4_2_,
+        production0_.result_date as result_d6_4_2_,
+        production0_.start_time as start_ti7_4_2_,
+        production0_.status as status8_4_2_,
+        production0_.total_material_cost as total_ma9_4_2_,
+        production0_.unit_cost as unit_co10_4_2_,
+        production0_.yield_rate as yield_r11_4_2_,
+        product1_.product_id as product_1_9_0_,
+        product1_.manufactured_date as manufact2_9_0_,
+        product1_.product_name as product_3_9_0_,
+        product1_.product_status as product_4_9_0_,
+        product1_.production_line_code as producti8_9_0_,
+        product1_.quantity as quantity5_9_0_,
+        product1_.reg_by as reg_by6_9_0_,
+        product1_.reg_date as reg_date7_9_0_,
+        production2_.product_id as product_2_7_4_,
+        production3_.production_plan_id as producti1_7_4_,
+        production3_.production_plan_id as producti1_8_1_,
+        production3_.end_date as end_date2_8_1_,
+        production3_.file_url as file_url3_8_1_,
+        production3_.manager as manager4_8_1_,
+        production3_.plan_status as plan_sta5_8_1_,
+        production3_.priority as priority6_8_1_,
+        production3_.product_name as product_7_8_1_,
+        production3_.start_date as start_da8_8_1_,
+        production3_.target_qty as target_q9_8_1_ 
+    from
+        production_data production0_ 
+    inner join
+        products product1_ 
+            on production0_.product_id=product1_.product_id 
+    left outer join
+        production_plan_product production2_ 
+            on product1_.product_id=production2_.product_id 
+    left outer join
+        production_plans production3_ 
+            on production2_.production_plan_id=production3_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_2_,
+        production0_.actual_quantity as actual_q2_4_2_,
+        production0_.end_time as end_time3_4_2_,
+        production0_.planned_quantity as planned_4_4_2_,
+        production0_.product_id as product12_4_2_,
+        production0_.product_name as product_5_4_2_,
+        production0_.production_line_code as product13_4_2_,
+        production0_.production_plan_id as product14_4_2_,
+        production0_.result_date as result_d6_4_2_,
+        production0_.start_time as start_ti7_4_2_,
+        production0_.status as status8_4_2_,
+        production0_.total_material_cost as total_ma9_4_2_,
+        production0_.unit_cost as unit_co10_4_2_,
+        production0_.yield_rate as yield_r11_4_2_,
+        product1_.product_id as product_1_9_0_,
+        product1_.manufactured_date as manufact2_9_0_,
+        product1_.product_name as product_3_9_0_,
+        product1_.product_status as product_4_9_0_,
+        product1_.production_line_code as producti8_9_0_,
+        product1_.quantity as quantity5_9_0_,
+        product1_.reg_by as reg_by6_9_0_,
+        product1_.reg_date as reg_date7_9_0_,
+        production2_.product_id as product_2_7_4_,
+        production3_.production_plan_id as producti1_7_4_,
+        production3_.production_plan_id as producti1_8_1_,
+        production3_.end_date as end_date2_8_1_,
+        production3_.file_url as file_url3_8_1_,
+        production3_.manager as manager4_8_1_,
+        production3_.plan_status as plan_sta5_8_1_,
+        production3_.priority as priority6_8_1_,
+        production3_.product_name as product_7_8_1_,
+        production3_.start_date as start_da8_8_1_,
+        production3_.target_qty as target_q9_8_1_ 
+    from
+        production_data production0_ 
+    inner join
+        products product1_ 
+            on production0_.product_id=product1_.product_id 
+    left outer join
+        production_plan_product production2_ 
+            on product1_.product_id=production2_.product_id 
+    left outer join
+        production_plans production3_ 
+            on production2_.production_plan_id=production3_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_2_,
+        production0_.actual_quantity as actual_q2_4_2_,
+        production0_.end_time as end_time3_4_2_,
+        production0_.planned_quantity as planned_4_4_2_,
+        production0_.product_id as product12_4_2_,
+        production0_.product_name as product_5_4_2_,
+        production0_.production_line_code as product13_4_2_,
+        production0_.production_plan_id as product14_4_2_,
+        production0_.result_date as result_d6_4_2_,
+        production0_.start_time as start_ti7_4_2_,
+        production0_.status as status8_4_2_,
+        production0_.total_material_cost as total_ma9_4_2_,
+        production0_.unit_cost as unit_co10_4_2_,
+        production0_.yield_rate as yield_r11_4_2_,
+        product1_.product_id as product_1_9_0_,
+        product1_.manufactured_date as manufact2_9_0_,
+        product1_.product_name as product_3_9_0_,
+        product1_.product_status as product_4_9_0_,
+        product1_.production_line_code as producti8_9_0_,
+        product1_.quantity as quantity5_9_0_,
+        product1_.reg_by as reg_by6_9_0_,
+        product1_.reg_date as reg_date7_9_0_,
+        production2_.product_id as product_2_7_4_,
+        production3_.production_plan_id as producti1_7_4_,
+        production3_.production_plan_id as producti1_8_1_,
+        production3_.end_date as end_date2_8_1_,
+        production3_.file_url as file_url3_8_1_,
+        production3_.manager as manager4_8_1_,
+        production3_.plan_status as plan_sta5_8_1_,
+        production3_.priority as priority6_8_1_,
+        production3_.product_name as product_7_8_1_,
+        production3_.start_date as start_da8_8_1_,
+        production3_.target_qty as target_q9_8_1_ 
+    from
+        production_data production0_ 
+    inner join
+        products product1_ 
+            on production0_.product_id=product1_.product_id 
+    left outer join
+        production_plan_product production2_ 
+            on product1_.product_id=production2_.product_id 
+    left outer join
+        production_plans production3_ 
+            on production2_.production_plan_id=production3_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_2_,
+        production0_.actual_quantity as actual_q2_4_2_,
+        production0_.end_time as end_time3_4_2_,
+        production0_.planned_quantity as planned_4_4_2_,
+        production0_.product_id as product12_4_2_,
+        production0_.product_name as product_5_4_2_,
+        production0_.production_line_code as product13_4_2_,
+        production0_.production_plan_id as product14_4_2_,
+        production0_.result_date as result_d6_4_2_,
+        production0_.start_time as start_ti7_4_2_,
+        production0_.status as status8_4_2_,
+        production0_.total_material_cost as total_ma9_4_2_,
+        production0_.unit_cost as unit_co10_4_2_,
+        production0_.yield_rate as yield_r11_4_2_,
+        product1_.product_id as product_1_9_0_,
+        product1_.manufactured_date as manufact2_9_0_,
+        product1_.product_name as product_3_9_0_,
+        product1_.product_status as product_4_9_0_,
+        product1_.production_line_code as producti8_9_0_,
+        product1_.quantity as quantity5_9_0_,
+        product1_.reg_by as reg_by6_9_0_,
+        product1_.reg_date as reg_date7_9_0_,
+        production2_.product_id as product_2_7_4_,
+        production3_.production_plan_id as producti1_7_4_,
+        production3_.production_plan_id as producti1_8_1_,
+        production3_.end_date as end_date2_8_1_,
+        production3_.file_url as file_url3_8_1_,
+        production3_.manager as manager4_8_1_,
+        production3_.plan_status as plan_sta5_8_1_,
+        production3_.priority as priority6_8_1_,
+        production3_.product_name as product_7_8_1_,
+        production3_.start_date as start_da8_8_1_,
+        production3_.target_qty as target_q9_8_1_ 
+    from
+        production_data production0_ 
+    inner join
+        products product1_ 
+            on production0_.product_id=product1_.product_id 
+    left outer join
+        production_plan_product production2_ 
+            on product1_.product_id=production2_.product_id 
+    left outer join
+        production_plans production3_ 
+            on production2_.production_plan_id=production3_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.production_result_id as producti1_4_2_,
+        production0_.actual_quantity as actual_q2_4_2_,
+        production0_.end_time as end_time3_4_2_,
+        production0_.planned_quantity as planned_4_4_2_,
+        production0_.product_id as product12_4_2_,
+        production0_.product_name as product_5_4_2_,
+        production0_.production_line_code as product13_4_2_,
+        production0_.production_plan_id as product14_4_2_,
+        production0_.result_date as result_d6_4_2_,
+        production0_.start_time as start_ti7_4_2_,
+        production0_.status as status8_4_2_,
+        production0_.total_material_cost as total_ma9_4_2_,
+        production0_.unit_cost as unit_co10_4_2_,
+        production0_.yield_rate as yield_r11_4_2_,
+        product1_.product_id as product_1_9_0_,
+        product1_.manufactured_date as manufact2_9_0_,
+        product1_.product_name as product_3_9_0_,
+        product1_.product_status as product_4_9_0_,
+        product1_.production_line_code as producti8_9_0_,
+        product1_.quantity as quantity5_9_0_,
+        product1_.reg_by as reg_by6_9_0_,
+        product1_.reg_date as reg_date7_9_0_,
+        production2_.product_id as product_2_7_4_,
+        production3_.production_plan_id as producti1_7_4_,
+        production3_.production_plan_id as producti1_8_1_,
+        production3_.end_date as end_date2_8_1_,
+        production3_.file_url as file_url3_8_1_,
+        production3_.manager as manager4_8_1_,
+        production3_.plan_status as plan_sta5_8_1_,
+        production3_.priority as priority6_8_1_,
+        production3_.product_name as product_7_8_1_,
+        production3_.start_date as start_da8_8_1_,
+        production3_.target_qty as target_q9_8_1_ 
+    from
+        production_data production0_ 
+    inner join
+        products product1_ 
+            on production0_.product_id=product1_.product_id 
+    left outer join
+        production_plan_product production2_ 
+            on product1_.product_id=production2_.product_id 
+    left outer join
+        production_plans production3_ 
+            on production2_.production_plan_id=production3_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.product_id as product_2_7_0_,
+        production0_.production_plan_id as producti1_7_0_,
+        production1_.production_plan_id as producti1_8_1_,
+        production1_.end_date as end_date2_8_1_,
+        production1_.file_url as file_url3_8_1_,
+        production1_.manager as manager4_8_1_,
+        production1_.plan_status as plan_sta5_8_1_,
+        production1_.priority as priority6_8_1_,
+        production1_.product_name as product_7_8_1_,
+        production1_.start_date as start_da8_8_1_,
+        production1_.target_qty as target_q9_8_1_ 
+    from
+        production_plan_product production0_ 
+    inner join
+        production_plans production1_ 
+            on production0_.production_plan_id=production1_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.product_id as product_2_7_0_,
+        production0_.production_plan_id as producti1_7_0_,
+        production1_.production_plan_id as producti1_8_1_,
+        production1_.end_date as end_date2_8_1_,
+        production1_.file_url as file_url3_8_1_,
+        production1_.manager as manager4_8_1_,
+        production1_.plan_status as plan_sta5_8_1_,
+        production1_.priority as priority6_8_1_,
+        production1_.product_name as product_7_8_1_,
+        production1_.start_date as start_da8_8_1_,
+        production1_.target_qty as target_q9_8_1_ 
+    from
+        production_plan_product production0_ 
+    inner join
+        production_plans production1_ 
+            on production0_.production_plan_id=production1_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.product_id as product_2_7_0_,
+        production0_.production_plan_id as producti1_7_0_,
+        production1_.production_plan_id as producti1_8_1_,
+        production1_.end_date as end_date2_8_1_,
+        production1_.file_url as file_url3_8_1_,
+        production1_.manager as manager4_8_1_,
+        production1_.plan_status as plan_sta5_8_1_,
+        production1_.priority as priority6_8_1_,
+        production1_.product_name as product_7_8_1_,
+        production1_.start_date as start_da8_8_1_,
+        production1_.target_qty as target_q9_8_1_ 
+    from
+        production_plan_product production0_ 
+    inner join
+        production_plans production1_ 
+            on production0_.production_plan_id=production1_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.product_id as product_2_7_0_,
+        production0_.production_plan_id as producti1_7_0_,
+        production1_.production_plan_id as producti1_8_1_,
+        production1_.end_date as end_date2_8_1_,
+        production1_.file_url as file_url3_8_1_,
+        production1_.manager as manager4_8_1_,
+        production1_.plan_status as plan_sta5_8_1_,
+        production1_.priority as priority6_8_1_,
+        production1_.product_name as product_7_8_1_,
+        production1_.start_date as start_da8_8_1_,
+        production1_.target_qty as target_q9_8_1_ 
+    from
+        production_plan_product production0_ 
+    inner join
+        production_plans production1_ 
+            on production0_.production_plan_id=production1_.production_plan_id 
+    where
+        production0_.product_id=?
+Hibernate: 
+    select
+        production0_.product_id as product_2_7_0_,
+        production0_.production_plan_id as producti1_7_0_,
+        production1_.production_plan_id as producti1_8_1_,
+        production1_.end_date as end_date2_8_1_,
+        production1_.file_url as file_url3_8_1_,
+        production1_.manager as manager4_8_1_,
+        production1_.plan_status as plan_sta5_8_1_,
+        production1_.priority as priority6_8_1_,
+        production1_.product_name as product_7_8_1_,
+        production1_.start_date as start_da8_8_1_,
+        production1_.target_qty as target_q9_8_1_ 
+    from
+        production_plan_product production0_ 
+    inner join
+        production_plans production1_ 
+            on production0_.production_plan_id=production1_.production_plan_id 
+    where
+        production0_.product_id=?
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.5</a> at 2025. 4. 7. 오후 12:01:38</p>
+</div>
+</div>
+</body>
+</html>

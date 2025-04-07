@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 20); // Adjust speed of animation (20ms per increment)
     });
 
-
     detailsToggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
             const lineCard = toggle.closest('.production-line-card');
@@ -134,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);  // Poll every second
     }
 
-
     function updateProgressBar(data) {
         console.log("Received progress data:", data);
         const lineCard = document.querySelector(`.production-line-card[data-line-code="${data.productionLineCode}"]`);
@@ -151,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             progressValueElement.textContent = `${progress}%`;
 
             // Update status
+            console.log("data.planStatus: ", data.planStatus);
             if (data.planStatus) {
                 statusElement.textContent = data.planStatus;
                 statusElement.className = `status ${data.planStatus.toLowerCase().replace('_', '-')}`;

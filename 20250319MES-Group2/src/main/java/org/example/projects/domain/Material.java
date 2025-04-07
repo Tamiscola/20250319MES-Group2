@@ -8,6 +8,7 @@ import org.example.projects.domain.enums.ProcessType;
 import org.example.projects.domain.enums.Status;
 
 @Entity
+@Table(name="material")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -16,6 +17,7 @@ import org.example.projects.domain.enums.Status;
 public class Material {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="m_id")
     private Long mId;            // 자재 ID
 
     private String mName;           // 자재명
@@ -23,6 +25,7 @@ public class Material {
     private String mCategory;       // 카테고리
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="m_process")
     private ProcessType mProcess;        // 소요부문
 
     @Min(value = 0, message = "Quantity must be at least 0")
@@ -30,5 +33,8 @@ public class Material {
 
     private Double mPrice;          // 가격
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="m_status")
     private Status mStatus;    // 재고 상태 (NORMAL, DEFECTED)
+
 }

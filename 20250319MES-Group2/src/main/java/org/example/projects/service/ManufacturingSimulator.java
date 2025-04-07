@@ -18,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -52,6 +54,9 @@ public class ManufacturingSimulator {
     @Autowired
     private ProductionDataRepository productionDataRepository;
 
+    @Autowired
+    private MaterialService materialService;
+
     private void resetTasks(ProductionLine line) {
         for (Process process : line.getProductionProcesses()) {
             for (Task task : process.getTasks()) {
@@ -63,14 +68,13 @@ public class ManufacturingSimulator {
         log.info("Reset all tasks for production line {}", line.getProductionLineCode());
     }
 
-
     // Update task progress incrementally
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateTaskProgress(Task task) {
         log.info("Updating progress for task: {}, current progress: {}%", task.getTaskType(), task.getProgress());
 
         Random random = new Random();
-        int increment = random.nextInt(10) + 1; // Increment between 1-10%
+        int increment = random.nextInt(40) + 50; // Increment between 1-10%
         int newProgress = Math.min(task.getProgress() + increment, 100);
 
         log.info("Increment: {}%, New progress: {}%", increment, newProgress);
@@ -89,24 +93,59 @@ public class ManufacturingSimulator {
     @Async("simulationExecutor")
     public void simulateProductionPlan(Long planId) {
         TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-
-        // Use AtomicReference to hold objects that need to be accessed outside the transaction
         AtomicReference<ProductionPlan> planRef = new AtomicReference<>();
         AtomicReference<Product> productRef = new AtomicReference<>();
+        AtomicReference<ProductionData> productionDataRef = new AtomicReference<>();
 
+        // STEP 1: Load the production plan
         transactionTemplate.execute(new TransactionCallback<Void>() {
             public Void doInTransaction(TransactionStatus status) {
                 ProductionPlan plan = productionPlanService.getProductionPlanWithAssociations(planId);
-                productionPlanRepository.save(plan);
-                Product product = initializeProduct(plan);
                 planRef.set(plan);
+                return null;
+            }
+        });
+
+        // STEP 2: Initialize and save the product properly first
+        transactionTemplate.execute(new TransactionCallback<Void>() {
+            public Void doInTransaction(TransactionStatus status) {
+                ProductionPlan plan = planRef.get();
+                Product product = initializeProduct(plan);
+
+                // Save product first to get ID
+                product = productRepository.saveAndFlush(product);
+
+                // Now create and set up the production data
+                ProductionData productionData = ProductionData.builder()
+                        .product(product)
+                        .productionPlan(plan)
+                        .productionLine(plan.getProductionLines().iterator().next()) // Or however you select the line
+                        .productName(product.getProductName())
+                        .plannedQuantity(plan.getTargetQty())
+                        .actualQuantity(0)
+                        .status(PlanStatus.IN_PROGRESS)
+                        .startTime(LocalDate.now())
+                        .totalMaterialCost(0.0) // Initialize cost tracking
+                        .unitCost(0.0)
+                        .materialConsumptions(new ArrayList<>()) // Initialize with empty list
+                        .build();
+
+                // Set up bidirectional relationship
+                product.setProductionData(productionData);
+
+                // Save production data
+                productionData = productionDataRepository.save(productionData);
+
+                // Update the references
                 productRef.set(product);
+                productionDataRef.set(productionData);
                 return null;
             }
         });
 
         ProductionPlan plan = planRef.get();
         Product product = productRef.get();
+        ProductionData productionData = productionDataRef.get();
 
         boolean simulationCompleted = false;
 
@@ -153,6 +192,18 @@ public class ManufacturingSimulator {
                     log.info("Process {} already completed, skipping.", process.getProcessType());
                     continue;
                 }
+
+                // Consume materials for this process type
+                transactionTemplate.execute(new TransactionCallback<Void>() {
+                    public Void doInTransaction(TransactionStatus status) {
+                        // Consume materials at the beginning of each process
+                        if (process.getProcessType() != ProcessType.COMPLETED) {
+                            double processCost = materialService.consumeMaterialsForProcess(productionData, process.getProcessType());
+                            log.info("Consumed materials for process {} with cost: {}", process.getProcessType(), processCost);
+                        }
+                        return null;
+                    }
+                });
 
                 // Check for COMPLETED process type
                 if (process.getProcessType() == ProcessType.COMPLETED) {
@@ -235,39 +286,20 @@ public class ManufacturingSimulator {
         // Finalize the production
         transactionTemplate.execute(new TransactionCallback<Void>() {
             public Void doInTransaction(TransactionStatus status) {
+                // Update product cost with total material costs
+                materialService.updateProductionCost(productionData);
+
                 plan.setPlanStatus(PlanStatus.COMPLETED);
                 plan.setEndDate(LocalDate.now());
                 productionPlanRepository.save(plan);
+
+                Product product = productRef.get();
                 finalizeProductQuantity(product, plan);
+                log.info("Production finalized for plan: {}", plan.getPlanId());
                 return null;
             }
         });
     }
-
-    // a result is created or updated whenever the status changes.
-    private void updateProductionResult(Product product, ProductionPlan plan) {
-        ProductionData existingResult = productionDataRepository.findByProductionPlan(plan).orElse(null);
-
-        if (existingResult == null) {
-            existingResult = ProductionData.builder()
-                    .productionLine(product.getProductionLine())
-                    .productionPlan(plan)
-                    .productName(product.getProductName())
-                    .plannedQuantity(plan.getTargetQty())
-                    .actualQuantity(product.getQuantity()) // Initial quantity might be 0 or partial
-                    .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100)
-                    .status(plan.getPlanStatus())
-                    .startTime(plan.getStartDate())
-                    .build();
-        } else {
-            existingResult.setActualQuantity(product.getQuantity());
-            existingResult.setYieldRate((double) product.getQuantity() / plan.getTargetQty() * 100);
-            existingResult.setStatus(plan.getPlanStatus());
-        }
-
-        productionDataRepository.save(existingResult);
-    }
-
 
     private void resetProcessesAndTasks(ProductionLine line) {
         // Delete existing tasks
@@ -325,16 +357,20 @@ public class ManufacturingSimulator {
     }
 
     private Product initializeProduct(ProductionPlan plan) {
-        Product product = Product.builder()
-                .productName(plan.getProductName())
-                .productionPlan(plan)
-                .productionLine(plan.getProductionLines().iterator().next()) // Assuming one line for simplicity
-                .productStatus(Status.NORMAL)
-                .manufacturedDate(LocalDate.now())
-                .regBy(plan.getManager())
-                .quantity(0) // Start with 0 quantity
-                .build();
-        return productRepository.save(product);
+        // Get the first product associated with this plan
+        final Product initialProduct = plan.getProducts().stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No product associated with plan: " + plan.getPlanId()));
+
+        // Ensure we have the latest version from the database
+        Product product = productRepository.findById(initialProduct.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + initialProduct.getProductId()));
+
+        // Reset quantity for simulation
+        product.setQuantity(0);
+        product.setManufacturedDate(LocalDate.now());
+
+        return product;
     }
 
     private void updateProductQuantity(Product product, ProductionPlan plan, Task task) {
@@ -345,8 +381,13 @@ public class ManufacturingSimulator {
     }
 
     private void finalizeProductQuantity(Product product, ProductionPlan plan) {
+        // Save product if not already persisted
+        if (product.getProductId() == null) {
+            product = productRepository.saveAndFlush(product); // Use saveAndFlush to ensure persistence
+        }
+
         product.setQuantity(plan.getTargetQty());
-        productRepository.save(product);
+        productRepository.save(product); // Persist updated product
         log.info("Finalized product quantity. Final quantity: {}", product.getQuantity());
 
         // Check if a ProductionResult already exists for this plan
@@ -364,15 +405,19 @@ public class ManufacturingSimulator {
         } else {
             // Create a new result if none exists
             ProductionData newResult = ProductionData.builder()
-                    .productionLine(product.getProductionLine())
+                    .productionLine(plan.getProductionLines().iterator().next())
                     .productionPlan(plan)
+                    .product(product) // Associate persisted product
                     .productName(product.getProductName())
                     .plannedQuantity(plan.getTargetQty()) // Target Quantity
                     .actualQuantity(product.getQuantity()) // Actual Quantity
                     .yieldRate((double) product.getQuantity() / plan.getTargetQty() * 100) // Yield Rate
                     .status(plan.getPlanStatus()) // Status
                     .startTime(plan.getStartDate())
-                    .endTime(LocalDate.now())   // End time
+                    .endTime(LocalDate.now()) // End time
+                    .totalMaterialCost(0.0) // Initialize material cost
+                    .unitCost(0.0) // Initialize unit cost
+                    .materialConsumptions(new ArrayList<>()) // Initialize with empty list
                     .build();
 
             productionDataRepository.save(newResult);
@@ -387,22 +432,5 @@ public class ManufacturingSimulator {
                 .mapToDouble(Task::getProgress)
                 .average()
                 .orElse(0.0);
-    }
-
-    // Create products based on the production plan
-    private void createProducts (ProductionPlan plan){
-        Product product = Product.builder()
-                .productName(plan.getProductName())
-                .productionPlan(plan)
-                .productionLine(plan.getProductionLines().iterator().next()) // Assuming one line for simplicity
-                .productStatus(Status.NORMAL)
-                .manufacturedDate(LocalDate.now())
-                .regBy(plan.getManager())
-                .quantity(plan.getTargetQty())  // Set the quantity to the target quantity
-                .build();
-
-        productRepository.save(product);
-
-        log.info("Created product batch for production plan {}. Quantity: {}", plan.getPlanId(), plan.getTargetQty());
     }
 }

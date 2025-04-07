@@ -1,0 +1,384 @@
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    font-family: 'Malgun Gothic', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* Layout Styles */
+#wrapper {
+    display: flex;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 250px;
+    /* background-color: #333; */ /* 기존의 어두운 배경색 제거 */
+    color: #000; /* 글자색을 검정색으로 변경 */
+}
+
+#page-content-wrapper {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar-heading {
+    padding: 20px;
+    text-align: center;
+}
+
+.sidebar-heading h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.list-group-item {
+    /* background-color: transparent; */ /* 기존 배경색 제거 */
+    color: #000; /* 글자색을 검정색으로 유지 */
+    border: none;
+    padding: 10px 20px;
+}
+
+.list-group-item:hover {
+    background-color: #ADD8E6; /* 연한 파란색 */
+    color: #000;
+}
+
+.company-information {
+    padding: 20px;
+    font-size: 12px;
+}
+
+/* Top Navigation Styles */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.loginInfo {
+    display: flex;
+    align-items: center;
+}
+
+.loginInfo button {
+    margin-left: 10px;
+}
+
+/* Content Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.section-title {
+    background-color: #f0f8ff;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-left: 5px solid #4682b4;
+    font-weight: bold;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.button {
+    background-color: #4682b4;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button:hover {
+    background-color: #396a93;
+}
+
+.dropdown {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.pagination button.active {
+    background-color: #4682b4;
+    color: white;
+    border-color: #4682b4;
+}
+
+/* Form Styles */
+.form-container {
+    margin-top: 30px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 20px; /* 항목들 간의 간격 */
+    flex-wrap: wrap; /* 두 개씩 한 줄에 배치하고, 줄 바꿈 처리 */
+    margin-bottom: 20px;
+}
+
+.form-row label {
+    width: 150px;
+    font-weight: bold;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="date"],
+.form-row select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    display: flex;
+    gap: 5px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.modal-content h2 {
+    color: #4682b4;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #4682b4;
+    padding-bottom: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#modifyLineForm .form-row {
+    margin-bottom: 15px;
+}
+
+#modifyLineForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#modifyLineForm input[type="text"],
+#modifyLineForm input[type="number"],
+#modifyLineForm input[type="date"],
+#modifyLineForm select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#modifyLineForm .radio-group {
+    display: flex;
+    gap: 15px;
+}
+
+#modifyLineForm .radio-item {
+    display: flex;
+    align-items: center;
+}
+
+#modifyLineForm .form-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+#modifyLineForm .button {
+    background-color: #4682b4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+#modifyLineForm .button:hover {
+    background-color: #396a93;
+}
+
+.button.delete {
+    background-color: #dc3545;
+}
+
+.button.delete:hover {
+    background-color: #bb2d3b;
+}
+
+.no-results {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.no-results p {
+    font-size: 18px;
+    color: #666;
+}
+
+.sortable::after {
+    content: '\25B2'; /* Up arrow */
+    margin-left: 5px;
+    visibility: hidden;
+}
+
+.sortable.asc::after {
+    visibility: visible;
+}
+
+.sortable.desc::after {
+    content: '\25BC'; /* Down arrow */
+    visibility: visible;
+}
+
+/* radio-group을 flexbox로 변경하여 한 줄에 두 개씩 배치 */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* 항목들 간의 간격을 제거 */
+    width: 100%; /* 부모 요소의 너비에 맞게 채운다 */
+}
+
+/* radio-item을 두 개씩 배치 */
+.radio-item {
+    width: 45%; /* 두 개씩 한 줄에 배치 */
+    box-sizing: border-box; /* padding, margin 포함한 너비 계산 */
+    margin-right: 0; /* 추가적인 간격을 제거 */
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: flex-start; /* label을 왼쪽 정렬 */
+}
+
+/* radio-item의 input과 label 사이 간격을 적당히 유지 */
+.radio-item input, .radio-item label {
+    margin-right: 10px; /* label과 input 사이에 간격 추가 */
+}
+
+/* 추가: 수평 중앙 정렬을 위한 처리 */
+.radio-group .radio-item:nth-child(odd) {
+    margin-right: 5%; /* 왼쪽 항목과 오른쪽 항목 간의 간격을 맞추기 위함 */
+}

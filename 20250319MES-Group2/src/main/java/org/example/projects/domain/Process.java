@@ -35,5 +35,6 @@ public class Process {
     private boolean completed = false;
 
     @Column(nullable = false, columnDefinition = "int default 0")
+    @Builder.Default
     private int progress = 0;
 }
