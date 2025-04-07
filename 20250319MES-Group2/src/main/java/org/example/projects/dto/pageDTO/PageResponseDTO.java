@@ -21,10 +21,6 @@ public class PageResponseDTO<ProductDTO> {
 
     private List<ProductDTO> dtoList;
 
-    public boolean isEmpty() {
-        return dtoList == null || dtoList.isEmpty();
-    }
-
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<ProductDTO> dtoList, int total) {
         if(total <= 0) {
