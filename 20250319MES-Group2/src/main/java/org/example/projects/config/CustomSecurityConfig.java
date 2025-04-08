@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 
 import org.example.projects.domain.UserRole;
 import org.example.projects.repository.UserRoleRepository;
+import org.example.projects.service.security.CustomOAuth2UserService;
 import org.example.projects.service.security.CustomUserDetailsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -50,7 +51,9 @@ public class CustomSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
+                                           CustomOAuth2UserService customOAuth2UserService)
+            throws Exception {
         log.info("---------------------config-----------------------------");
 
         httpSecurity.authenticationProvider(authenticationProvider())
@@ -59,7 +62,7 @@ public class CustomSecurityConfig {
                 .loginProcessingUrl("/login") // Endpoint for form submission
                 .defaultSuccessUrl("/plan/list", true)  // 사용자 로그인 페이지 설정;
                 .failureUrl("/login?error=true") // Redirect after failed login
-                .permitAll();;
+                .permitAll();
 
         httpSecurity.csrf().disable();
 
@@ -73,6 +76,12 @@ public class CustomSecurityConfig {
                 .antMatchers("/login", "/oauth2/**", "/error").permitAll() // Allow access to login and error pages
                 .antMatchers("/plan/**").hasRole("USER") // Restrict access to /plan/** to authenticated users
                 .anyRequest().authenticated();
+
+        httpSecurity.oauth2Login()
+                .loginPage("/login")
+                .defaultSuccessUrl("/plan/list", true)
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
 
         return httpSecurity.build();
     }
