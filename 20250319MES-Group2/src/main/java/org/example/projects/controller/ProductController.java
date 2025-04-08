@@ -52,6 +52,7 @@ public class ProductController {
 
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("pageRequestDTO", pageRequestDTO);
+        model.addAttribute("isEmpty", responseDTO.getDtoList() == null || responseDTO.getDtoList().isEmpty());
 
         return "product-list";
     }

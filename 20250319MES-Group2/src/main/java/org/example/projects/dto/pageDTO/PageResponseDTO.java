@@ -41,4 +41,8 @@ public class PageResponseDTO<ProductDTO> {
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;
     }
+    public boolean isEmpty() {
+        return dtoList == null || dtoList.isEmpty();
+    }
+
 }
