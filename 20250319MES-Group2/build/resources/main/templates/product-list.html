@@ -116,7 +116,7 @@
                 </form>
 
                 <!-- 제품 테이블 -->
-                <table>
+                <table th:if="${!responseDTO.empty}">
                     <thead>
                     <tr>
                         <th>번호</th>
@@ -142,8 +142,13 @@
                     </tbody>
                 </table>
 
+                <!-- No results message -->
+                <div th:if="${responseDTO.empty}" class="no-results">
+                    <p>검색 결과가 없습니다.</p>
+                </div>
+
                 <!-- 페이지네이션 -->
-                <div class="pagination">
+                <div class="pagination" th:if="${!responseDTO.empty}">
                     <button class="page-item" th:if="${responseDTO.prev}" th:data-num="${responseDTO.start -1}">
                         Prev
                     </button>
