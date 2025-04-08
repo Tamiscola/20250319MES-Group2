@@ -36,4 +36,12 @@ public class UserRole {
 
     @Column(name = "registered_date")
     private Date registeredDate;
+
+    public UserRole(String socialId, String socialProvider, String userName) {
+        this.socialId = socialId;
+        this.socialProvider = socialProvider;
+        this.userName = userName;
+    }
+
+    public UserRole() {}
 }
